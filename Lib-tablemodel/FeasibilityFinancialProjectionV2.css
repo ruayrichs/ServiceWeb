@@ -1,0 +1,92 @@
+﻿.table-finans-v2 {
+    width: 100%;
+}
+
+    .table-finans-v2 tr {
+        border-right: 1px solid #ccc;
+    }
+
+    .table-finans-v2 th {
+        padding: 2px 4px;
+        border: 1px solid #ccc;
+        border-right: none;
+        background-color: #eee;
+        font-weight: 500;
+    }
+    
+    .table-finan th[rowspan]{
+        vertical-align:middle;
+    }
+
+    .table-finans-v2 td {
+        border-bottom: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-right: none;
+        border-top: none;
+        height: 25px;
+    }
+
+        .table-finans-v2 td:last-child {
+            border-bottom: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            border-top: none;
+            height: 25px;
+        }
+
+        .table-finans-v2 td > div[data-mode=label] {
+            width: 100%;
+            padding: 0 3px;
+        }
+
+    .table-finans-v2 input[type=text] {
+        width: 100%;
+        border: none;
+        height: 100%;
+        padding: 0 3px;
+    }
+
+    .table-finans-v2 select {
+        width: 100%;
+        border: none;
+        height: 100%;
+        padding: 0 3px;
+    }
+
+    .table-finans-v2 .cell-disable {
+        background-color: #eee;
+    }
+
+    .table-finans-v2 .row-summery > td {
+        text-align: right;
+        padding: 0 3px;
+        background-color: #fcf8e3;
+    }
+
+    .table-finans-v2 tr > td > select[disabled=disabled],
+    .table-finans-v2 tr > td > input[disabled=disabled] {
+        background-color: #eee;
+        cursor: no-drop;
+    }
+
+    .table-finans-v2 tr > td > span {
+        width: 100%;
+        display: block;
+        padding: 2px 3px;
+        height: 100%;
+        cursor: default;
+        background-color: #eee;
+    }
+    .table-finans-v2 tr > td > p {
+        width: 100%;
+        display: block;
+        padding: 2px 3px;
+        height: 100%;
+        cursor: default;
+        margin: 0;
+    }
+
+    .table-finans-v2 .alert-info > td > input[type=text] {
+        color: #31708f;
+        background-color: #d9edf7;
+    }

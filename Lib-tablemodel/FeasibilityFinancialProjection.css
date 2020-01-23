@@ -1,0 +1,207 @@
+﻿
+/* context menu */
+.context-menu
+{
+	display: none;
+	position: absolute;
+	z-index: 10;
+	padding: 12px 0;
+	width: 240px;
+	background-color: #fff;
+	border: solid 1px #dfdfdf;
+	box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu--active
+{
+	display: block;
+}
+
+.context-menu__items
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.context-menu__item
+{
+	display: block;
+	margin-bottom: 4px;
+}
+
+	.context-menu__item:last-child
+	{
+		margin-bottom: 0;
+	}
+
+.context-menu__link
+{
+	display: block;
+	padding: 4px 12px;
+	color: #0066aa;
+	text-decoration: none;
+}
+
+	.context-menu__link:hover
+	{
+		color: #fff;
+		background-color: #0066aa;
+	}
+
+/* style Table */
+.table-finan
+{
+	width: 100%;
+	color: #000;
+}
+
+	.table-finan tr
+	{
+		border: solid 1px #ccc;
+	}
+
+	.table-finan th
+	{
+		padding: 6px;
+		border: 1px solid #ccc;
+		background-color: #eee;
+		font-weight: bold;
+	}
+
+    .table-finan th[rowspan]{
+        vertical-align:middle;
+    }
+
+	.table-finan td
+	{
+		border-bottom: 1px solid #ccc;
+		border-left: 1px solid #ccc;
+		border-right: none;
+		border-top: none;
+		height: 25px;
+		padding: 4px 6px;
+		font-size: 13px;
+	}
+
+	.table-finan > tbody > tr.tr-header > td
+	{
+		background-color: #EEEEFF;
+		font-weight: bold;
+	}
+
+	.table-finan > tbody > tr > td:last-child
+	{
+		border-right: solid 1px #ccc;
+	}
+
+	.table-finan th.nowrap, .table-finan td.nowrap
+	{
+		width: 1px;
+		white-space: nowrap;
+	}
+
+.tablemodel-text
+{
+	padding: 0px 5px;
+}
+
+.tablemodel-center
+{
+	vertical-align: middle;
+	text-align: center;
+}
+
+.table-finan input[type=text]
+{
+	width: 100%;
+	border: none;
+	height: 25px;
+	padding: 0 3px;
+}
+
+.table-finan .cell-disable
+{
+	background-color: #eee;
+}
+
+.table-finan .row-summery > td
+{
+	text-align: right;
+	background-color: #fcf8e3;
+	font-weight: bold;
+}
+
+.row-summery
+{
+	border: solid 1px #ccc;
+}
+
+
+/*set table in detail*/
+.tablemodel
+{
+	padding: 2px;
+	border: 1px solid #ccc;
+	border-right: none;
+	font-weight: 100;
+}
+
+tr.tablemodel
+{
+	border: solid 1px #ccc;
+}
+
+tr.tablehead
+{
+	padding: 2px;
+	border: solid 1px #ccc;
+	border-right: none;
+	background-color: #eee;
+	font-weight: 100;
+}
+
+th.tablemodel
+{
+	padding: 2px;
+	border: solid 1px #ccc;
+	border-right: none;
+	background-color: #eee;
+	font-weight: 100;
+}
+
+td.tablemodel
+{
+	border-bottom: 1px solid #ccc;
+	border: solid 1px #ccc;
+	border-right: none;
+	border-top: none;
+	height: 25px;
+}
+
+.table-finan > tbody > tr > td input[type=text], .table-finan > tbody > tr > td select
+{
+	width: 100%;
+	height: 25px;
+	padding: 0 3px;
+	border: solid 1px;
+	border-radius: 3px;
+	border-color: #CFD8DC;
+}
+
+.table-finan > tbody > tr > th input[type=checkbox], .table-finan > tbody > tr > td input[type=checkbox]
+{
+	margin-top: 0;
+}
+
+tr > td select
+{
+	min-width: 80px;
+	width: 100%;
+	border: none;
+}
+
+td.cell-disable, th.cell-disable
+{
+	background-color: #eee;
+}
