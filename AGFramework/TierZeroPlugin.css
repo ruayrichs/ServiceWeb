@@ -1,0 +1,336 @@
+﻿.panel-create-tiarzero {
+    position: relative;
+    z-index: 1020;
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 0.875rem;
+}
+
+    .panel-create-tiarzero *, .panel-create-tiarzero ::after, .panel-create-tiarzero ::before {
+        box-sizing: border-box;
+    }
+
+    .panel-create-tiarzero .tiarzero-icon {
+        position: fixed;
+        right: 30px;
+        bottom: 20px;
+        padding: 6px 12px;
+        border: 1px solid #FDD835;
+        border-radius: 50%;
+        background-color: #FFEB3B;
+        cursor: pointer;
+        box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+        font-size: 21px;
+    }
+
+    .panel-create-tiarzero .tiarzero-content {
+        width: 450px;
+        /*height: 250px;*/
+        right: 30px;
+        bottom: 85px;
+        position: fixed;
+        border-radius: 4px;
+        background-color: #fff;
+        display: none;
+    }
+
+        .panel-create-tiarzero .tiarzero-content.open {
+            display: block;
+        }
+
+            .panel-create-tiarzero .tiarzero-content.open.inform {
+                min-height: 375px;
+                height: auto;
+            }
+
+        .panel-create-tiarzero .tiarzero-content::after {
+            content: "";
+            position: absolute;
+            top: 99%;
+            right: 30px;
+            margin-left: -5px;
+            border-top-width: 20px;
+            border-bottom-width: 0px;
+            border-right-width: 5px;
+            border-left-width: 20px;
+            border-style: solid;
+            border-color: #F7F7F7 transparent transparent transparent;
+        }
+
+        .panel-create-tiarzero .tiarzero-content .card-body {
+            max-height: 375px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+            .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .form-row {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+                margin-right: -5px;
+                margin-left: -5px;
+            }
+
+            .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .form-row {
+                margin-bottom: 10px;
+            }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .form-row:last-child {
+                    margin-bottom: 0;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .form-row > [class*=col-] {
+                    padding-right: 5px;
+                    padding-left: 5px;
+                }
+
+            .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item {
+                display: none;
+            }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item:first-child {
+                    display: block;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .col-12 {
+                    position: relative;
+                    width: 100%;
+                    min-height: 1px;
+                    padding-right: 15px;
+                    padding-left: 15px;
+                    -webkit-box-flex: 0;
+                    -ms-flex: 0 0 100%;
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .form-control {
+                    display: block;
+                    width: 100%;
+                    padding: .375rem .75rem;
+                    line-height: 1.5;
+                    color: #495057;
+                    background-color: #fff;
+                    background-clip: padding-box;
+                    border: 1px solid #ced4da;
+                    border-radius: .25rem;
+                    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .form-control-sm {
+                    padding: .25rem .5rem;
+                    font-size: .875rem;
+                    line-height: 1.5;
+                    border-radius: .2rem;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .inform-required {
+                    border-left: solid 0.2rem #E57373;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .bg-required {
+                    background-color: #ffdbdb;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item label {
+                    display: inline-block;
+                    margin-bottom: .5rem;
+                    font-weight: 600;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item .text-info {
+                    color: #17a2b8 !important;
+                }
+
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item input,
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item textarea,
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item select,
+                .panel-create-tiarzero .tiarzero-content .card-body .content-group .content-item button {
+                    font-family: inherit;
+                }
+
+.content-icon-close {
+    cursor: pointer;
+    float: right;
+}
+
+.plugin-tier-attach-file {    
+    cursor: pointer;   
+    width: 18px;
+    height: 18px;
+    margin-bottom: 0px;
+}
+
+#plugin-tier-file-detail .plugin_detail-list {
+    background-color: #f5f5f5;
+    border: 1px solid transparent;
+    font-weight: bold;
+    margin: 0 0 9px;
+    overflow-y: hidden;
+    padding: 4px 4px 4px 8px;
+    max-width: 448px;
+}
+
+#plugin-tier-file-detail .alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+#plugin-tier-file-detail .alert {
+    position: relative;
+    padding: 1px 6px;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    min-height: 28px;
+}
+
+#plugin-tier-file-detail .close {
+    float: right;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+}
+
+/*boostap style*/
+
+.panel-create-tiarzero .card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+}
+
+    .panel-create-tiarzero .card .d-none {
+        display: none !important;
+    }
+
+    .panel-create-tiarzero .card .card-header {
+        padding: 10px;
+        margin-bottom: 0;
+        background-color: rgba(0,0,0,.03);
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+
+        .panel-create-tiarzero .card .card-header:first-child {
+            border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+        }
+
+        .panel-create-tiarzero .card .card-header .text-danger {
+            color: #dc3545 !important;
+        }
+
+    .panel-create-tiarzero .card .card-body {
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 1.25rem;
+    }
+
+    .panel-create-tiarzero .card .card-footer {
+        padding: 7px;
+        background-color: rgba(0,0,0,.03);
+        border-top: 1px solid rgba(0,0,0,.125);
+        text-align: right;
+    }
+
+        .panel-create-tiarzero .card .card-footer .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+            .panel-create-tiarzero .card .card-footer .btn:focus, .panel-create-tiarzero .card .card-footer .btn:hover {
+                text-decoration: none;
+            }
+
+            .panel-create-tiarzero .card .card-footer .btn:not(:disabled):not(.disabled) {
+                cursor: pointer;
+            }
+
+        .panel-create-tiarzero .card .card-footer .btn-sm {
+            padding: .25rem .5rem;
+            font-size: .875rem;
+            line-height: 1.5;
+            border-radius: .2rem;
+        }
+
+        .panel-create-tiarzero .card .card-footer .btn-success {
+            color: #fff;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+            .panel-create-tiarzero .card .card-footer .btn-success:hover {
+                color: #fff;
+                background-color: #218838;
+                border-color: #1e7e34;
+            }
+
+            .panel-create-tiarzero .card .card-footer .btn-success:focus {
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(40,167,69,.5);
+            }
+
+.panel-create-tiarzero .col-3 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.panel-create-tiarzero .col-4 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+
+.panel-create-tiarzero .col-5 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 41.666667%;
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+}
+
+.panel-create-tiarzero .col-6 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.panel-create-tiarzero .col-9 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 75%;
+    flex: 0 0 75%;
+    max-width: 75%;
+}

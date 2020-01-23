@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="HirearchyStructureAPI.aspx.cs" Inherits="ServiceWeb.Accountability.API.HirearchyStructureAPI" %>

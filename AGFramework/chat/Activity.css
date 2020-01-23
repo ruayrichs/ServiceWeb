@@ -1,0 +1,447 @@
+﻿
+#tab-menu-activity-name {
+    margin-bottom:-5px;
+    display:inline-block;
+    max-width:500px;
+    overflow-x:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+.table-inbox-heading {
+    width:100%;
+    border-top:1px solid #2a6496;
+    border-bottom:1px solid #2a6496;
+}
+.border-right {
+    border-right:1px solid #333;
+}
+
+.table-inbox-heading tr th{
+    padding-top:10px;
+    padding-bottom:10px;
+    color:#fff;
+background-image: linear-gradient(to bottom,#2a6496 0,#7099bd 100%);
+}
+
+.animate-left-panel {
+    margin-left:-225px;
+}
+
+#animate-project-icon {
+    font-size:30px;
+    width:20px;
+    height:20px;
+    position:absolute;
+    z-index:10;
+    right:-18px;
+    top:43px;
+    background:#fff;
+    border-radius:50%;
+    cursor:pointer;
+    cursor:hand;
+}
+
+#animate-project-icon:hover {
+    color:rgba(225, 153, 24, 0.80);
+}
+
+.range-star {
+    color:#ffd300;
+    margin-right:5px;
+}
+
+.bg-hightlight {
+    background:#aec9ef;
+    color:#333;
+    width:150px;
+    font-weight:600;
+    text-align:center;
+}
+
+.search-all-activity,.search-all-activity:focus,.select-activity-filter {
+    border:1px solid #333;
+    border-radius:5px;
+    margin-left:20px;
+    padding:5px;
+    width:200px;
+    padding-left:10px;
+    margin-top:-7px;
+    margin-right:-5px;
+    outline: 0;
+}
+
+.activity-position {
+    display:none;
+}
+
+#panel-cause-detail,
+#panel-problem-fix-detail {
+    word-break:break-all;
+}
+.fa-left-menu:hover {
+    color:orange;
+}
+.white-bg {
+    color: #777;
+}
+
+.left-panel {
+    background: #fff;
+    border: 1px solid #ccc;
+}
+.tab-panel-main {
+    height:732px;
+}
+.row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.activity-container {
+    width: 100%;
+    table-layout: fixed;
+    color: #000;
+}
+
+    .activity-container tr td.task-color {
+        height: 30px;
+        width: 7px;
+    }
+
+    .activity-container tr td.pad {
+        width: 5px;
+    }
+
+    .activity-container tr td.pad-d {
+        width: 2px;
+    }
+    .activity-container tr td.activity-image {
+        width:64px;
+    }
+    .activity-container tr td.content {
+        padding: 13px;
+        padding-left:2px;
+        cursor: pointer;
+        cursor: hand;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+        white-space: nowrap;
+    }
+
+    .activity-container tr td.color-picker {
+        width: 20px;
+        text-align: center;
+    }
+
+        .activity-container tr td.color-picker i {
+            font-size: 14px;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+.color-choise {
+    cursor: pointer;
+    cursor: hand;
+}
+
+    .color-choise:hover {
+        border: 1px solid #333;
+    }
+
+/*.activity-selection:hover .color-picker,
+        .activity-selection:hover .content,
+        .activity-selection:hover .activity-date,
+        .activity-selection:hover .activity-time,
+        .activity-selection-focus .color-picker,
+        .activity-selection-focus .content,
+        .activity-selection-focus .activity-date,
+        .activity-selection-focus .activity-time,
+        .activity-selection-focus .color-picker .open-color-picker {
+            color: #fff;
+            background: #6e9cc3;
+        }*/
+.activity-main-menu {
+    background: #333;
+    padding: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    color: #eee;
+    height: 800px;
+}
+
+#project-container tr td {
+    padding: 15px;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+#project-container tr:hover {
+    background: #aaa;
+    cursor: pointer;
+    cursor: hand;
+}
+
+    #project-container tr:hover .project-list {
+        color: #eee;
+    }
+
+.project-list {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.filter-menu {
+    cursor: pointer;
+    cursor: hand;
+}
+
+#ex-co-left {
+    z-index: 500;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+    padding: 7px;
+    height: 520px;
+    position: absolute;
+    left: 0px;
+}
+
+    #ex-co-left:hover {
+        background-image: linear-gradient(to right, rgba(0, 0, 0, .7) 0%, rgba(0, 0, 0, .0001) 100%);
+    }
+
+.project-header-container {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.button-container {
+    background: #fff;
+    padding: 10px;
+}
+
+.content-container {
+    color: #888;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    height: 350px;
+    padding-top: 30px;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.project-name-list {
+    white-space: nowrap;
+    width: 160px;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+    word-break: break-all;
+    cursor: pointer;
+    cursor: hand;
+    font-size: 14px;
+}
+
+#project-filter-drop-down {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.filter-menu:hover {
+    background: #cad9e6;
+}
+
+.activity-date {
+    width: 85px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.activity-leader,
+.activity-position{
+    width: 150px;
+    padding-right: 10px;
+}
+.activity-position {
+    width:120px;
+}
+.activity-xstatus,
+.activity-priority,
+.activity-haste,
+.activity-problem {
+    width:120px;
+}
+
+.activity-time {
+    width: 75px;
+    text-align: right;
+    padding-right: 10px;
+    display: none;
+    color: #000;
+}
+
+.hand {
+    cursor: pointer;
+    cursor: hand;
+}
+
+#add-remark-table {
+    width: 100%;
+    word-break: break-all;
+}
+
+
+#remark-table {
+    width: 100%;
+    word-break: break-all;
+}
+
+
+.remark-row {
+    padding: 10px;
+}
+
+.remark-header {
+    width: 40px;
+    vertical-align: top;
+    text-align: center;
+}
+
+.remark-image {
+    width: 30px;
+}
+
+.remark-fullname {
+    color: rgb(0,32,96);
+}
+
+.remark-my-fullname {
+    color: #98c83e;
+}
+
+.remark-datetime {
+    color: #c8c7c7;
+    float: right;
+}
+
+.activity-detail {
+    color: #444;
+}
+
+    .activity-detail table tr th {
+        width: 200px;
+    }
+
+    .activity-detail table tr th, .activity-detail table tr td {
+        padding-bottom: 10px;
+    }
+
+.table_detail_main tr {
+    background: #77a0c3;
+    color: #fff;
+}
+
+.table_detail_other tr:nth-child(even) {
+    background: #e8edf1;
+    color: #555;
+}
+
+.table_detail_other tr:nth-child(odd) {
+    background: #bec8d0;
+    color: #555;
+}
+
+.activity-owner {
+}
+.activity-require .activity-image,
+.activity-require .activity-xstatus,
+.activity-require .activity-priority,
+.activity-require .activity-haste,
+.activity-require .activity-problem,
+.activity-require .content,
+.activity-require .activity-date,
+.activity-require .activity-leader,
+.activity-require .activity-position,
+.activity-require .activity-time,
+.activity-require .color-picker,
+.activity-require .task-color,
+.activity-require .pad,
+.activity-require .pad-d {
+    background: rgba(59, 123, 178, 0.10);
+    color: #333;
+}
+
+.activity-require .content,
+.activity-require .activity-date,
+.activity-require .activity-time,
+.activity-require .color-picker {
+    background: rgba(59, 123, 178, 0.10);
+    color: #333;
+}
+
+.row-grouping-pos,
+.row-grouping-type,
+.row-grouping-date,
+.row-grouping-status {
+    background: #555;
+    color: #fff;
+}
+
+.popup-iframe {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: none;
+    z-index: 20000;
+}
+
+.task-report-body .row {
+    padding: 0px;
+}
+
+#table-task-report tr th, #table-task-report tr th {
+    width: 220px;
+}
+.activity-panel-detail {
+    color:#000;
+}
+.activity-panel-detail .row {
+    margin-top: 0px;
+}
+
+.activity-panel-detail label {
+    margin-bottom: 0px;
+}
+
+.tab-panel {
+    padding: 20px;
+}
+
+    .tab-panel .tab-panel-menu {
+        border: 1px solid #ccc;
+        border-radius: 5px 5px 0 0;
+        border-bottom: none;
+        padding: 10px;
+        background: #eee;
+        font-weight: 600;
+        cursor: pointer;
+        cursor: hand;
+    }
+
+    .tab-panel .tab-panel-menu-active {
+        border-bottom: none;
+        background: #fff;
+    }
+
+    .tab-panel .tab-panel-body {
+        border: 1px solid #ccc;
+        border-radius: 0 0 5px 5px;
+        padding: 10px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        margin-top: 7px;
+    }

@@ -1,0 +1,141 @@
+﻿.agape-tree-menu-right-click{
+    position: absolute;
+    padding: 20px;
+    padding-top:10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    z-index: 300000;
+    box-shadow:0px 0px 10px rgba(0, 0, 0, 0.29);
+}
+.agape-tree-menu-right-click .btn{
+    box-shadow:none;
+}
+.agape-tree-menu-empty-folder{
+    display:none;
+}
+.agape-tree-menu-guid-folder {
+    color:red;
+}
+.agape-tree-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.agape-tree-menu li {
+    padding:5px;
+    padding-bottom:0px;
+    min-height:20px;
+}
+.agape-tree-li ,.agape-tree-li-root{
+    overflow-x:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.agape-tree-li-title {
+    position:absolute;
+    padding:10px;
+    background:rgba(0, 0, 0, 0.51);
+    color:#fff;
+    border-radius:5px;
+    margin-left:150px;
+    display:none;
+    z-index:3000;
+}
+
+.agape-tree-command {
+    background-size:20px 20px;
+    padding-right:20px;
+    padding-bottom:20px;
+    cursor:pointer;
+    cursor:hand;
+}
+.agape-tree-command-newfolder {
+    background:url('icon/newfolder.png') no-repeat;
+}
+.agape-tree-command-share {
+    background:url('icon/share.png') no-repeat;
+}
+.agape-tree-menu-select-path {
+    border-radius:5px;
+    padding:5px;
+    width:100%;
+    border:1px solid #ccc;
+}
+.agape-tree-menu-button {
+    border-radius:5px;
+    padding:5px;
+    border:1px solid #ccc;
+}
+.agape-tree-menu-button-create {
+    color:green;
+}
+.agape-tree-menu-button-cancel {
+    color:red;
+    margin-left:5px;
+}
+
+/*=========== Image Class ================*/
+.agape-tree-open-folder {
+    background:url('icon/openfolder.png') no-repeat;
+    background-size:15px 15px;
+    padding-right:20px;
+}
+.agape-tree-close-folder {
+    background:url('icon/closefolder.png') no-repeat;
+    background-size:15px 15px;
+    padding-right:20px;
+}
+.agape-tree-file {
+    background:url('icon/lists.png') no-repeat;
+    background-size:15px 15px;
+    padding-right:20px;
+}
+.agape-tree-file-share {
+    background:url('icon/document.png') no-repeat;
+    background-size:15px 15px;
+    padding-right:20px;
+}
+
+.agape-tree-chart {
+}
+.agape-tree-chart-line {
+    background:url('icon/chart/line.png') no-repeat;
+}
+.agape-tree-chart-barline {
+    background:url('icon/chart/barline.png') no-repeat;
+}
+.agape-tree-chart-pareto {
+    background:url('icon/chart/pareto.png') no-repeat;
+}
+.agape-tree-chart-scatter {
+    background:url('icon/chart/scatter.png') no-repeat;
+}
+.agape-tree-chart-bar {
+    background:url('icon/chart/bar.png') no-repeat;
+}
+.agape-tree-chart-pie {
+    background:url('icon/chart/pie.png') no-repeat;
+}
+.agape-tree-chart-waterfall {
+    background:url('icon/chart/waterfall.png') no-repeat;
+}
+.agape-tree-node-focus {
+    background-image: -webkit-linear-gradient(#69b1e0,#4a96d3);
+    background-image: -moz-linear-gradient(#69b1e0,#4a96d3);
+    background-image: -ms-linear-gradient(#69b1e0,#4a96d3);
+    background-image: -o-linear-gradient(#69b1e0,#4a96d3);
+    background-image: linear-gradient(#69b1e0,#4a96d3);    
+    border-top: 1px solid #5295cd;
+    border-bottom: 1px solid #2661a6;
+}
+
+.blink-new {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0.5; }
+}

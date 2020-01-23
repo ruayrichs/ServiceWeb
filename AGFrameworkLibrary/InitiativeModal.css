@@ -1,0 +1,158 @@
+﻿.initiative-model-control-slide-panel {
+    height: 100vh;
+    width: 0;
+    position: fixed;
+    z-index: 3001;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.5);
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.initiative-modal-active {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.initiative-modal-control {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 3001;
+    display: none;
+    padding-bottom: 10px;
+    /*width: 0;
+    overflow-x:hidden;
+    transition:0.5s;*/
+}
+
+    .initiative-modal-control .initiative-dialog {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+        .initiative-modal-control .initiative-dialog .outer-background {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 50px;
+            background: #eee;
+            /*text-align: center;*/
+        }
+
+        .initiative-modal-control .initiative-dialog .outer-background-activity {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 50px;
+            bottom: 50px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .initiative-modal-control .initiative-dialog iframe {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            border: none;
+            background: none;
+        }
+
+.initiative-model-control-slide-panel {
+    height: 100vh;
+    width: 0;
+    position: fixed;
+    z-index: 10000 !important;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.5);
+    overflow-x: hidden;
+    overflow-y : hidden;
+    transition: 0.5s;
+}
+
+.initiative-model-control-body-content {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 80px);
+    width: 96%;
+    margin: 20px 0 2% 2%;
+    background-color: #eee;
+    border-radius: 5px;
+    border: 1px solid #333;
+    color: #000;
+}
+
+
+.mat-box-initaive-control {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 15px;
+}
+
+.initiative-model-control-header .mat-box-initaive-control {
+    border-radius: 5px 5px 0 0;
+    background: #555;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #333;
+}
+
+    .initiative-model-control-header .mat-box-initaive-control .one-line > label {
+        margin-bottom: 0;
+    }
+
+.initiative-model-control-contant {
+    position: absolute;
+    top: 67px;
+    left: 0;
+    width: 100%;
+    bottom: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 0;
+}
+
+.initiative-model-bottom {
+    position: absolute;
+    bottom: -40px;
+    height: 35px;
+    width: 100%;
+    padding-top: 10px;
+}
+
+.water-button {
+    color: #fff !important;
+    padding: 5px 8px;
+    border: 2px solid #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+    .water-button:hover {
+        color: #049dbd;
+    }
+
+.panel-body-initiative-master {
+    padding: 0 10px;
+}
+
+.panel-content-initiative-master {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+}

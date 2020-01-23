@@ -1,0 +1,227 @@
+﻿
+.fa-edit-activity-remark {
+    display: none !important;
+}
+
+.contain-data {
+    padding: 10px 10px;
+}
+
+.col-item {
+    border: 1px solid #E1E1E1;
+    border-radius: 5px;
+    background: #FFF;
+}
+
+    .col-item .photo img {
+        margin: 0 auto;
+    }
+
+    .col-item .info {
+        padding: 10px;
+        border-radius: 0 0 5px 5px;
+        margin-top: 1px;
+    }
+
+    .col-item .price {
+        /*width: 50%;*/
+        float: left;
+        margin-top: 5px;
+    }
+
+        .col-item .price h5 {
+            line-height: 20px;
+            margin: 0;
+        }
+
+.one-line {
+    text-overflow: ellipsis !important;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.btn-add {
+    padding: 3px 8px;
+    border: 1px dashed #009688;
+    display: block;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.img-box-ini-style {
+    background-size: cover;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    display: block;
+    width: 70px;
+    height: 70px;
+    border-radius: 50px;
+    border: 1px solid #ccc;
+}
+
+.feed-activity-command {
+    padding: 10px 5px;
+    border-top: 1px solid #eee;
+    color: #7f7f7f;
+}
+
+.ag-remarker .system-message-comment-container {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 10px;
+    display: none;
+    margin-top: 0px;
+}
+
+.system-message-comment-container-reply > p[class=text-right] {
+    bottom: 10px !important;
+}
+
+.form-group > span:first-child {
+    font-weight: 550 !important;
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+.page-header {
+    font-size: 18px;
+    color: #c96425;
+    display: block;
+    font-weight: 600;
+}
+
+.mat-box {
+    border-radius: 5px;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.hide {
+    display: none !important;
+}
+
+#table-eq-relation > tbody > tr > td > button {
+    margin-left: 8px;
+    padding: 2px 8px;
+}
+
+.hierarchy-select > .agape-show-node-name {
+    color: #007bff !important;
+    font-weight: 800;
+}
+
+.form-control.required-popup {
+    border-left: solid 0.2rem #E57373;
+}
+
+.datetimepicker-minutes > table, .datetimepicker-hours > table {
+    min-width: 180px;
+}
+
+
+/* ------------------------------------------------------------------------------------------------------------------------ */
+
+.search-highlight {
+    background: yellow;
+    font-weight: 600;
+}
+
+.search-result-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    padding-left: 10px;
+    background: #eee;
+    border-radius: 3px;
+    display: none;
+    z-index: 20;
+}
+
+.search-result {
+    color: red;
+    margin-right: 20px;
+}
+
+.search-result-command {
+    float: right;
+}
+
+    .search-result-command .fa {
+        font-size: 23px;
+        margin: 0 2px;
+        margin-top: -2px;
+        color: #777;
+    }
+
+        .search-result-command .fa:hover {
+            color: #aaa;
+        }
+
+.search-result-count {
+    display: inline-block;
+    padding: 1px;
+    text-align: center;
+    margin: 0 3px;
+    background: #fff;
+    border-radius: 3px;
+    width: 80px;
+}
+.panel-load-more {
+    border: 1px dashed #bbb;
+    margin-top: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+.panel-load-more:hover {
+    color: #777;
+}
+
+.ddl-option-type-remark {
+    display: inline !important;
+}
+
+.form-control:disabled {
+    background-color: #e9ecef !important;
+    opacity: 1 !important;
+}
+
+#icon-lock-ticket {
+    border: 1px dashed;
+    border-radius: 4px;
+    padding: 3px 7px;
+}
+
+#icon-lock-ticket.lock {
+    color: #ffc107 !important;
+}
+#icon-lock-ticket.unlock {
+    color: #28a745 !important;
+}
+#icon-lock-ticket .description-lock-page {
+    margin: 2px 7px 0px 0px;
+    vertical-align: top;
+    overflow: hidden;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#icon-lock-ticket i {
+    font-size: 26px;
+}
+#icon-lock-ticket i.lock {
+    color: #ffc107 !important;
+}
+#icon-lock-ticket i.unlock {
+    color: #28a745 !important;
+}

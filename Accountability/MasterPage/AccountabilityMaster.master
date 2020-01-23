@@ -1,0 +1,63 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterConfig/MasterPage/MasterPageConfig.master" AutoEventWireup="true" CodeBehind="AccountabilityMaster.master.cs" Inherits="ServiceWeb.Accountability.MasterPage.AccountabilityMaster" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolderConfig" runat="server">
+<%--    <script src="-/AGFrameworkLibrary/agape-javascript-framework.js"></script>
+    <link href="-/AGFrameworkLibrary/agape-css-framework.css" rel="stylesheet" />--%>
+
+    <style>
+        .page-header {
+            margin: 40px 0 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 18px;
+            color: #c96425;
+            display: block;
+            margin-bottom: 10px;
+            margin-top: 3px;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+        .hide {
+            display: none !important;
+        }
+
+            .popup-remark-initiative {
+        z-index: 50000;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.701961);
+        top: 0px;
+        left: 0px;
+        display: none;
+    }
+
+    .popup-remark-initiative .remark-content {
+        width: 530px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        margin-top: 150px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+        .popup-remark-initiative .remark-content .remark-header {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        .popup-remark-initiative .remark-content .remark-body {
+            padding-bottom: 5px;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+
+        .popup-remark-initiative .remark-content .remark-footer {
+            text-align: right;
+            padding-top: 20px;
+        }
+    </style>
+    <div class="mat-box">
+        <asp:ContentPlaceHolder runat="server" ID="ContentPlaceHolder1">
+        </asp:ContentPlaceHolder>
+    </div>
+</asp:Content>

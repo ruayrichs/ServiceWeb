@@ -1,0 +1,428 @@
+﻿.activity-chatting-command-box {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: #777;
+}
+
+.system-message-comment {
+    font-size: 14px;
+    color: #428bca;
+    cursor: pointer;
+}
+
+.system-message-comment-container {
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.13);
+    border-left: 3px solid #428BCA;
+    background: #fcfbbb;
+    border-radius: 3px;
+    position: relative;
+}
+
+.system-message-comment-arrow {
+    position: absolute;
+    font-size: 30px;
+    top: 10px;
+    left: -20px;
+    color: #428BCA;
+}
+
+.system-message-comment-container-project-desc {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    border-top: 1px solid #ccc;
+    padding-top: 5px;
+    font-size: 14px;
+    color: #777;
+    font-weight: 600;
+}
+
+    .system-message-comment-container-project-desc b {
+        color: #428BCA;
+    }
+
+.system-message-comment-container .system-message-comment-container-remark {
+    margin-bottom: 0px;
+    padding: 10px;
+    padding-left: 60px;
+    position: relative;
+}
+
+.system-message-comment-container .system-message-comment-container-reply {
+    margin-top: 10px;
+    position: relative;
+}
+
+.system-message-comment-container-reply .reply-attach {
+    margin-right: 20px;
+    font-size: 26px;
+    color: #999;
+    cursor: pointer;
+}
+
+    .system-message-comment-container-reply .reply-attach:hover {
+        color: #777;
+    }
+
+.system-message-comment-container-reply-file-container {
+    display: none;
+    margin: 10px 0;
+    padding: 15px 10px;
+    background: #eee;
+    border: 1px solid #ccc;
+    position: relative;
+}
+
+
+
+
+
+.system-message-comment-container .system-message-comment-container-reply textarea {
+    resize: none;
+}
+
+.system-message-comment-container-remark-more {
+    color: #3B5998;
+    margin-bottom: 20px;
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-date {
+    color: #aaa;
+    float: right;
+}
+
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fullname {
+    color: #428BCA !important;
+}
+
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-message {
+    /*margin-top: 10px;*/
+    min-height: 18px;
+}
+
+.system-message-comment-container .system-message-comment-container-remark img.system-message-comment-container-remark-img {
+    color: #428BCA;
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.system-message-comment-container .system-message-comment-container-remark div.system-message-comment-container-remark-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+}
+
+.system-message-comment-container .easy-mode .system-message-comment-container-remark .system-message-comment-container-remark-img {
+    width: 35px;
+    height: 35px;
+    top: 5px;
+    left: 13px;
+}
+
+.system-message-comment-container .system-message-comment-container-remark-owner {
+    background: #F3FCBB;
+}
+
+    .system-message-comment-container .system-message-comment-container-remark-owner .system-message-comment-container-remark-fullname {
+        color: #AED55C;
+    }
+
+
+.system-message-comment-container .system-message-quote {
+    margin: 10px auto;
+    padding: 10px 20px;
+    background: #eee;
+    border-left: 3px solid #428bca;
+}
+
+.system-message-attach-image-block,
+.system-message-attach-file-block {
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background: #fff;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 4px;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    font-size: 12px;
+    padding: 13px 8px;
+    text-align: center;
+    overflow: hidden;
+    line-height: 18px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.system-message-attach-image-block-adder {
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border: 2px dashed #CCB;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    font-size: 30px;
+    color: #aaa;
+    padding-top: 40px;
+}
+
+.fs-26 {
+    font-size: 24px;
+}
+/*.system-message-attach-file-block{
+    display:inline-block;
+    margin-right:5px;
+    margin-bottom:5px;
+    background:#fff;
+    width:200px;
+    box-shadow:none;
+    border-radius:5px;
+    border:1px solid #ccc;
+    overflow-x:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    padding:8px 10px;
+}*/
+
+.system-message-attach-files {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+    .system-message-attach-files .file-remover,
+    .file-insert-remover {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #fff;
+        color: #fff;
+        z-index: 10;
+        text-align: center;
+        padding-top: 1px;
+        cursor: pointer;
+        display: none;
+    }
+
+/*============ Highlight ===========================*/
+
+.remark-highlight-command-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1900;
+    width: 100%;
+    height: 100%;
+    border: none;
+    box-shadow: none;
+    background: none;
+    background-color: transparent;
+}
+
+.remark-highlight-command-shortcut {
+    position: absolute;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.42);
+    border-radius: 5px;
+    background: #fff;
+    z-index: 2000;
+    cursor: pointer;
+    color: #428bca;
+    font-size: 20px;
+}
+
+.remark-highlight-command-container .remark-highlight-command-box {
+    z-index: 2000;
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.42);
+    border-radius: 5px;
+    width: 700px;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    padding-bottom: 20px;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+    /*.remark-highlight-command-container .remark-highlight-command-box::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #777;
+}
+
+.remark-highlight-command-container .remark-highlight-command-box::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #f6f6f6;
+}
+
+.remark-highlight-command-container .remark-highlight-command-box::-webkit-scrollbar-thumb
+{
+	background-color: #ccc;
+    border-radius: 5px;
+}*/
+
+    .remark-highlight-command-container .remark-highlight-command-box .fa {
+        cursor: pointer;
+        color: #777;
+    }
+
+    .remark-highlight-command-container .remark-highlight-command-box .remark-highlight-command-box-quote {
+        max-height: 250px;
+        overflow-y: auto;
+        padding: 10px 20px;
+        background: #FCFBBB;
+        border-left: 5px solid #428bca;
+    }
+
+/*================================ Highlight Tab ============================== */
+.remark-highlight-command-container .highlight-tab-panel-container {
+    margin-top: 15px;
+}
+
+    .remark-highlight-command-container .highlight-tab-panel-container .highlight-tab-panel-header span {
+        padding: 8px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px 5px 0 0;
+        background: #eee;
+        cursor: pointer;
+        border-bottom: 0px;
+    }
+
+        .remark-highlight-command-container .highlight-tab-panel-container .highlight-tab-panel-header span.is-active {
+            font-weight: 600;
+            background: #fff;
+        }
+
+    .remark-highlight-command-container .highlight-tab-panel-container .highlight-tab-panel-content {
+        margin-top: 6px;
+    }
+
+        .remark-highlight-command-container .highlight-tab-panel-container .highlight-tab-panel-content .highlight-tab-panel-content-element {
+            display: none;
+            border: 1px solid #ccc;
+            border-radius: 0 0 5px;
+            padding: 10px;
+        }
+
+    .remark-highlight-command-container .highlight-tab-panel-container .create-activity-frame {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        display: none;
+        z-index: 20000;
+    }
+
+
+
+/*================================== Mail View ============================== */
+
+.system-message-mail-view {
+    /*background:#fff;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius:3px;*/
+}
+
+    .system-message-mail-view .mail-table {
+        width: 100%;
+    }
+
+        .system-message-mail-view .mail-table td {
+            vertical-align: top;
+            padding-bottom: 5px;
+        }
+
+    .system-message-mail-view .mail-top {
+        /*background: #f7f7f7;
+    padding:10px;
+    border-bottom: 1px solid #f7f7f7;*/
+    }
+
+    .system-message-mail-view .mail-line-subject {
+        width: 80px;
+        font-weight: 600;
+    }
+
+    .system-message-mail-view .mail-line-detail {
+        padding: 10px;
+    }
+
+.system-message-mail-arrow {
+    position: absolute;
+    top: 60px;
+    font-size: 18px;
+    left: 23px;
+}
+
+    .system-message-mail-arrow.arrow-in {
+        color: #009688;
+    }
+
+    .system-message-mail-arrow.arrow-out {
+        color: #E65041;
+    }
+
+.btn-checkin,
+.btn-checkin:active,
+.btn-checkin:focus {
+    background: #EB3F79;
+    border-color: #EB3F79;
+}
+
+.system-reply-remark {
+    float: right;
+    color: #2196F3;
+    font-size: 25px;
+    margin-top: -5px;
+}
+
+@keyframes blink { 
+   50% { outline-color: #009688; } 
+}
+.focus-comment-reply { /*or other element you want*/
+    outline-width: 1px !important;
+    outline-style: dashed !important;
+    outline-color: #F44336;
+    animation: blink .5s step-end infinite alternate;
+}

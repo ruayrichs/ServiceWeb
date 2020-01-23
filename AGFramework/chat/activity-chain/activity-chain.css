@@ -1,0 +1,82 @@
+﻿.circle-progress-chart-container {
+    display: inline-block;
+    width: 150px;
+    margin: 10px;
+}
+
+.circle-progress-chart {
+    position: relative;
+    margin: 10px auto;
+    width: 100px;
+    height: 100px;
+}
+
+.circle-progress-chart canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.circle-progress-chart span {
+    color: #555;
+    display: block;
+    line-height: 100px;
+    text-align: center;
+    width: 100px;
+    font-family: sans-serif;
+    font-size: 26px;
+    font-weight: 100;
+    margin-left: 5px;
+}
+
+
+
+.scalable-chart-container{
+    position:relative;
+    display:inline-block;
+    width:auto;
+    margin:20px 0;
+}
+.scalable-chart-container .middle-line{
+    border-top:2px solid #ccc;
+    position:absolute;
+    left:0;
+    right:0;
+    top:50%;
+    z-index:0;
+}
+.scalable-chart-container .bubble-container .bubble{
+    border-radius:50%;
+    background:#ccc;
+    display:inline-block;
+    margin:0 20px;
+    color:#fff;
+    text-align:center;
+    vertical-align:middle;
+    position:relative;
+    z-index:1;
+}
+    .scalable-chart-container .bubble-container .bubble.process {
+        background:#3A95DB;
+    }
+    .scalable-chart-container .bubble-container .bubble.success {
+        background:#30CB6F;
+    }
+
+.scalable-chart-container .bubble-container .bubble .detail{
+    position:absolute;
+    top:100%;
+    padding-top:10px;
+    left:-15px;
+    right:-15px;
+    color:#333;
+    font-size:12px;
+    line-height:15px;
+}
+.scalable-chart-container .bubble-container .bubble:first-child{
+    margin-left:0;
+}
+.scalable-chart-container .bubble-container .bubble:last-child{
+    margin-right:0;
+}
