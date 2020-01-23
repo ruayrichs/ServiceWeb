@@ -2,3 +2,7 @@
 web.config
 ServiceWeb.sln
 ServiceWeb.v12.suo
+bin/CrystalDecisions.CrystalReports.Engine.dll
+bin/CrystalDecisions.ReportSource.dll
+bin/CrystalDecisions.Shared.dll
+bin/CrystalDecisions.Web.dll
