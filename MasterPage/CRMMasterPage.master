@@ -1,0 +1,67 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterPage/MasterPage.master" AutoEventWireup="true" CodeBehind="CRMMasterPage.master.cs" Inherits="ServiceWeb.MasterPage.CRMMasterPage" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <link href="<%= Page.ResolveUrl("~/widget/Lib/smart-search-1.1.css") %>" rel="stylesheet">
+    <script src="<%= Page.ResolveUrl("~/widget/Lib/smart-search.js?vs=20190113") %>"></script>
+    <link href="<%= Page.ResolveUrl("~/UserControl/AGapeGallery/lightGallery-master/dist/css/lightgallery.min.css") %>" rel="stylesheet" />
+    <script src="<%= Page.ResolveUrl("~/UserControl/AGapeGallery/lightGallery-master/dist/js/lightgallery.min.js?vs=20190113") %>"></script>
+
+    <style type="text/css">
+        /*.bootstrap-select.btn-group .dropdown-menu.inner {
+            position: static;
+            float: none;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            border-radius: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        .bootstrap-select.btn-group .dropdown-menu li {
+            position: relative;
+        }*/
+        .hide {
+            display: none !important;
+        }
+        .sidebar .sidebar-search {
+            padding: 10px;
+        }
+
+        /* Fixes dropdown menus placed on the right side */
+        .nav-item .dropdown-menu {
+            left: auto !important;
+            right: 0px;
+        }
+        .row {
+            margin-bottom: 10px;
+        }
+        .row:last-child {
+            margin-bottom: 0px;
+        }
+        
+        .page-header {
+            margin: 40px 0 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 18px;
+            color: #c96425;
+            display: block;
+            margin-bottom: 10px;
+            margin-top: 3px;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .image-box{
+            background-position: center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+            border-radius: 5px;
+            border: 1px solid;
+            border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+        }
+    </style>
+    
+    <asp:ContentPlaceHolder runat="server" ID="ContentPlaceHolder1">
+    </asp:ContentPlaceHolder>
+</asp:Content>

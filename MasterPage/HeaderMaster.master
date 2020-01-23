@@ -1,0 +1,427 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterPage/IncludeLibraryMaster.Master" AutoEventWireup="true" CodeBehind="HeaderMaster.master.cs" Inherits="ServiceWeb.MasterPage.HeaderMaster" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="IncludeLibraryPlaceHolder" runat="server">
+
+    <link href="<%= Page.ResolveUrl("~/AGFramework/TierZeroPlugin.css?vs=1.1") %>" rel="stylesheet" type="text/css">
+
+    <style>
+        @media (max-width:768px) {
+        .control-main-menu-hide,
+        .control-main-menu-show {
+            display: none !important;
+        }
+    }
+    </style>
+
+    <div class="d-none">
+        <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <asp:Button Text="" runat="server" ID="btnDefaultEnter" OnClientClick="MasterPageDefaultButtonClick(); return false;" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </div>
+
+    <asp:HiddenField ID="hddSID" runat="server" />
+    <asp:HiddenField ID="hddCompanyCode" runat="server" />
+    <div id="wrapper">
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0" style="z-index: 1021;">
+            <div class="navbar-brand">
+                <a class="pull-left" href="<%= HomePage %>">
+                    <img src="<%= Page.ResolveUrl("~/images/f1-logo.png") %>" style="width: 125px !important; height: 50px; cursor: pointer">
+                </a>
+                <b class="text-truncate d-inline-block" style="margin-left: 15px; margin-top: 8px; max-width: 48vw;">Service Management</b>
+            </div>
+
+            <div class="pull-right" style="margin: 5px;">
+
+                <button class="navbar-toggler" style="" type="button" data-toggle="collapse" data-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="fa fa-bars" style="font-size: 33px;"></span>
+                </button>
+
+                <% if (Permission.AllPermission)
+                    { %>
+                <!--05/11/2561 เพิ่มรายการสัญญา CI ใกล้หมด อายุภายใน 30 วัน by born kk-->
+                <button class="navbar-toggler" style="" type="button" data-toggle="collapse" data-target="#res_time-neary-up-list" aria-controls="time-neary-up-list-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-clock-o fa-fw" style="font-size: 33px;"><span class="badge badge-pill badge-warning" id="res_num_time_neary_up" runat="server" style="position: absolute; font-size: 10px;"></span></i>
+                </button>
+                <% } %>
+
+                <% if (Permission.IncidentView ||
+                     Permission.RequestView ||
+                     Permission.ProblemView ||
+                     Permission.AllPermission)
+                    { %>
+                <!-- by born kk-->
+                <button class="navbar-toggler" style="" type="button" data-toggle="collapse" data-target="#reply-list" aria-controls="reply-list-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-comments fa-fw" style="font-size: 33px;"><span class="badge badge-pill badge-warning" id="res_num_reply" style="position: absolute; font-size: 10px;"></span></i>
+                </button>
+                <% } %>
+
+                <button class="navbar-toggler" style="" type="button" data-toggle="collapse" data-target="#profile-nav" aria-controls="profile-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="fa fa-user" style="font-size: 33px;"></span>
+                    <%--<img src="<%= UserImage %>" class="rounded-circle" height="30">--%>
+                </button>
+            </div>
+            <!-- 09/11/2556 add go to detail CI (by born kk) -->
+            <div class="d-none">
+                <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <asp:HiddenField runat="server" ID="hddEquipmentCode" />
+                        <asp:HiddenField runat="server" ID="hddPage_Mode" />
+                        <asp:Button Text="" runat="server" ID="btnOpenDetailEquipment"
+                            OnClick="btnOpenDetailEquipment_Click" OnClientClick="AGLoading(true);" />
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <!-- by born kk -->
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <ul class="navbar-nav px-3">
+
+                    <% if (HttpContext.Current.Request.Url.AbsolutePath.Contains("/Default.aspx")) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-area-chart fa-fw c-pointer" style="font-size: 33px;" title="Weekly Status" data-toggle="modal" data-target="#modal-weekly-status"></i>
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <% if (Permission.AllPermission)
+                        { %>
+                    <!--05/11/2561 เพิ่มรายการสัญญา CI ใกล้หมด อายุภายใน 30 วัน by born kk-->
+                    <li class="nav-item dropdown" id="time_nearly_up">
+                        <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="update_time_nearly_up_list">
+                            <ContentTemplate>
+                                <div class="dropdown-menu" style="left: auto; right: 0px; max-height: 340px; overflow-y: scroll; width: calc(100vw - 270px);">
+                                    <asp:Repeater runat="server" ID="time_nearly_up_lists">
+                                        <ItemTemplate>
+                                            <a class="dropdown-item" href="Javascript:;" onclick="openEquipment('<%# Eval("EquipmentCode") %>', 'Edit')"><%# Eval("Description") %> (<%# Eval("EquipmentCode") %>) ของ <%# Eval("Name") %> (<%# Eval("OwnerCode") %>) จะหมดอายุสัญญาในวันที่  <%# Eval("EndDate") %></a>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownTime_nearly_up" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-clock-o fa-fw" style="font-size: 33px;"><span class="badge badge-pill badge-warning" id="num_time_nearly_up" runat="server" style="position: absolute; font-size: 10px;"></span></i>
+                        </a>
+
+                    </li>
+
+                    <% } %>
+
+                    <% if (Permission.IncidentView ||
+                     Permission.RequestView ||
+                     Permission.ProblemView ||
+                     Permission.AllPermission)
+                        { %>
+                    <!-- by born kk-->
+                    <li class="nav-item dropdown" id="menu_reply">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownReply" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-comments fa-fw" style="font-size: 33px;"><span class="badge badge-pill badge-warning" id="num_reply" style="position: absolute; font-size: 10px;"></span></i>
+                        </a>
+
+                    </li>
+                    <% } %>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<%= UserImage %>" class="rounded-circle" height="34" width="34">
+                        </a>
+                        <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item disabled" href="<%= Page.ResolveUrl("~/UserProfile/UserProfile.aspx") %>">
+                                <%= FullNameEN %>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="<%= Page.ResolveUrl("~/UserProfile/UserProfile.aspx") %>">
+                                <i class="fa fa-user"></i>&nbsp;
+                                Profile
+                            </a>
+                            <a class="dropdown-item" href="<%= Page.ResolveUrl("~/UserProfile/UserChangePassword.aspx") %>">
+                                <i class="fa fa-key"></i>
+                                Change Password
+                            </a>
+                            <a class="dropdown-item" href="<%= Page.ResolveUrl("~/MasterConfig/Impact.aspx") %>">
+                                <i class="fa fa-cog"></i>&nbsp;
+                                Settings
+                            </a>
+                            <a class="dropdown-item" href="<%= Page.ResolveUrl("~/AboutSystem.aspx") %>">
+                                <i class="fa fa-certificate"></i>&nbsp;
+                                About
+                            </a>
+                            <asp:LinkButton runat="server" CssClass="dropdown-item" OnClick="btnMasterPage_Logout_Click">
+                                <i class="fa fa-sign-out"></i>&nbsp;
+                                Logout
+                            </asp:LinkButton>
+
+                            <%--<button class="dropdown-item" type="button" onclick="$(this).next().click();">
+                                <i class="fa fa-sign-out"></i>
+                                Logout
+                            </button>--%>
+                            <%--<asp:Button Text="" runat="server" CssClass="d-none" ID="btnMasterPage_Logout" UseSubmitBehavior="false"
+                                OnClick="btnMasterPage_Logout_Click" OnClientClick="AGLoading(true);" />--%>
+                            <%--<a class="dropdown-item" href="<%= Page.ResolveUrl("~/Logout.aspx") %>">
+                                <i class="fa fa-sign-out"></i>
+                                Logout
+                            </a>--%>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-sm-12 bg-light bd-sidebar d-md-none">
+                    <nav id="profile-nav" class="bd-links sidebar collapse" style="">
+                        <div class="bd-toc-item active">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <i class="fa fa-user"></i>
+                                        Profile
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <i class="fa fa-cog"></i>
+                                        Settings
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<%= Page.ResolveUrl("~/Logout.aspx") %>">
+                                        <i class="fa fa-sign-out"></i>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <nav id="reply-list" class="bd-links sidebar collapse" style="">
+                        <div class="bd-toc-item active" style="max-height: 340px; overflow-y: scroll">
+                            <ul class="nav flex-column">
+                            </ul>
+                        </div>
+                    </nav>
+                    <!--05/11/2561 เพิ่มรายการสัญญา CI ใกล้หมด อายุภายใน 30 วัน by born kk-->
+                    <nav id="res_time-neary-up-list" class="bd-links sidebar collapse" style="">
+                        <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="res_update_time_nearly_up_list">
+                            <ContentTemplate>
+                                <div class="bd-toc-item active" style="max-height: 340px; overflow-y: scroll">
+                                    <ul class="nav flex-column">
+                                        <asp:Repeater runat="server" ID="res_time_nearly_up_lists">
+                                            <ItemTemplate>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="Javascript:;" onclick="openEquipment('<%# Eval("EquipmentCode") %>', 'Edit')"><%# Eval("Description") %> (<%# Eval("EquipmentCode") %>) ของ <%# Eval("Name") %> (<%# Eval("OwnerCode") %>) จะหมดอายุสัญญาในวันที่  <%# Eval("EndDate") %></a>
+                                                </li>
+                                            </ItemTemplate>
+                                        </asp:Repeater>
+                                    </ul>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </nav>
+                    <!-- by born kk-->
+                </div>
+
+                <div id="master-panel-menu" class="col-md-2 bg-light bd-sidebar">
+
+                    <div class="control-main-menu-show">
+                        <div class="contol-icon" onclick="configLeftMainMenu('hide');">
+                            <i class="fa fa-caret-left"></i>
+                        </div>
+                    </div>
+
+                    <nav id="bd-docs-nav" class="bd-links sidebar collapse" style="margin-right: -8px;">
+                        <div class="bd-toc-item active">
+
+                            <asp:ContentPlaceHolder ID="ContentMenuHolder" runat="server">
+                            </asp:ContentPlaceHolder>
+
+                        </div>
+                    </nav>
+
+                </div>
+
+                <div class="control-main-menu-hide">
+                    <div class="contol-icon" onclick="configLeftMainMenu('show');">
+                        <i class="fa fa-caret-right"></i>
+                    </div>
+                </div>
+
+                <main role="main" class="col-md-10 ml-sm-auto py-3 px-3" id="master-panel-contant">
+                    <asp:ContentPlaceHolder ID="ContentDetailHolder" runat="server">
+                    </asp:ContentPlaceHolder>
+                </main>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="d-none">
+        <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <asp:TextBox runat="server" ID="txtReply_TicketNo" ClientIDMode="Static"></asp:TextBox>
+                <asp:TextBox runat="server" ID="txtReply_DocType" ClientIDMode="Static"></asp:TextBox>
+                <asp:TextBox runat="server" ID="txtReply_Filcalyear" ClientIDMode="Static"></asp:TextBox>
+                <asp:TextBox runat="server" ID="txtReply_RefCode" ClientIDMode="Static"></asp:TextBox>
+                <asp:Button Text="" ID="btnToTicket" OnClick="btnToTicket_Click"
+                    OnClientClick="AGLoading(true);" runat="server" ClientIDMode="Static" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </div>
+    <!-- Icons -->
+    <script src="<%= Page.ResolveUrl("~/vendor/feather-icons/dist/feather.min.js?vs=20190113") %>" type="text/javascript"></script>
+    <!--script get reply comment -->
+    <script src="<%= Page.ResolveUrl("~/AGFramework/chat/ReplyCommentInBar.js?vs=20191118") %>" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            checkCookieConfigMenu();
+        });
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function configLeftMainMenu(cvalue) {
+            if (cvalue) {
+                setCookie('configMenu', cvalue, 365);
+            }
+            toggleLeftMainMenu();
+        }
+
+        function checkCookieConfigMenu() {
+            var configMenu = getCookie("configMenu");
+            if (configMenu != "" && configMenu == "hide") {
+                toggleLeftMainMenu();
+            }
+        }
+
+        function toggleLeftMainMenu() {
+            $("#master-panel-menu").toggleClass("hide-main-menu");
+            $("#master-panel-contant").toggleClass("col-md-10");
+            $("#master-panel-contant").toggleClass("col-md-12");
+            $(".control-main-menu-hide").toggle();
+            $(".control-main-menu-show").toggle();
+        }
+        // 09/11/2556 add go to detail CI (by born kk)
+        function openEquipment(EquipmentCode, Mode) {
+            inactiveRequireField();
+            $("#<%= hddEquipmentCode.ClientID %>").val(EquipmentCode);
+               $("#<%= hddPage_Mode.ClientID %>").val(Mode);
+            $("#<%= btnOpenDetailEquipment.ClientID %>").click();
+        }
+        function inactiveRequireField() {
+            $(".required").prop('required', false);
+        }
+        // born kk
+    </script>
+
+    <script>
+        feather.replace();
+
+        function toggleMenu(sender) {
+            var menuId = $(sender).attr("data-menu");
+            var subMenu = $("ul[data-submenu='" + menuId + "']");
+
+            if (subMenu.is(":visible")) {
+                $(sender).find("a svg").remove();
+                $(sender).find("a").append("<span data-feather='plus-circle'></span>");
+            } else {
+                $(sender).find("a svg").remove();
+                $(sender).find("a").append("<span data-feather='minus-circle'></span>");
+            }
+
+            feather.replace();
+            subMenu.toggle();
+        }
+
+        /* isNumberKey
+            Only allows NUMBERS to be keyed into a text field.
+            @environment ALL
+            @param evt - The specified EVENT that happens on the element.
+            @return True if number, false otherwise.
+        */
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            // Added to allow decimal, period, or delete
+            if (charCode == 110 || charCode == 190 || charCode == 46)
+                return true;
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        } // isNumberKey
+
+        function MasterPageDefaultButtonClick() {
+            if ($('.DEFAULT-BUTTON-CLICK').length > 0) {
+                var panelTarget = $(document.activeElement).closest('.PANEL-DEFAULT-BUTTON');
+                if (panelTarget.length > 0) {
+                    var btnTarget = panelTarget.find('.DEFAULT-BUTTON-CLICK');
+                    if (btnTarget.length > 0) {
+                        $(btnTarget[0]).click();
+                    }
+                }
+            }
+        }
+    </script>
+    <%-- <link href="-/AGFramework/TierZeroPlugin.css" rel="stylesheet" />--%>
+    <%--<script src="-/AGFramework/TierZeroPlugin.js"></script>--%>
+    <%--<div id="panel-TierZeroPlugin"></div>--%>
+    <%--<script>
+        $(document).ready(function () {
+            $("#panel-TierZeroPlugin").genPluginCreateTierZero();
+        });
+    </script>--%>
+
+    <script src="<%= Page.ResolveUrl("~/AGFramework/TierZeroPlugin.js?vs=20190113") %>" type="text/javascript"></script>
+
+    <script>
+        (function (d) {
+            var h = 'http://localhost:39871/';
+            var p = "EACDD371-E833-45D8-8D8E-D75FF1";
+            var id = "panel-TierZeroPlugin";
+            if (!d.getElementById(id)) {
+                var panel = d.createElement("div");
+                panel.id = id;
+                d.body.insertBefore(panel, document.body.firstChild);
+            }
+            $("#" + id).genPluginCreateTierZero(h, p);
+        }(document));
+
+
+        function goToEdit(url) {
+
+            var height = document.documentElement.clientHeight;
+            window.open(url, '_blank', 'location=yes,height='+height+',width=1200,scrollbars=yes,status=yes');
+        }
+
+    </script>
+
+</asp:Content>

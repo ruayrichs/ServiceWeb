@@ -1,0 +1,417 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterPage/HeaderMaster.master" AutoEventWireup="true" CodeBehind="MasterPageConfig.master.cs" Inherits="ServiceWeb.MasterConfig.MasterPage.MasterPageConfig" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentMenuHolder" runat="server">
+    
+    
+    <% if (!Permission.AllPermission && 
+            (
+            Permission.UserManagementView ||
+            Permission.RoleConfigView ||
+            Permission.SLAView
+            ) &&
+            IsFilterOwner
+        )
+        { %>
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted c-pointer"
+        data-menu="MasterConf" onclick="toggleMenu(this);">
+        <span>Master Configuration</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="MasterConf">
+        <% if (Permission.UserManagementView)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link active" href="<%= Page.ResolveUrl("~/crm/Master/UserManagement/UserManagementCriteria.aspx") %>" id="nav-menu-user-management">
+                <span data-feather="settings"></span>
+                 User Management
+            </a>
+        </li>
+        <% } %>
+
+        <% if (Permission.RoleConfigView)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/Character/MasterCharacter.aspx") %>" id="nav-menu-role-config">
+                <span data-feather="settings"></span>
+                Role Configure
+            </a>
+        </li>
+        <% } %>
+        
+        <% if (Permission.SLAView)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/mastertier/TierMaster.aspx") %>" id="nav-menu-sla">
+                <span data-feather="settings"></span>
+                SLA
+            </a>
+        </li>
+        <% } %>
+    </ul>
+    <% } %>
+
+    
+    <% if (Permission.AllPermission)
+        { %>
+
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted c-pointer"
+        data-menu="MasterConf" onclick="toggleMenu(this);">
+        <span>Master Configuration</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    
+    <ul class="nav flex-column mb-2" data-submenu="MasterConf">
+        
+        <li class="nav-item">
+            <a class="nav-link active" href="<%= Page.ResolveUrl("~/MasterConfig/MasterEmailConfig.aspx") %>" id="nav-menu-email-config">
+                <span data-feather="settings"></span>
+                Email Configuration
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " href="<%= Page.ResolveUrl("~/MasterConfig/MasterAdConfig.aspx") %>" id="nav-menu-AD-config">
+                <span data-feather="settings"></span>
+                AD Configuration
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Relation.aspx") %>" id="nav-menu-relation">
+                <span data-feather="settings"></span>
+                Relation Type
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/EquipmentClass.aspx") %>" id="nav-menu-config-item-class">
+                <span data-feather="settings"></span>
+                Configuration Item Class
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/MasterConfigurationItemFamily.aspx") %>" id="nav-menu-master-conf-fam">
+                <span data-feather="settings"></span>
+                 Configuration Item Family
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/WarranteeType.aspx") %>" id="nav-menu-warranty-type">
+                <span data-feather="settings"></span>
+                Warranty Type
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/UnitOfMeasurement.aspx") %>" id="nav-menu-unit-oM">
+                <span data-feather="settings"></span>
+                Unit Of Measurement
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/BuArea.aspx") %>" id="nav-menu-BUArea">
+                <span data-feather="settings"></span>
+                BU Area
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/AssetLocation.aspx") %>" id="nav-menu-asset-location">
+                <span data-feather="settings"></span>
+                Asset Location
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/AssetSubLocation.aspx") %>" id="nav-menu-asset-sub-location">
+                <span data-feather="settings"></span>
+                Asset Sub Location
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/AuthorizationContact.aspx") %>" id="nav-menu-authorization">
+                <span data-feather="settings"></span>
+                Authorization Contact
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/EquipmentLocationMaster.aspx") %>" id="nav-menu-master-ci-location">
+                <span data-feather="settings"></span>
+                Master CI Location
+            </a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/KnowledgeManagement.aspx") %>" id="nav-menu-knowledge-management">
+                <span data-feather="settings"></span>
+                Knowledge Management
+            </a>
+        </li>
+    </ul>
+           <%--sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer--%>
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="asset" onclick="toggleMenu(this);">
+        <span>Ticket Configuration</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="asset">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Impact.aspx") %>" id="nav-menu-impact">
+                <span data-feather="settings"></span>
+                Impact
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Urgency.aspx") %>" id="nav-menu-urgency">
+                <span data-feather="settings"></span>
+                Urgency
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Priority.aspx") %>" id="nav-menu-priority">
+                <span data-feather="settings"></span>
+                Priority
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Severity.aspx") %>" id="nav-menu-severity">
+                <span data-feather="settings"></span>
+                Severity
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/TicketStatus.aspx") %>" id="nav-menu-ticket-status">
+                <span data-feather="settings"></span>
+                Ticket Status
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/MasterDocType.aspx") %>" id="nav-menu-master-doctype">
+                <span data-feather="settings"></span>
+                Master DocType
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/SLAMappingChanelTier0.aspx") %>" id="nav-menu-sla-mapping">
+                <span data-feather="settings"></span>
+                SLA Mapping Chanel Tier 0
+            </a>
+        </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="IncidentArea" onclick="toggleMenu(this);">
+        <span>Incident Area</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="IncidentArea">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/OwnerService.aspx") %>" id="nav-menu-owner-service">
+                <span data-feather="settings"></span>
+                Owner Service
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/ProblemGroup.aspx") %>" id="nav-menu-problem-group">
+                <span data-feather="settings"></span>
+                Problem Group
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/ProblemType.aspx") %>" id="nav-menu-problem-type">
+                <span data-feather="settings"></span>
+                Problem Type
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/ProblemSource.aspx") %>" id="nav-menu-problem-source">
+                <span data-feather="settings"></span>
+                Problem Source
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/ContactSource.aspx") %>" id="nav-menu-contract-source">
+                <span data-feather="settings"></span>
+                Contact Source
+            </a>
+        </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="accountability" onclick="toggleMenu(this);">
+        <span>Accountability Master</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+
+    <ul class="nav flex-column mb-2" data-submenu="accountability">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/AccountAbility.aspx") %>" id="nav-menu-account-ability">
+                <span data-feather="settings"></span>
+                Workflow Level
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/CompanyStructure/WorkStructurePossibleEntry.aspx") %>" id="nav-menu-ws-possible">
+                <span data-feather="settings"></span>
+                WS Possible Entry
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/CompanyStructure/CompanyStructure.aspx") %>" id="nav-menu-ws-config">
+                <span data-feather="settings"></span>
+                WS Configure
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/Master/AccountabilityManagement.aspx") %>" id="nav-menu-account">
+                <span data-feather="settings"></span>
+                Accountability
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/ChangeOrderTypeMappingAccountability.aspx") %>" id="nav-menu-role-change-map-acc">
+                <span data-feather="settings"></span>
+                Change Order Mapping Accountability
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/Hierarchy/HierarchyGroupList.aspx") %>" id="nav-menu-role-hierarchy">
+                <span data-feather="settings"></span>
+                Role Hierarchy
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Accountability/Character/MasterCharacter.aspx") %>" id="nav-menu-role-config">
+                <span data-feather="settings"></span>
+                Role Configure
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/mastertier/TierMaster.aspx") %>" id="nav-menu-sla">
+                <span data-feather="settings"></span>
+                SLA
+            </a>
+        </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="Recurring" onclick="toggleMenu(this);">
+        <span>Recurring</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="Recurring">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/MailRecurring.aspx") %>" id="nav-menu-email-recurring">
+                <span data-feather="settings"></span>
+                E-Mail Recurring
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/EmailMessageCriteria.aspx") %>" id="nav-menu-email-message">
+                <span data-feather="settings"></span>
+                Email Message
+            </a>
+        </li> 
+    </ul>
+    
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="AuthenConf" onclick="toggleMenu(this);">
+        <span>Authen Configuration</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="AuthenConf">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/MasterRole.aspx") %>" id="nav-menu-master-permission">
+                <span data-feather="settings"></span>
+                Master Permission
+            </a>
+        </li>
+        <%
+            if (Permission.AllPermission)
+            {%>
+        <%--<li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/MasterRolePermission.aspx") %>" id="nav-menu-master-role-permission">
+                <span data-feather="settings"></span>
+                Master Role Permission
+            </a>
+        </li>--%>
+            <%}
+            %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/EmployeeMappingRole.aspx") %>" id="nav-menu-employee-permission">
+                <span data-feather="settings"></span>
+                Employee Permission
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/RequestPermissionKeyList.aspx") %>" id="nav-menu-request-permission-key">
+                <span data-feather="settings"></span>
+                Request Permission Key
+            </a>
+        </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="UserManagement" onclick="toggleMenu(this);">
+        <span>User Management</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="UserManagement">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/UserManagement/UserManagementCriteria.aspx") %>" id="nav-menu-user-management">
+                <span data-feather="settings"></span>
+                 User Management
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/PositionMaster.aspx") %>" id="nav-menu-prosition-master">
+                <span data-feather="settings"></span>
+                 Position Master
+            </a>
+        </li>
+    </ul>
+    
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted c-pointer"
+        data-menu="SystemManagement" onclick="toggleMenu(this);">
+        <span>System Management</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+    <ul class="nav flex-column mb-2" data-submenu="SystemManagement">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/CheckPortStatus.aspx") %>" id="nav-menu-checkportstatus">
+                <span data-feather="settings"></span>
+                Check Port Status
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/ManageUserSessionApp.aspx") %>" id="nav-menu-sessionmanagement">
+                <span data-feather="settings"></span>
+                Session Management
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Version.aspx") %>" id="nav-menu-version">
+                <span data-feather="settings"></span>
+                About Management
+            </a>
+        </li>
+    </ul>
+    <% } %>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentDetailHolder" runat="server">
+    <asp:ContentPlaceHolder ID="ContentPlaceHolderConfig" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>

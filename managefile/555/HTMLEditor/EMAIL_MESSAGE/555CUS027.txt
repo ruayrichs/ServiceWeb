@@ -1,0 +1,129 @@
+
+            
+            
+            
+            
+            
+            
+            
+    <style>
+        table {
+            width: 100%;
+            border: 1px solid #000;
+        }
+        table > thead tr th {
+            font-size: 35px;
+            padding-top: 20px;
+        }
+        table > tbody tr th {
+            text-align: left;
+            width:100px;
+            vertical-align: top;
+        }
+        table > tfoot tr th {
+            text-align: left;
+        }
+        table th, table td {
+            padding-top: 7px;
+            padding-bottom: 7px;
+            padding-right: 7px;
+            padding-left: 7px;
+        }
+        table > tfoot th, table > tfoot td {
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 7px;
+            padding-left: 7px;
+        }
+        .hide {
+            display: none;
+        }
+    </style>
+
+    <div style="width: 100%;">
+        <div style="padding: 10px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center;"><span style="background-color: rgb(255, 255, 255);">Service ticket notification [{!#EVENT#!}]</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="2"><hr></td></tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <th><span style="background-color: rgb(255, 255, 255);">Ticket Type</span></th>
+                        <td><span style="background-color: rgb(255, 255, 255);">: {!#TICKETTYPE#!}</span></td>
+                    </tr>
+                    <tr>
+                        <th><span style="background-color: rgb(255, 255, 255);">Ticket No.</span></th>
+                        <td><span style="background-color: rgb(255, 255, 255);">: {!#TICKETNO#!}</span></td>
+                    </tr>
+                    <tr>
+                        <th><span style="background-color: rgb(255, 255, 255);">Subject</span></th>
+                        <td><span style="background-color: rgb(255, 255, 255);">: {!#SUBJECT#!}</span></td>
+                    </tr>
+                    <tr style="display: none;">
+                        <th>Customer</th>
+                        <td>: {!#CUSTOMER#!}</td>
+                    </tr>
+                    <tr>
+                        <th><span style="background-color: rgb(255, 255, 255);">Status</span></th>
+                        <td><span style="background-color: rgb(255, 255, 255);">: {!#STATUS#!}</span></td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr><td colspan="2"><span style="background-color: rgb(255, 255, 255);"><br></span></td></tr>
+                </tbody>
+                <tfoot style="display: none;">
+                    <tr>
+                        <th colspan="2"><span style="color: rgb(255, 0, 0);">
+                            Note : This message is from the sender who use new communication platform Named “LINK” message ID : [{!#TICKETNOCODE#!}] <br>
+                            If you remove this content the message will not communicate with the system.
+                        </span></th>
+                    </tr>
+                    <tr><td colspan="2"><br></td></tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+<p class="MsoNormal"><span style="background-color: rgb(255, 255, 255);"><b><span style="font-size: 16pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: rgb(26, 26, 27); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial;">&nbsp; **</span></b><b><span style="font-size:16.0pt;line-height:107%;font-family:&quot;TH SarabunPSK&quot;,sans-serif">&nbsp;T<span style="color: rgb(26, 26, 27); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial;">his is an automatically generated
+email please do not reply**</span></span></b><b><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial;"><o:p></o:p></span></b></span></p><p>
+
+</p><p class="MsoNormal"><span style="font-size: 16pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">&nbsp; If there are any problems. Please do not hesitate to contact us<span lang="TH"> </span>for 24/7 support service at&nbsp; 02-257-7111</span></p><p class="MsoNormal"><span style="font-size: 16pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">&nbsp; or e-mail: noc@inet.co.th</span></p><div><span style="background-color: rgb(255, 255, 255);"><span style="font-size: 12pt;"><span style="font-weight: bolder;">&nbsp; &nbsp;</span></span></span></div><div><span style="background-color: rgb(255, 255, 255);"><span style="font-size: 12pt;"><span style="font-weight: bolder;"><br></span></span><strong style="font-size: 0.875rem;"><span style="font-size: 16pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial;">&nbsp; &nbsp;Best Regards,</span></strong></span></div>
+
+<p class="MsoNormal"><strong><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);"><o:p>&nbsp;</o:p></span></strong></p>
+
+<h5><span style="font-family: &quot;TH SarabunPSK&quot;, sans-serif; font-size: 16pt; font-weight: bolder;">&nbsp; &nbsp;</span><strong><span style="font-size: 18pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: rgb(132, 60, 12); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">Network
+Operations Center<br><o:p></o:p></span></strong><span style="font-family: &quot;TH SarabunPSK&quot;, sans-serif; font-size: 16pt; font-weight: bolder;">&nbsp; &nbsp;</span><strong><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: rgb(59, 56, 56); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">Call
+Center : 0-2257-7111 Hotline : 0-2257-1998<br><o:p></o:p></span></strong><span style="font-family: &quot;TH SarabunPSK&quot;, sans-serif; font-size: 16pt; font-weight: bolder;">&nbsp; &nbsp;</span><strong><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: rgb(59, 56, 56); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">E-mail
+: noc@inet.co.th<br><o:p></o:p></span></strong><span style="font-family: &quot;TH SarabunPSK&quot;, sans-serif; font-size: 16pt; font-weight: bolder;">&nbsp; &nbsp;</span><strong><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: rgb(59, 56, 56); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">INET
+home page : http://www/inet.co.th<br><o:p></o:p></span></strong><span style="font-family: &quot;TH SarabunPSK&quot;, sans-serif; font-size: 16pt; font-weight: bolder;">&nbsp; &nbsp;</span><strong><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: rgb(59, 56, 56); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255);">Facebook
+: www.facebook.com/INETClub<br><o:p></o:p></span></strong><span style="font-family: &quot;TH SarabunPSK&quot;, sans-serif; font-size: 16pt; font-weight: bolder;">&nbsp; &nbsp;</span><strong><span style="font-size: 14pt; line-height: 107%; font-family: &quot;TH SarabunPSK&quot;, sans-serif; color: red; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial;"><span style="background-color: rgb(255, 255, 255);">If you don’t receive a response, please contact us at
+0-2257-7111</span><span style="background-color: rgb(253, 252, 251);"><o:p></o:p></span></span></strong></h5>
+
+
+
+
+
+
+
+
+
+
+        
+
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        

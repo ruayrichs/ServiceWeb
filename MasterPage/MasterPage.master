@@ -1,0 +1,403 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterPage/HeaderMaster.master" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="ServiceWeb.MasterPage.MasterPage" %>
+
+<asp:Content ID="ContentMenu" ContentPlaceHolderID="ContentMenuHolder" runat="server">
+    <ul class="nav flex-column">
+        <% if (Permission.HomeView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link active" href="<%= Page.ResolveUrl("~/Default.aspx") %>" id="nav-menu-home">
+                <span data-feather="home"></span>
+                Home <span class="sr-only">(current)</span>
+            </a>
+        </li>
+        <% } if (Permission.MyQueueView || Permission.AllPermission) { %>
+         <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MyWork.aspx") %>" id="nav-menu-mywork">
+                <span data-feather="user"></span>
+                My Queue
+            </a>
+        </li>
+        <% } if (Permission.MyGroupView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MyGroup.aspx") %>" id="nav-menu-mygroup">
+                <span data-feather="user"></span>
+                My Group
+            </a>
+        </li>
+        <% } if (Permission.MyOverDueView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MyOverdue.aspx") %>" id="nav-menu-myoverdue">
+                <span data-feather="user"></span>
+                My Overdue
+            </a>
+        </li>
+        <% } %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MyTicket.aspx") %>" id="nav-menu-myticket">
+                <span data-feather="user"></span>
+                My Ticket
+            </a>
+        </li>
+        <% if (Permission.DashboardView || Permission.DashboardViewAll || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Dashboard.aspx") %>" id="nav-menu-dashboard">
+                <span data-feather="pie-chart"></span>
+                Dashboard
+            </a>
+        </li>  
+        <% } if (Permission.CalendarView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/NextMaintenanceCalendar.aspx") %>" id="nav-menu-calendar">
+                <span data-feather="calendar"></span>
+                Calendar
+            </a>
+        </li>
+         <% } if (Permission.TierZeroView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Tier/TierZeroList.aspx") %>" id="nav-menu-item">
+                <span data-feather="shuffle"></span>
+                Tier 0
+            </a>
+        </li>
+        <% } if (Permission.SearchView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/AfterSale/ServiceCallCriteria.aspx") %>" id="nav-menu-SearchServiceCall">
+                <span data-feather="search"></span>
+                Searching
+            </a>
+        </li>
+        <% } if (Permission.IncidentView || Permission.AllPermission) { %>
+        <li class="nav-item">
+            <asp:LinkButton class="nav-link" OnClick="btnLink_TicketService_Click" ID="btnL_incident" CommandArgument="I" runat="server" ClientIDMode="Static">
+                <span data-feather="file"></span>
+                Incident
+            </asp:LinkButton>
+        </li>
+        <% } %>
+
+        <% if (Permission.ProblemView || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <asp:LinkButton class="nav-link" OnClick="btnLink_TicketService_Click" ID="btnL_Problem" CommandArgument="P" runat="server" ClientIDMode="Static">
+                <span data-feather="file"></span>
+                 Problem
+            </asp:LinkButton>
+        </li>
+        <% } %>
+
+        <% if (Permission.RequestView || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <asp:LinkButton class="nav-link" OnClick="btnLink_TicketService_Click" ID="brnL_Request" CommandArgument="R" runat="server" ClientIDMode="Static">
+                 <span data-feather="file"></span>
+                 Request
+            </asp:LinkButton>
+        </li>
+        <% } %>        
+
+        <% if (Permission.ChangeOrderView || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/AfterSale/ServiceCallChangeCriteria.aspx") %>" id="nav-menu-changeOrder">
+                <span data-feather="file-text"></span>
+                Change Order
+            </a>
+        </li>
+        <% } %>
+
+        <% if (Permission.ContactView || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/CustProfileList.aspx") %>" id="nav-menu-customers">
+                <span data-feather="users"></span>
+                Clients
+            </a>
+        </li>
+        <% } %>
+        <%--<li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Transaction/DocumentReceiveCriteria.aspx") %>">
+                <span data-feather="inbox"></span>
+                Document Receive
+            </a>
+        </li>--%>
+
+        <% if (Permission.ConfigurationItemView || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/Equipment/EquipmentCriteria.aspx") %>" id="nav-menu-configuration-item">
+                <span data-feather="layers"></span>
+                Configuration Item
+            </a>
+        </li>
+        <% } %>
+
+        <% if (Permission.ConfigurationItemView || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/Equipment/Equipment_CI_Request_Criteria.aspx") %>" id="nav-menu-create-ci">
+                <span data-feather="layers"></span>
+                Create CI From SO
+            </a>
+        </li>
+        <% } %>
+
+        <%--<li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/Equipment/EquipmentDiagram.aspx") %>">
+                <i class="fa fa-sitemap"></i>
+                Equipment Relation
+            </a>
+        </li>--%>
+
+        <% if (Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/Equipment/EquipmentClassDiagramRelation.aspx") %>" id="nav-menu-class-relation">
+                <i class="fa fa-sitemap"></i>
+                Class Relation
+            </a>
+        </li>
+        <% } %>
+
+        <% if (Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Master/ServiceContractCriteria.aspx") %>" id="nav-menu-service-contract">
+                <span data-feather="file-text"></span>
+                Service Contract
+            </a>
+        </li>
+        <% } %>
+
+        <% if (Permission.KM_View || Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/KM/KnowledgeManagement.aspx") %>" id="nav-menu-knowledge">
+                <span data-feather="share-2"></span>
+                Knowledge
+            </a>
+        </li>
+        <% } %>
+        <%--<li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Master/CostCenterCriteria.aspx") %>">
+                <span data-feather="menu"></span>
+                BOM Cost Sheet
+            </a>
+        </li>--%>
+
+        <% if (Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/MasterEmailConfig.aspx") %>" id="nav-menu-admin">
+                <span data-feather="settings"></span>
+                Administrator
+            </a>
+        </li>
+        <% } %>
+        
+        <% if (!Permission.AllPermission && 
+                (
+                Permission.UserManagementView ||
+                Permission.RoleConfigView ||
+                Permission.SLAView
+                ) &&
+                IsFilterOwner
+            )
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/UserManagement/UserManagementCriteria.aspx") %>" id="nav-menu-admin">
+                <span data-feather="settings"></span>
+                Administrator
+            </a>
+        </li>
+        <% } %>
+
+           <% if (Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/RequestTransection/RequestActivateAppClient.aspx") %>" id="nav-menu-req-active-app-client">
+              <i class="fa fa-book"></i> 
+                Request Activate App Client
+            </a>
+        </li>
+        <% } %>
+           <%--<% if (Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/RequestTransection/BusinessOwnerRequest.aspx") %>" id="nav-menu-business-owner">
+                <i class="fa fa-book"></i> 
+                Request Business Owner
+            </a>
+        </li>
+        <% } %>--%>
+        
+           <% if (Permission.AllPermission)
+            { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/RequestTransection/BusinessOwnerProfile.aspx") %>" id="nav-menu-business-owner-profile">
+                <i class="fa fa-address-card-o"></i> 
+                API Permission Detail
+            </a>
+        </li>
+        <% } %>
+        <li class="nav-item d-none">
+            <a class="nav-link active" href="#" id="nav-menu-hide">
+                
+            </a>
+        </li>
+    </ul>
+
+    <%--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="asset" onclick="toggleMenu(this);">
+        <span>Asset Portfolio</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+
+    <ul class="nav flex-column mb-2" data-submenu="asset">
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/Asset/AssetMasterCriteria.aspx") %>">
+                <span data-feather="archive"></span>
+                Asset Master
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/crm/Master/Asset/AssetStructure.aspx") %>">
+                <span data-feather="git-pull-request"></span>
+                Asset Hierarchy
+            </a>
+        </li>
+    </ul>--%>
+
+    <% if (Permission.AllPermission)
+        { %>
+    
+    <% } %>
+
+
+    <% //if (Permission.ReportView || Permission.AllPermission)
+        // { %>
+        <% if (Permission.AllPermission || /*Permission.ReportView ||*/ Permission.ReportExportData || Permission.ReportUserAnalyst || Permission.ReportCIMaintenance
+                 || Permission.ReportReportClient || Permission.ReportReportLocation || Permission.ReportMTTN || Permission.ReportMTTR || Permission.ReportTicketReport || Permission.ReportTicketAnalysis ) { %>
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted c-pointer"
+        data-menu="Report" onclick="toggleMenu(this);">
+        <span>Report</span>
+        <a class="d-flex align-items-center text-muted">
+            <span data-feather="minus-circle"></span>
+        </a>
+    </h6>
+        <% } %>
+    <ul class="nav flex-column mb-2" data-submenu="Report">
+        <%--<li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/PivotTableReportMaster.aspx") %>">
+                <span data-feather="bar-chart-2"></span>
+                Report List
+            </a>
+        </li>--%>
+        <% if (Permission.AllPermission || Permission.ReportExportData ) { %>        
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/ExportDataReport.aspx") %>" id="nav-menu-export-data">
+                <span data-feather="user"></span>
+                Export Data
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportUserAnalyst ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/UserAnalyst.aspx") %>" id="nav-menu-user-analyst">
+                <span data-feather="user"></span>
+                User Analyst
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportCIMaintenance ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/CIMaintenanceReport.aspx") %>" id="nav-menu-ci-maintenance">
+                <span data-feather="user"></span>
+                CI Maintenance
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportReportClient ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/ReportCustomer.aspx") %>" id="nav-menu-report-customer">
+                <span data-feather="user"></span>
+                Report Client
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportReportLocation ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/ReportMappingLocation.aspx") %>" id="nav-menu-report-location">
+                <span data-feather="user"></span>
+                Report Location
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportMTTN ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/MTTNReport.aspx") %>" id="nav-menu-mttn">
+                <span data-feather="user"></span>
+                MTTN
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportMTTR ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/MTTRReport.aspx") %>" id="nav-menu-mttr">
+                <span data-feather="user"></span>
+                MTTR
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportTicketReport ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/TicketReport.aspx") %>" id="nav-menu-ticket-report">
+                <span data-feather="user"></span>
+                Ticket Report
+            </a>
+        </li>
+        <% } if (Permission.AllPermission || Permission.ReportTicketAnalysis ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/TicketRep.aspx") %>" id="nav-menu-ticket-analysis">
+                <span data-feather="user"></span>
+                Ticket Analysis
+            </a>
+        </li>
+        <% } %>
+        <li class="nav-item d-none">
+            <a class="nav-link" href="#nav-menu-ticket-Relation" onclick="RedirectNewPage()" id="nav-menu-ticket-Relation">
+                <span data-feather="user"></span>
+                Ticket Relation
+            </a>
+        </li>
+    </ul>
+    <% //} %>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            CheckingSeassion();
+        });
+        function CheckingSeassion() {
+            $.ajax({
+                type: "POST",
+                url: servictWebDomainName + "Logout.aspx/LogoutCheck",
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d == 0) {
+                        window.location = "/Login.aspx";
+                    }
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+        }
+
+    </script>
+    <script>
+        var myWindow;
+        function RedirectNewPage() {            
+            document.getElementById("nav-menu-ticket-Relation").className = "nav-link active";
+            myWindow = window.open("<%= Page.ResolveUrl("~/ReportRedirect/repticket.htm") %>", "myWindow", "width=auto,height=auto");
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="ContentDetail" ContentPlaceHolderID="ContentDetailHolder" runat="server">
+    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>
+

@@ -1,0 +1,21 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterPage/IncludeLibraryMaster.Master" AutoEventWireup="true" CodeBehind="ServiceTicketMasterPage.master.cs" Inherits="ServiceWeb.MasterPage.ServiceTicketMasterPage" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="IncludeLibraryPlaceHolder" runat="server">
+    <div id="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <main role="main" class="col-md-12 ml-sm-auto py-3 px-3" id="master-panel-contant">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script>
+        function goToEdit(url) {
+
+            var height = document.documentElement.clientHeight;
+            window.open(url, '_blank', 'location=yes,height=' + height + ',width=1200,scrollbars=yes,status=yes');
+        }
+    </script>
+</asp:Content>
