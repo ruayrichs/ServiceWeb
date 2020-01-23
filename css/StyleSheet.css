@@ -1,0 +1,50 @@
+﻿body 
+{ margin-top : 0;
+  margin-left : 0;
+  margin-right : 0;
+  margin-bottom : 0;
+  font-family : Tahoma;
+  font-size : small;
+}
+a:link {
+	text-decoration: none;
+	color: black;
+}
+a:visited {
+	text-decoration: none;
+	color: black;
+}
+a:hover {
+	text-decoration: underline;
+	color: black;
+}
+a:active {
+	text-decoration: none;
+	color: black;
+}
+.iDivBB
+{
+	padding-left:10px  ; 
+	padding-right:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	text-align:left ;
+}
+.iDivBorder 
+{
+	border-color:#009ACD;
+	border-style:solid;
+	border-width:1px;
+	background-color:White;
+	height:100%;
+	
+}
+.orangetab1 
+{
+   background-color:#B0E2FF;
+}
+
+.orange1 
+{
+    background-color :#E0FFFF;
+}

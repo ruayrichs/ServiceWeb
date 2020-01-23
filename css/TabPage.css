@@ -1,0 +1,107 @@
+﻿* {
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tabs {  
+  float: none;
+  list-style: none;
+  position: relative; 
+  text-align: left;
+}
+.tabs li {
+  float: left;
+  display: block;
+}
+.tabs input[type="radio"] {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+.tabsHeader {
+  display: block;
+  padding: 16px 21px;
+  border-radius: 10px 10px 0px 0px; 
+  text-transform: uppercase;
+  background-color: #CEFBFF;
+  cursor: pointer;
+  position: relative;
+  top: 3px;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  border: solid 1px;
+  border-color: #428bca;  
+}
+.tabsHeader:hover {
+  background: #FFEFD6;
+}
+.tabs .tab-content {
+  display: none;
+  overflow: hidden;
+  width: 100%;  
+  line-height: 25px;
+  padding: 25px;
+  position: absolute;
+  top: 53px;
+  left: 0;
+  background-color: White;
+  border-radius: 0px 10px 10px 10px;
+  border: solid 1px;
+  border-color: #428bca;
+  margin-top: 1px;
+}
+.tabs [id^="tab"]:checked + label {
+  top: 0;
+  padding-top: 20px;
+  background-color: White;
+  border-bottom-width: 0px !important;
+  z-index: 3;
+}
+.tabs [id^="tab"]:checked ~ [id^="tab-content"] {
+  display: block;
+}
+
+.tabsItem {  
+  float: none;
+  list-style: none;
+  position: relative; 
+  text-align: left;
+}
+.tabsItem li {
+  float: left;
+  display: block;
+}
+.tabsItem input[type="radio"] {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+.tabsItem .tab-content {  
+  display: none;
+  overflow: hidden;
+  width: 100%;  
+  line-height: 25px;
+  padding: 25px;
+  position: absolute;
+  top: 53px;
+  left: 0;
+  background-color: White;
+  border-radius: 0px 10px 10px 10px;
+  border: solid 1px;
+  border-color: #428bca;
+  margin-top: 1px;
+}
+.tabsItem [id^="tab"]:checked + label {
+  top : 0;
+  padding-top: 20px;
+  background-color: White;
+  border-bottom-width: 0px !important;
+  z-index: 3;
+}
+.tabsItem [id^="tab"]:checked ~ [id^="tab-content"] {
+  display: block;
+}

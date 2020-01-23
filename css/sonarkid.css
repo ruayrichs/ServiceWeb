@@ -1,0 +1,25 @@
+﻿body 
+{
+	text-align:center;
+	padding:0;
+	margin:0;
+}
+.body-wrap{width:1000px;margin:0 auto;text-align:left;}
+.main-nav{width:100%;float:left;list-style:none;padding:0;margin:0;
+	border: 1px solid 		#333 /*{a-bar-border}*/;
+	background: 			#333 /*{a-bar-background-color}*/;
+	color: 					#ffffff /*{a-bar-color}*/;
+	font-weight: bold;}
+.main-nav li{float:left;display:inline-block;position:relative;border-right:1px solid #000;}
+.main-nav li:hover, .main-nav li.active{background:#5393c5;}
+.main-nav li a{float:left;padding:10px 34px;text-decoration:none;text-align:center;font-size:13px;}
+.main-nav li a .img{height:25px;display:block;}
+.main-nav li a p{color:#FFF;font-weight:bold;margin:10px 0 0;bottom:0;}
+.main-content{width:100%;float:left;border:1px solid #444;background:#FFF;padding-bottom:10px;}
+.main-content .main-content-wrap{float:left;text-align:center;width:100%;}
+.hidden{display: none;}
+.table_wrap{text-align:left;}
+.table-little-content{ float:left;color:#333;width:auto;}
+.table-little-content tr th{background:#3262A8;color:#fff;padding:3px;text-align:center;}
+.table-little-content tr td{padding:3px;text-align:left;}
+.table-little-content tr:nth-child(odd){background:#EAF4FE;}

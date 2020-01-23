@@ -1,0 +1,99 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta property="og:title" content="My First Campaign" />
+    <style>
+        table {
+            width: 100%;
+            border: 1px solid #000;
+        }
+        table > thead tr th {
+            font-size: 35px;
+            padding-top: 20px;
+        }
+        table > tbody tr th {
+            text-align: left;
+            width:100px;
+            vertical-align: top;
+        }
+        table > tfoot tr th {
+            text-align: left;
+        }
+        table th, table td {
+            padding-top: 7px;
+            padding-bottom: 7px;
+            padding-right: 7px;
+            padding-left: 7px;
+        }
+        table > tfoot th, table > tfoot td {
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 7px;
+            padding-left: 7px;
+        }
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body style="margin: 0;mso-line-height-rule: exactly;padding: 0;min-width: 100%;background-color: #fbfbfb">
+    <div style="width: 100%;">
+        <div style="padding:10px;background-color: #fff;">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">{!#TITLEDESC#!} notification [{!#EVENT#!}]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="2"><hr /></td></tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <th>Ticket No.</th>
+                        <td>: {!#TICKETNO#!}</td>
+                    </tr>
+                    <tr>
+                        <th>Ticket No.</th>
+                        <td>: {!#TICKETTYPE#!}</td>
+                    </tr>
+                    <tr>
+                        <th>Ticket No.</th>
+                        <td>: {!#ACCOUNTABILITY#!}</td>
+                    </tr>
+                    <tr>
+                        <th>Subject</th>
+                        <td>: {!#SUBJECT#!}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>: {!#STATUS#!}</td>
+                    </tr>
+                    <tr>
+                        <th>Priority</th>
+                        <td>: {!#PRIORITY#!}</td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr><td colspan="2"><hr /></td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">
+                            Please click on the link below to {!#DETAILDESC#!}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-bottom: 10px;">
+                            <a href="{!#URL#!}">{!#URL#!}</a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

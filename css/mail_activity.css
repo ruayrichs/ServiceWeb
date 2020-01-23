@@ -1,0 +1,193 @@
+﻿<style scoped > .col-item {
+    border: 1px solid #E1E1E1;
+    border-radius: 5px;
+    background: #FFF;
+}
+
+.col-item .photo img {
+    margin: 0 auto;
+}
+
+.col-item .info {
+    padding: 10px;
+    border-radius: 0 0 5px 5px;
+    margin-top: 1px;
+}
+
+.col-item:hover .info {
+    background-color: #F5F5DC;
+}
+
+.col-item .price {
+    /*width: 50%;*/
+    float: left;
+    margin-top: 5px;
+}
+
+    .col-item .price h5 {
+        line-height: 20px;
+        margin: 0;
+    }
+
+.price-text-color {
+    color: #219FD1;
+}
+
+.col-item .info .rating {
+    color: #777;
+}
+
+.col-item .rating {
+    /*width: 50%;*/
+    float: left;
+    font-size: 17px;
+    text-align: right;
+    line-height: 52px;
+    margin-bottom: 10px;
+    height: 52px;
+}
+
+.col-item .separator {
+    border-top: 1px solid #E1E1E1;
+}
+
+.clear-left {
+    clear: left;
+}
+
+.col-item .separator p {
+    line-height: 20px;
+    margin-bottom: 0;
+    margin-top: 10px;
+    text-align: center;
+}
+
+    .col-item .separator p i {
+        margin-right: 5px;
+    }
+
+.col-item .btn-add {
+    width: 50%;
+    float: left;
+}
+
+.col-item .btn-add {
+    border-right: 1px solid #E1E1E1;
+}
+
+.col-item .btn-details {
+    width: 50%;
+    float: left;
+    padding-left: 10px;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+[data-slide="prev"] {
+    margin-right: 10px;
+}
+
+.fa-fw {
+    width: 2em;
+    font-size: 1.5em;
+}
+
+.content {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.mainTopSpace {
+    padding: 30px;
+}
+
+.panel-body {
+    width: 300px;
+}
+
+.containerMain {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 100%;
+}
+
+.admin-menu li {
+    cursor: pointer;
+    cursor: hand;
+}
+
+    .admin-menu li a {
+        color: black;
+    }
+
+.scoll {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+    .scoll:hover {
+        overflow-y: scroll;
+    }
+
+.edit-activity {
+    width: 100%;
+    display: none;
+    padding: 5px;
+}
+
+.table-pad2 tr td {
+    padding: 5px;
+    padding-top: 0px;
+}
+
+.table-bgalt tr:nth-child(even) {
+    background: rgba(222, 237, 236, 0.19);
+}
+
+.table-bgalt tr:nth-child(odd) {
+    background: rgba(222, 237, 236, 0.51);
+}
+
+#add-remark-table {
+    width: 100%;
+    word-break: break-all;
+}
+
+
+#remark-table {
+    width: 100%;
+    word-break: break-all;
+}
+
+.remark-row {
+    padding: 10px;
+}
+
+.remark-header {
+    width: 40px;
+    vertical-align: top;
+    text-align: center;
+}
+
+.remark-image {
+    width: 30px;
+}
+
+.remark-fullname {
+    color: rgb(0,32,96);
+}
+
+.remark-my-fullname {
+    color: #98c83e;
+}
+
+.remark-datetime {
+    color: #c8c7c7;
+    float: right;
+}

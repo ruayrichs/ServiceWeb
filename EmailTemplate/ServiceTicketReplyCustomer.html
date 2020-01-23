@@ -1,0 +1,98 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta property="og:title" content="My First Campaign" />
+
+    <style type="text/css">
+        table {
+            width: 100%;
+            border: 1px solid #000;
+        }
+
+            table > tbody tr td:first-child {
+                text-align: left;
+                vertical-align: top;
+            }
+
+            table th, table td {
+                padding-top: 7px;
+                padding-bottom: 7px;
+                padding-right: 7px;
+                padding-left: 7px;
+            }
+
+            table > tfoot th, table > tfoot td {
+                padding-top: 0;
+                padding-bottom: 0;
+                padding-right: 7px;
+                padding-left: 7px;
+            }
+
+        .hide {
+            display: none;
+        }
+    </style>
+
+</head>
+<body style="margin: 0; padding: 0; min-width: 100%; background-color: #fbfbfb;">
+    <div style="width: 100%;">
+        <div style="padding: 10px; background-color: #fff;">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle; font-size: 28px;">Ticket Service Reply</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><hr style="margin-top: 0;" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                           <b>Call ID</b><span> : {!#TICKETNO#!}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Cient</b><span> : {!#CUSTOMER#!}</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Subject</b><span> : {!#SUBJECT#!}</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>Detail</b><span> : {!#DETAIL#!}</span></td>
+                    </tr>
+                    <tr>
+                        <td><hr style="margin-bottom: 0;" /></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th style="text-align: left; padding-top: 10px;">
+                            "Please confirm back your services request to us"
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom: 10px; padding-top: 20px;">
+                            <div>
+                                <span>Hi ,</span>
+                                <br /><br />
+                                <span style="margin-left: 20px;">We have already got your service request from you via direct E-Mail channel, To verify this is really your service request please click this link "</span>
+                                <a target="_blank" href="{!#URL#!}">Confirm Service Request</a><span> "</span>
+                                <span>to activate the confirm request form and submit to us.</span>
+                                <br /><br />
+                                <span>Cheers,</span>
+                                <br />
+                                <span>Service Support Team</span>
+                            </div>
+
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

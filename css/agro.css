@@ -1,0 +1,75 @@
+﻿/* ==== agro loading */
+
+.agro-loading, .agro-loading table, .agro-loading td {
+    width:100%;
+    height:100%;
+}
+.agro-loading {
+    position:fixed;
+    top:0;
+    left:0;
+    background:rgba(0, 0, 0, 0.55);
+    z-index:2000000;
+    line-height:500px;
+    text-align:center;
+    display:none;
+}
+.agro-loading table {
+    table-layout:fixed;
+}
+.agro-loading td {
+    vertical-align:middle
+}
+.agro-loading img {
+    width:200px;
+    height:200px;
+}
+
+/* agro style */
+.btn {
+    width:150px;
+}
+.btn-fit {
+    width:auto;
+}
+.agro-header {
+    font-size: 18px;
+    line-height:1.1;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+    font-weight:500;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(to bottom,#d9edf7 0,#b9def0 100%);
+    text-shadow: 0 1px 0 rgba(255,255,255,.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 2px rgba(0,0,0,.05);
+}
+.space {
+    padding:10px;
+}
+.row {
+    margin-top:16px;
+}
+
+/* === report === */
+.report-command {
+    background:#f7f7f7;
+    padding:10px;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+.report-command input{
+    display:none;
+}
+.report-command span.btn span {
+    margin-left:5px;
+}
+.report-command span.btn {
+    width:auto;
+}
+

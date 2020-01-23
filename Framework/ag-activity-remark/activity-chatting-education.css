@@ -1,0 +1,184 @@
+﻿.system-message-comment-container{
+    border:none;
+    box-shadow:none;
+    padding:0;
+    background:none;
+    margin:0;
+}
+
+.system-message-comment-container p{
+    font-size:inherit;
+}
+
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fullname{
+    font-weight:600;
+    color:#3B59A4;
+    display:block;
+    padding:5px 15px;
+    border:1px solid #e5e6e9;
+    border-bottom:none;
+    background:#F7F7F7;
+    border-radius:5px 5px 0 0;
+    color:#333;
+    position:relative;
+}
+
+
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fullname .fa-caret-left{
+    position:absolute;
+    left:-7px;
+    top:5px;
+    font-size:25px;
+    color:#F7F7F7;
+}
+
+.system-message-comment-container .system-message-comment-container-remark-owner .system-message-comment-container-remark-fullname {
+    color: #333;
+}
+
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-date {
+    position:absolute;
+    top:8px;
+    right:20px;
+}
+
+.system-message-comment-container .system-message-comment-container-remark{
+    background: none;
+    margin-bottom:10px;
+    padding-top:0;
+}
+.system-message-comment-container-remark:nth-child(even){
+    /*background:#F5F5F5;*/
+}
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-img {
+    top:0;
+    left:0;
+    border-radius:0;
+}
+.system-message-comment-container-remark-message{
+    border-radius: 0 0 5px 5px;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    background:#fff;
+    padding:5px 15px;
+}
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-message{
+    margin:0;
+    padding:15px;
+    white-space:normal;
+}
+
+.system-message-comment-container .system-message-comment-container-reply{
+    padding-left:60px;
+    padding-right:10px;
+}
+
+.system-message-comment-container .system-message-quote {
+    margin:0;
+    background:#fff;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-bottom:none;
+    padding:15px;
+    padding-bottom:0;
+}
+.system-message-comment-container-remark.has-quote .system-message-comment-container-remark-message{
+    border-top:none;
+    padding-top:0px;
+}
+.system-message-comment-container .system-message-quote .system-message-quote-inner{
+    padding:10px 20px;
+    padding-right:0;
+    border-left:2px solid #aaa;
+    background:#F7F7F7;
+}
+.system-message-comment-container .system-message-attach-files-container{
+    padding:15px;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    background:#F7F7F7;
+    margin-top:-2px;
+}
+
+.system-message-comment-container-remark-more{
+    padding:5px 10px;
+    border:1px solid #ccc;
+    border-radius:3px;
+    text-align:center;
+    margin-right:10px;
+}
+.system-message-comment-container-reply .system-message-comment-container-remark-img{
+    top: 5px;
+    left: 0px;
+    border-radius: 0;
+    width: 40px;
+    height: 40px;
+}
+.system-message-comment-container-reply .system-message-comment-container-remark-img.easy-mode-true{
+     top: -10px;
+}
+
+
+/*======================== Favorite ===================*/
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fav{
+    width: 40px;
+    left: 0px;
+    top:45px;
+    position:absolute;
+    text-align:center;
+}
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fav .fa{
+    color:#ccc;
+    font-size:20px;
+    cursor:pointer;
+    display:block;
+    margin-top:5px;
+}
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fav .fa:hover,
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-fav .fa.active{
+    color:gold;
+}
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-score{
+    display:block;
+    margin-top:0;
+    font-size:12px;
+}
+.system-message-comment-container .system-message-comment-container-remark .system-message-comment-container-remark-score.active{
+    font-weight:600;
+}
+
+.system-message-comment-container-remark-message .system-message-comment-container-remark-fav-add{
+    position:absolute;
+    right:15px;
+    bottom:15px;
+}
+/*======================== Feed ====================*/
+
+.feed-activity-remark {
+    background:#f7f7f7;
+    border-top: 1px solid #eee;
+    margin-bottom:0px;
+}
+.feed-activity-remark .system-message-comment-container-remark-storage{
+    padding-left:20px;
+    padding-top:20px;
+    padding-right:5px;
+}
+.feed-activity-remark .system-message-comment-container-reply{
+    margin-bottom:0px;
+    padding-bottom:10px;
+}
+.feed-activity-remark .system-message-comment-container-remark {
+    padding-left:50px!important;
+}
+.feed-activity-remark .system-message-comment-container-remark.system-message-comment-container-remark-posting,
+.feed-activity-remark .system-message-comment-container-reply
+{
+    padding-left:70px!important;
+    padding-right:20px;
+}
+.feed-activity-remark .system-message-comment-container-reply .system-message-comment-container-remark-img{
+    left:20px;
+}
+
+
