@@ -1,0 +1,117 @@
+﻿
+.agape-gallery {
+    background:rgba(0, 0, 0, 0.8);
+    position:fixed;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    z-index:2000000;
+}
+
+.agape-gallery-clear-body{
+    /*overflow-x:hidden;
+    overflow-y:hidden;*/
+}
+
+.agape-gallery .agape-gallery-container {
+    border-radius:5px;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+.agape-gallery .agape-gallery-container .header {
+    /*background: rgba(246,246,246,1);
+    background: -moz-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(246,246,246,1) 9%, rgba(255,255,255,1) 93%, rgba(237,237,237,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(246,246,246,1)), color-stop(9%, rgba(246,246,246,1)), color-stop(93%, rgba(255,255,255,1)), color-stop(100%, rgba(237,237,237,1)));
+    background: -webkit-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(246,246,246,1) 9%, rgba(255,255,255,1) 93%, rgba(237,237,237,1) 100%);
+    background: -o-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(246,246,246,1) 9%, rgba(255,255,255,1) 93%, rgba(237,237,237,1) 100%);
+    background: -ms-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(246,246,246,1) 9%, rgba(255,255,255,1) 93%, rgba(237,237,237,1) 100%);
+    background: linear-gradient(to bottom, rgba(246,246,246,1) 0%, rgba(246,246,246,1) 9%, rgba(255,255,255,1) 93%, rgba(237,237,237,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#ededed', GradientType=0 );*/
+    background:#333;
+    padding:20px;
+    font-size:16px;
+    color:#fff;
+    text-overflow:ellipsis;
+    overflow-x:hidden;
+    white-space:nowrap;
+    position:relative;
+    height:70px;
+    overflow-y:hidden;
+}
+.agape-gallery .agape-gallery-container .header .remover {
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size:20px;
+    margin-top:-15px;
+    margin-right:-10px;
+    cursor:pointer;
+    color:#fff;
+}
+
+.agape-gallery .agape-gallery-container .body {
+    padding:30px;
+    text-align:center;
+    overflow:hidden;
+    position:absolute;
+    top:70px;
+    bottom:100px;
+    left:0px;
+    right:0px;
+}
+
+.agape-gallery .agape-gallery-container .body .agape-image-container{
+    height:100%;
+}
+
+.agape-gallery .agape-gallery-container .body img{
+    cursor:pointer;
+    height:100%;
+}
+
+.agape-gallery .agape-gallery-container .footer {
+    text-align:center;
+    /*background: rgba(255,255,255,1);
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 53%, rgba(237,237,237,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(53%, rgba(246,246,246,1)), color-stop(100%, rgba(237,237,237,1)));
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 53%, rgba(237,237,237,1) 100%);
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 53%, rgba(237,237,237,1) 100%);
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 53%, rgba(237,237,237,1) 100%);
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 53%, rgba(237,237,237,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=0 );*/
+    background:#333;
+    padding:10px;
+    color:#fff;
+    height:100px;
+    position:absolute;
+    left:0px;
+    right:0px;
+    bottom:0px;
+}
+.agape-gallery .agape-gallery-container .footer input {
+    width:100px;
+    text-align:center;
+    padding:5px;
+    border-radius:5px;
+    background:#eee;
+    line-height:30px;
+    color:#000;
+    margin-top:5px;
+}
+.agape-gallery .agape-gallery-container .footer input:hover {
+    background:#ccc;
+}
+ .agape-gallery .agape-gallery-container .footer .footer-detail {
+   text-align:center;
+   margin-top:0px;
+   font-size:12px;
+   font-weight:600;
+   border-bottom:1px solid #ccc;
+   padding-bottom:5px;
+   line-height:20px;
+   margin-bottom:5px;
+}
