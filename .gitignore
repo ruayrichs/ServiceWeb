@@ -1,4 +1,5 @@
 .svn/
+.WebConfig/
 web.config
 ServiceWeb.sln
 ServiceWeb.v12.suo
