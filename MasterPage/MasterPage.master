@@ -13,28 +13,28 @@
          <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyWork.aspx") %>" id="nav-menu-mywork">
                 <span data-feather="user"></span>
-                My Queue
+                My Queue <span class="badge badge-pill badge-danger" id="myWorkCount" style="float: right;">0</span>
             </a>
         </li>
         <% } if (Permission.MyGroupView || Permission.AllPermission) { %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyGroup.aspx") %>" id="nav-menu-mygroup">
                 <span data-feather="user"></span>
-                My Group
-            </a>
+                My Group <span class="badge badge-pill badge-danger" id="myGroupCount" style="float: right;">0</span>
+            </a>            
         </li>
         <% } if (Permission.MyOverDueView || Permission.AllPermission) { %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyOverdue.aspx") %>" id="nav-menu-myoverdue">
                 <span data-feather="user"></span>
-                My Overdue
+                My Overdue <span class="badge badge-pill badge-danger" id="myOverDueCount" style="float: right;">0</span>
             </a>
         </li>
         <% } %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyTicket.aspx") %>" id="nav-menu-myticket">
                 <span data-feather="user"></span>
-                My Ticket
+                My Ticket <span class="badge badge-pill badge-danger" id="myTicketCount" style="float: right;">0</span>
             </a>
         </li>
         <% if (Permission.DashboardView || Permission.DashboardViewAll || Permission.AllPermission) { %>
@@ -395,9 +395,54 @@
             myWindow = window.open("<%= Page.ResolveUrl("~/ReportRedirect/repticket.htm") %>", "myWindow", "width=auto,height=auto");
         }
     </script>
+    <script>
+        var objDatasMy;
+        $(document).ready(function () {
+            var MyWorkAPI = "API/v1/GetTicketMyWorkAPI.aspx";
+            var MyGroupAPI = "API/v1/GetTicketMyGroupAPI.aspx";
+            var MyOverDueAPI = "API/v1/GetTicketMyOverDueAPI.aspx";
+            var MyTicketAPI = "API/v1/GetTicketMyTicketAPI.aspx";
+            bindDatasMyTicket(MyWorkAPI);
+            bindDatasMyTicket(MyGroupAPI);
+            bindDatasMyTicket(MyOverDueAPI);
+            bindDatasMyTicket(MyTicketAPI);
+        });
+
+        function bindDatasMyTicket(api) {
+            var postData = { dataStatus: "active" }
+            $.ajax({
+                type: "POST",
+                url: servictWebDomainName + api,
+                data: postData,
+                success: function (datas) {
+                    objDatasMy = JSON.parse(datas);
+                    console.log(objDatasMy);
+                    bindListMy(api, objDatasMy);
+                },
+                error: function (jqxhr, status, exception) {
+                    console.log('Exception:', exception);
+                }
+            });
+        }
+
+        function bindListMy(api, datas) {
+            if (api === "API/v1/GetTicketMyWorkAPI.aspx") {
+                $("#myWorkCount").text(datas.length);
+            } else if (api === "API/v1/GetTicketMyGroupAPI.aspx") {
+                $("#myGroupCount").text(datas.length);
+            } else if (api === "API/v1/GetTicketMyOverDueAPI.aspx") {
+                $("#myOverDueCount").text(datas.length);
+            } else if (api === "API/v1/GetTicketMyTicketAPI.aspx") {
+                $("#myTicketCount").text(datas.my_ticket.length);
+            } else {
+                console.log(api);
+            }
+        }
+        </script>
 </asp:Content>
 <asp:Content ID="ContentDetail" ContentPlaceHolderID="ContentDetailHolder" runat="server">
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
     </asp:ContentPlaceHolder>
 </asp:Content>
+
 
