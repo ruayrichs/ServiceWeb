@@ -13,28 +13,28 @@
          <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyWork.aspx") %>" id="nav-menu-mywork">
                 <span data-feather="user"></span>
-                My Queue <span class="badge badge-pill badge-danger" id="myWorkCount" style="float: right;">0</span>
+                My Queue <span class="badge badge-pill badge-danger" id="myWorkCount" style="float: right;"></span>
             </a>
         </li>
         <% } if (Permission.MyGroupView || Permission.AllPermission) { %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyGroup.aspx") %>" id="nav-menu-mygroup">
                 <span data-feather="user"></span>
-                My Group <span class="badge badge-pill badge-danger" id="myGroupCount" style="float: right;">0</span>
+                My Group <span class="badge badge-pill badge-danger" id="myGroupCount" style="float: right;"></span>
             </a>            
         </li>
         <% } if (Permission.MyOverDueView || Permission.AllPermission) { %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyOverdue.aspx") %>" id="nav-menu-myoverdue">
                 <span data-feather="user"></span>
-                My Overdue <span class="badge badge-pill badge-danger" id="myOverDueCount" style="float: right;">0</span>
+                My Overdue <span class="badge badge-pill badge-danger" id="myOverDueCount" style="float: right;"></span>
             </a>
         </li>
         <% } %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MyTicket.aspx") %>" id="nav-menu-myticket">
                 <span data-feather="user"></span>
-                My Ticket <span class="badge badge-pill badge-danger" id="myTicketCount" style="float: right;">0</span>
+                My Ticket <span class="badge badge-pill badge-danger" id="myTicketCount" style="float: right;"></span>
             </a>
         </li>
         <% if (Permission.DashboardView || Permission.DashboardViewAll || Permission.AllPermission) { %>
@@ -398,16 +398,19 @@
     <script>
         var objDatasMy;
         $(document).ready(function () {
-            var MyWorkAPI = "API/v1/GetTicketMyWorkAPI.aspx";
-            var MyGroupAPI = "API/v1/GetTicketMyGroupAPI.aspx";
-            var MyOverDueAPI = "API/v1/GetTicketMyOverDueAPI.aspx";
-            var MyTicketAPI = "API/v1/GetTicketMyTicketAPI.aspx";
-            bindDatasMyTicket(MyWorkAPI);
-            bindDatasMyTicket(MyGroupAPI);
-            bindDatasMyTicket(MyOverDueAPI);
-            bindDatasMyTicket(MyTicketAPI);
+            bindDatasMyTicket("API/v1/GetTicketMyWorkAPI.aspx");
+            bindDatasMyTicket("API/v1/GetTicketMyGroupAPI.aspx");
+            bindDatasMyTicket("API/v1/GetTicketMyOverDueAPI.aspx");
+            bindDatasMyTicket("API/v1/GetTicketMyTicketAPI.aspx");
         });
-
+        $(window).on("load", function () {
+            setInterval(function () {
+                bindDatasMyTicket("API/v1/GetTicketMyWorkAPI.aspx");
+                bindDatasMyTicket("API/v1/GetTicketMyGroupAPI.aspx");
+                bindDatasMyTicket("API/v1/GetTicketMyOverDueAPI.aspx");
+                bindDatasMyTicket("API/v1/GetTicketMyTicketAPI.aspx");
+            }, 20000);
+        });
         function bindDatasMyTicket(api) {
             var postData = { dataStatus: "active" }
             $.ajax({
@@ -416,7 +419,6 @@
                 data: postData,
                 success: function (datas) {
                     objDatasMy = JSON.parse(datas);
-                    console.log(objDatasMy);
                     bindListMy(api, objDatasMy);
                 },
                 error: function (jqxhr, status, exception) {
