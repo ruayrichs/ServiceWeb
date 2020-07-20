@@ -20,6 +20,44 @@
         };
 
         //$(document).ready(function () { webOnLoad(); }) 
+        $(document).ready(function () {
+            upDateCheckBoxDaySend();
+            //setValueID();
+
+
+            // QR
+            var trial = $("#SizeQRSmall").attr('src');
+            $("#SizeQRBig").attr("src", trial);
+
+            $("#SizeQRSmall").click(function () {
+                $("#SizeQRSmall").hide(500);
+                $("#SizeQRBig").show(500);
+            });
+            $("#SizeQRBig").click(function () {
+                $("#SizeQRBig").hide(500);
+                $("#SizeQRSmall").show(500);
+            });
+            // \QR
+        });
+        function upDateCheckBoxDaySend() {            
+            $('#<%= CheckBoxDaySend.ClientID%>').addClass("custom-control-input");
+        }
+        function setValueID() {
+            //$('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_txtdata_3').val($('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_3').val());
+            //$('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_xDisplay_3').addClass("d-none");
+
+            //$('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_txtdata_4').val($('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_4').val());
+            //$('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_xDisplay_4').addClass("d-none");
+        }
+        function sendValueID(val, addID) {
+            //if (addID == 'IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_3') {
+            //    $('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_3').val(val);
+            //}
+
+            //if (addID == 'IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_4') {
+            //    $('#IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_4').val(val);
+            //}
+        }
     </script>
     <style>
         .hide {
@@ -83,7 +121,12 @@
     </nav>
     <div class="card shadow">
         <div class="card-header">
-            <h5 class="mb-0">Configuration Item Detail</h5>
+            <h5 class="mb-0">
+                Configuration Item Detail
+                <img class="float-right" id="SizeQRBig" style="height : 200px; Margin:-12px 2px -12px; display: none;" alt="QR code">
+                <img class="float-right" id="SizeQRSmall" style="height : 48px; Margin:-12px 2px -12px;" src="https://chart.googleapis.com/chart?chs=200x200&amp;cht=qr&amp;chl=<%= qrcodeurl %>" alt="QR code">
+                <%--<img class="float-right" id="SizeQRSmall" style="height : 48px; Margin:-12px 2px -12px;" src="https://chart.googleapis.com/chart?chs=200x200&amp;cht=qr&amp;chl=<%= txtEquipmentCode.Text %>" alt="QR code"> --%>
+            </h5>
         </div>
         <div class="card-body">
             <style>
@@ -309,7 +352,7 @@
                                                 <div class="form-row">
                                                     <asp:Repeater runat="server" ID="rptAttributes" OnItemDataBound="rptAttributes_ItemDataBound">
                                                         <ItemTemplate>
-                                                            <div class="form-group col-sm-12 col-md-6" style="margin-bottom: 10px;">
+                                                            <div runat="server" class="form-group col-sm-12 col-md-6" id="xDisplay" style="margin-bottom: 10px;">
                                                                 <label>
                                                                     <asp:Label ID="lbPrice" runat="server" Text='<%# Eval("Description")%>' /></label>
                                                                 <asp:HiddenField ID="hddsid" runat="server" Value='<%# Eval("SID") %>' />
@@ -353,10 +396,10 @@
                                                         <asp:TextBox runat="server" placeholder="Number" CssClass="form-control form-control-sm" ID="txtGeneralBox_Size_Dimension" />
                                                     </div>
                                                 </div>
-                                                <div class="form-row">
+                                                <div class="form-row d-none">
                                                     <div class="form-group col-sm-12 col-md-6">
                                                         <label>Material No</label>
-                                                        <asp:TextBox runat="server" placeholder="Text" CssClass="form-control form-control-sm" ID="txtGeneralBox_MaterialNo" />
+                                                        <asp:TextBox runat="server" onchange="sendValueID(this.value, 'IncludeLibraryPlaceHolder_ContentPlaceHolder1_rptAttributes_txtdata_3')" placeholder="Text" CssClass="form-control form-control-sm" ID="txtdata_3" />
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-6">
                                                         <label>Start-up Date</label>
@@ -1265,6 +1308,49 @@
                                                                 CssClass="form-control form-control-sm time-picker "></asp:TextBox>
                                                             <div class="input-group-append">
                                                                 <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 col-sm-12">
+                                                        <label>
+                                                            Send Mail before Next Maintenance
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <asp:TextBox runat="server" CssClass="form-control form-control-sm date-picker"
+                                                                ID="txtShowDaySend"
+                                                                placeholder="dd/mm/yyy" disabled />
+                                                            <span class="input-group-append hand">
+                                                                <i class="fa fa-calendar input-group-text"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-2 col-sm-12">
+                                                        <label>Day</label>
+                                                        <asp:RegularExpressionValidator
+                                                            Class="text-danger"
+                                                            ID="RegularExpressionValidator1"
+                                                            ControlToValidate="txtDaySend" runat="server"
+                                                            ErrorMessage="***Only Numbers"
+                                                            ValidationExpression="\d+">
+                                                            </asp:RegularExpressionValidator>
+                                                        <div class="input-group">
+                                                            <asp:TextBox ID="txtDaySend" runat="server"
+                                                                placeholder="Day"
+                                                                CssClass="form-control form-control-sm">
+                                                            </asp:TextBox>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text"><i class="fa fa-paper-plane-o"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-12">
+                                                        <label>&nbsp;</label>
+                                                        <div class="input-group">
+                                                            <div class="custom-control custom-checkbox">
+                                                              <asp:CheckBox ID="CheckBoxDaySend" runat="server" Text="" />
+                                                              <label class="custom-control-label" for="<%= CheckBoxDaySend.ClientID%>">Active send mail</label>
                                                             </div>
                                                         </div>
                                                     </div>

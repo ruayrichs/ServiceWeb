@@ -189,6 +189,9 @@
                                     <div class="form-group">
                                         <asp:CheckBox ID="CBEV_RespondCustomer" runat="server" Text="Alert event respond Client" />
                                     </div>
+                                    <div class="form-group">
+                                        <asp:CheckBox ID="CBTCIChangeLog2Customer" runat="server" Text="Alert event CI Change log to Owner" />
+                                    </div>
                                 </div>
                             </div>
                         </div>

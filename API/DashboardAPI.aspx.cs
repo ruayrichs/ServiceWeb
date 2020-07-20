@@ -127,10 +127,12 @@ namespace ServiceWeb.API
            
             DashboardFinalDataModel DashboardFinalData = dashboardLib.PreparFinanDataDashboard(
                 ERPWAuthentication.SID, ERPWAuthentication.CompanyCode,
-                OptionData, _IsFilterOwner, ERPWAuthentication.Permission.OwnerGroupCode
+                OptionData, _IsFilterOwner, ERPWAuthentication.Permission.OwnerGroupCode, ERPWAuthentication.EmployeeCode
             );
 
-            var json = new JavaScriptSerializer().Serialize(DashboardFinalData);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = int.MaxValue;
+            var json = serializer.Serialize(DashboardFinalData);
             Response.Write(json);
         }
 

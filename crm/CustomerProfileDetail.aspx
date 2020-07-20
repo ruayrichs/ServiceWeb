@@ -544,6 +544,7 @@
                                                         <th class="text-nowrap">Subject</th>
                                                         <th class="text-nowrap">Priority</th>
                                                         <th class="text-nowrap">Time Delay</th>
+                                                        <th class="text-nowrap">Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -612,6 +613,7 @@
                                                         <th class="text-nowrap">Ticket Type</th>
                                                         <th class="text-nowrap">Subject</th>
                                                         <th class="text-nowrap">Priority</th>
+                                                        <th class="text-nowrap">Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -1358,8 +1360,10 @@
             $("[data-id='panelListTicketDelay']").AGWhiteLoading(true, 'Loading...');
             $("[data-id='panelListTicketSuccess']").AGWhiteLoading(true, 'Loading...');
             $("[data-id='panelListTicketAll']").AGWhiteLoading(true, 'Loading...');
+
+            getTicketListByCustomer();
                                     
-            var postData = {
+            <%--var postData = {
             };
 
             $.ajax({
@@ -1368,7 +1372,7 @@
                 data: postData,
                 success: function (datas) {
                     objDatasMyTicket = JSON.parse(datas);
-                    //console.log(objDatasMyTicket);
+                    console.log(objDatasMyTicket);
 
                     $("#<%= lblCountOpen.ClientID %>").html(objDatasMyTicket.CountTicketOpen);
                     $("#<%= lblCountDelay.ClientID %>").html(objDatasMyTicket.CountTicketDelay);
@@ -1382,7 +1386,7 @@
 
                     getTicketListByCustomer();
                 }
-            });
+            });--%>
         }
 
         function getTicketListByCustomer() 
@@ -1401,6 +1405,16 @@
                 success: function (datas) {
                     objDatasMyTicket = JSON.parse(datas);
                     console.log(objDatasMyTicket);
+
+                    $("#<%= lblCountOpen.ClientID %>").html(objDatasMyTicket.OpenTask.length);
+                    $("#<%= lblCountDelay.ClientID %>").html(objDatasMyTicket.DelayRisk.length);
+                    $("#<%= lblCountSuccess.ClientID %>").html(objDatasMyTicket.SuccessTask.length);
+                    $("#<%= lblCountAll.ClientID %>").html(objDatasMyTicket.AllTask.length);
+
+                    $("[data-id='panelListTicketOpen']").AGWhiteLoading(false, 'Loading...');
+                    $("[data-id='panelListTicketDelay']").AGWhiteLoading(false, 'Loading...');
+                    $("[data-id='panelListTicketSuccess']").AGWhiteLoading(false, 'Loading...');
+                    $("[data-id='panelListTicketAll']").AGWhiteLoading(false, 'Loading...');
 
                     //table-open
                                             
@@ -1525,71 +1539,8 @@
                     "#" + ticket.TicketType,
                     ticket.Subject,
                     ticket.Priority,
-                    ticket.TimeDelay
-                ]);
-            }
-
-            var dataTableResult = objTarget.dataTable({
-                data: datasTicket,
-                deferRender: true,
-                "order": [[2, "asc"]],
-                'columnDefs': [
-                    {
-                        'targets': 0,
-                        'createdCell': function (td, cellData, rowData, row, col) {
-                            $(td).addClass("text-nowrap text-center align-middle");
-                            $(td).html(
-                                '<i class="fa fa-pencil-square fa-lg text-dark c-pointer" title="Edit"></i>'
-                            );
-                            $(td).closest("tr").addClass("c-pointer");
-                            $(td).closest("tr").bind("click", function () {
-                                var docnumber = cellData;
-                                openTicket(docnumber);
-                            });
-                          
-                        }
-                    },
-                    {
-                        'targets': [1, 3, 5, 6],
-                        'createdCell': function (td, cellData, rowData, row, col) {
-                            $(td).addClass("text-truncate text-nowrap");
-                        }
-                    },
-                    {
-                        'targets': [2],
-                        'createdCell': function (td, cellData, rowData, row, col) {
-                            $(td).addClass("text-truncate text-nowrap");
-                            $(td).html(
-                                convertToDateDisplay(cellData)
-                            );
-                        }
-                    }
-                ]
-            });
-            
-            function convertToDateDisplay(data) {
-                if (data.length >= 8) {
-                    data = data.substring(6, 8) + '/' + data.substring(4, 6) + '/' + data.substring(0, 4);
-                }
-                return data;
-            }
-
-            return dataTableResult;
-        }
-                                
-        function bindListTicket_3(objTarget, datas) {
-            
-            var datasTicket = [];
-            for (var i = 0 ; i < datas.length ; i++) {
-                var ticket = datas[i];
-
-                datasTicket.push([
-                    ticket.TicketNO,
-                    ticket.TicketNo4Display,
-                    ticket.StartDateTime,
-                    "#" + ticket.TicketType,
-                    ticket.Subject,
-                    ticket.Priority,
+                    ticket.EndDateTime,
+                    ticket.StatusCode + "|" + ticket.StatusDesc
                 ]);
             }
 
@@ -1625,6 +1576,119 @@
                             $(td).addClass("text-truncate text-nowrap");
                             $(td).html(
                                 convertToDateDisplay(cellData)
+                            );
+                        }
+                    },
+                    {
+                        'targets': [6],
+                        'createdCell': function (td, cellData, rowData, row, col) {
+                            // calculation of no. of days between two date  
+
+                            // To set two dates to two variables 
+                            var date1 = new Date(cellData.replace(
+                                /^(\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)$/,
+                                '$4:$5:$6 $2/$3/$1'
+                            ));
+                            var date2 = new Date();
+
+                            // To calculate the time difference of two dates 
+                            var Difference_In_Time = date2.getTime() - date1.getTime();
+
+                            // To calculate the no. of days between two dates 
+                            var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+                            $(td).addClass("text-truncate text-nowrap");
+                            $(td).html(
+                                'End Date : ' +
+                                convertToDateDisplay(cellData)
+                                + '</br>Delay <label style="color:red">' + Difference_In_Days.toFixed(0) + '</label> day'
+                            );
+                        }
+                    },
+                    {
+                        'targets': 7,
+                        'createdCell': function (td, cellData, rowData, row, col) {
+                            $(td).addClass("col-status text-nowrap");
+                            $(td).html(
+                                '<div style="width: 100%;" class="status ' + cellData.split('|')[0] + '">' +
+                                cellData.split('|')[1] +
+                                '</div>'
+                            );
+                        }
+                    }
+                ]
+            });
+            
+            function convertToDateDisplay(data) {
+                if (data.length >= 8) {
+                    data = data.substring(6, 8) + '/' + data.substring(4, 6) + '/' + data.substring(0, 4);
+                }
+                return data;
+            }
+
+            return dataTableResult;
+        }
+                                
+        function bindListTicket_3(objTarget, datas) {
+            
+            var datasTicket = [];
+            for (var i = 0 ; i < datas.length ; i++) {
+                var ticket = datas[i];
+
+                datasTicket.push([
+                    ticket.TicketNO,
+                    ticket.TicketNo4Display,
+                    ticket.StartDateTime,
+                    "#" + ticket.TicketType,
+                    ticket.Subject,
+                    ticket.Priority,
+                    ticket.StatusCode + "|" + ticket.StatusDesc
+                ]);
+            }
+
+            var dataTableResult = objTarget.dataTable({
+                data: datasTicket,
+                deferRender: true,
+                "order": [[2, "asc"]],
+                'columnDefs': [
+                    {
+                        'targets': 0,
+                        'createdCell': function (td, cellData, rowData, row, col) {
+                            $(td).addClass("text-nowrap text-center align-middle");
+                            $(td).html(
+                                '<i class="fa fa-pencil-square fa-lg text-dark c-pointer" title="Edit"></i>'
+                            );
+                            $(td).closest("tr").addClass("c-pointer");
+                            $(td).closest("tr").bind("click", function () {
+                                var docnumber = cellData;
+                                openTicket(docnumber);
+                            });
+                          
+                        }
+                    },
+                    {
+                        'targets': [1, 3, 5],
+                        'createdCell': function (td, cellData, rowData, row, col) {
+                            $(td).addClass("text-truncate text-nowrap");
+                        }
+                    },
+                    {
+                        'targets': [2],
+                        'createdCell': function (td, cellData, rowData, row, col) {
+                            $(td).addClass("text-truncate text-nowrap");
+                            $(td).html(
+                                convertToDateDisplay(cellData)
+                            );
+                        }
+                    },
+                    {
+                        'targets': 6,
+                        'createdCell': function (td, cellData, rowData, row, col) {
+                            $(td).addClass("col-status text-nowrap");
+                            $(td).html(
+                                '<div style="width: 100%;" class="status ' + cellData.split('|')[0] + '">' +
+                                cellData.split('|')[1] +
+                                '</div>'
                             );
                         }
                     }

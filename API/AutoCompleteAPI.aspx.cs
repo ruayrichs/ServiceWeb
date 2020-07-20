@@ -110,9 +110,12 @@ namespace ServiceWeb.API
 
             if (FilterOwner && !ERPWAuthentication.Permission.AllPermission)
             {
-                foreach (DataRow dr in dt_owner.Rows)
+                if (dt_owner.Rows.Count > 0)
                 {
                     sql += @" and";
+                }
+                foreach (DataRow dr in dt_owner.Rows)
+                {
                     if (dr == dt_owner.Rows[dt_owner.Rows.Count - 1])
                     {
                         sql += @" b.BPChannalCode = '" + dr["OwnerService"].ToString() + "'";
@@ -181,7 +184,10 @@ namespace ServiceWeb.API
 
             if (FilterOwner && !ERPWAuthentication.Permission.AllPermission)
             {
-                sql += @" and";
+                if(dt_owner.Rows.Count > 0)
+                {
+                    sql += @" and";
+                }
                 foreach (DataRow dr in dt_owner.Rows)
                 {
                     if (dr == dt_owner.Rows[dt_owner.Rows.Count - 1])
@@ -274,9 +280,12 @@ namespace ServiceWeb.API
 
             if (FilterOwner && !ERPWAuthentication.Permission.AllPermission)
             {
-                foreach (DataRow dr in dt_owner.Rows)
+                if (dt_owner.Rows.Count > 0)
                 {
                     sql += @" and";
+                }
+                foreach (DataRow dr in dt_owner.Rows)
+                {
                     if (dr == dt_owner.Rows[dt_owner.Rows.Count - 1])
                     {
                         sql += @" b.OwnerService = '" + dr["OwnerService"].ToString() + "'";

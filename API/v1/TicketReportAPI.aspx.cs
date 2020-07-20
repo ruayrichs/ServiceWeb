@@ -130,7 +130,7 @@ namespace ServiceWeb.API.v1
 
             DashboardFinalDataModel DashboardFinalData = dashboardLib.PreparFinanDataDashboard(
                 ERPWAuthentication.SID, ERPWAuthentication.CompanyCode,
-                "", false, ""
+                "", false, "", ERPWAuthentication.EmployeeCode
             );
 
             var json = new JavaScriptSerializer().Serialize(DashboardFinalData);

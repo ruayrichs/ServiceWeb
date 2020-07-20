@@ -1,5 +1,12 @@
-﻿using Agape.Lib.DBService;
+﻿using agape.lib.constant;
+using Agape.FocusOne.Utilities;
+using Agape.Lib.DBService;
 using Agape.Lib.Link.Mobile.Model;
+using Agape.Lib.Web.Bean.CS;
+using ERPW.Lib.F1WebService.ICMUtils;
+using ERPW.Lib.Master;
+using ERPW.Lib.Master.Config;
+using ERPW.Lib.Master.Entity;
 using ERPW.Lib.Service;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -29,6 +36,9 @@ namespace ServiceWeb.API.ServiceTicketAPI
 
         private const string ACTION_TRIGGER_ESCALATE = "action_trigger_escalate";
 
+        private DBService dbService = new DBService();
+
+        private MasterConfigLibrary libmasterConfig = new MasterConfigLibrary();
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -105,7 +115,7 @@ namespace ServiceWeb.API.ServiceTicketAPI
             switch (action)
             {
                 case TriggerService.TRIGGER_ACTION_TICKET_START:
-                   
+
                 case TriggerService.TRIGGER_ACTION_TICKET_ESCALATE:
                     TriggerEscalate(triggerData);
                     break;
@@ -116,12 +126,15 @@ namespace ServiceWeb.API.ServiceTicketAPI
                 case TriggerService.TRIGGER_ACTION_TICKET_BEFORE_OVERDUE:
                     TriggerBefore(triggerData);
                     break;
+                case TriggerService.TRIGGER_ACTION_TICKET_STATUS_AUTO_UPDATE:
+                    TriggerUpdateStatus(triggerData);
+                    break;
                 default:
                     throw new Exception("access denied.");
             }
         }
 
-        // #trigger SLA coffee kk ****************************************************
+        #region Trigger SLA
         private void TriggerBefore(ERPW_TRIGGER_STATUS triggerData)
         {
             JObject response = new JObject();
@@ -193,7 +206,7 @@ namespace ServiceWeb.API.ServiceTicketAPI
 
             Response.Write(response);
         }
-        // #endtrigger SLA coffee kk ****************************************************
+        #endregion 
 
         private void TriggerEscalate(ERPW_TRIGGER_STATUS triggerData)
         {
@@ -202,7 +215,7 @@ namespace ServiceWeb.API.ServiceTicketAPI
             try
             {
                 bool escalate = false;
-                bool overDue = false;                
+                bool overDue = false;
 
                 string ticketSubject = "";
 
@@ -221,10 +234,10 @@ namespace ServiceWeb.API.ServiceTicketAPI
                               AND DocType = '" + triggerData.DocumentType + "' AND FiscalYear = '" + triggerData.FiscalYear + @"' 
                               AND CallerID = '" + triggerData.DocumentNo + "' AND CallStatus = '" + ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE + "'";
 
-                DataTable dt = dbService.selectDataFocusone(sql);                
+                DataTable dt = dbService.selectDataFocusone(sql);
 
                 if (dt.Rows.Count == 0) // not found = don't close
-                {                  
+                {
                     sql = @"SELECT * FROM CRM_SERVICECALL_MAPPING_ACTIVITY 
                                    WHERE SNAID = '" + triggerData.CompanyCode + "' AND AOBJECTLINK = '" + triggerData.TransactionID + @"' 
                                    AND DOCYEAR = '" + triggerData.FiscalYear + "' AND ServiceDocNo = '" + triggerData.DocumentNo + "'";
@@ -272,7 +285,7 @@ namespace ServiceWeb.API.ServiceTicketAPI
                 if (escalate && escalateTier != "")
                 {
                     string incidentArea = "";
-                    string equipmentCode = "";                    
+                    string equipmentCode = "";
 
                     // Get equipment and incident area
                     sql = @"SELECT ObjectID FROM cs_servicecall_header 
@@ -379,11 +392,11 @@ namespace ServiceWeb.API.ServiceTicketAPI
                         //    );
                         //}
 
-                        
+
                         // Escalate to next tier
                         AfterSaleService.getInstance().EscalateTicket(
                             triggerData.SID, triggerData.CompanyCode, triggerData.DocumentType, triggerData.DocumentNo,
-                            triggerData.FiscalYear, tierCode, escalateTier, escalateTierDesc, resolutionMinutes, 
+                            triggerData.FiscalYear, tierCode, escalateTier, escalateTierDesc, resolutionMinutes,
                             requesterTime,
                             incidentArea, equipmentCode, ticketSubject, "System Auto", "", "System Auto", false,
                             MainDelegate, participantsArray.ToArray(), null, null);
@@ -410,7 +423,27 @@ namespace ServiceWeb.API.ServiceTicketAPI
                     }
                 }
 
+                bool overDueActive = overDue;
                 if (overDue)
+                {
+                    sql = @"select b.EventType from cs_servicecall_header a
+                        inner join ERPW_TICKET_STATUS b
+                        on a.SID = b.SID
+                        and a.CompanyCode = b.CompanyCode
+                        and a.Docstatus = b.TicketStatusCode
+                        where a.SID = '" + triggerData.SID + @"' 
+                        and a.CompanyCode = '" + triggerData.CompanyCode + @"' 
+                        and a.CallerID = '" + triggerData.DocumentNo + "'";
+
+                    DataTable dtEventTypeStatus = dbService.selectDataFocusone(sql);
+                    string EventTypeStatus = dtEventTypeStatus.Rows[0]["EventType"].ToString();
+                    if (EventTypeStatus == "CANCEL" || EventTypeStatus == "CANCEL_CHANGE" || EventTypeStatus == "CLOSED" || EventTypeStatus == "CLOSED_CHANGE")
+                    {
+                        overDueActive = false;
+                    }
+                }
+
+                if (overDueActive)
                 {
                     NotificationLibrary.GetInstance().TicketAlertEvent(
                         NotificationLibrary.EVENT_TYPE.TICKET_OVERDUE,
@@ -450,6 +483,322 @@ namespace ServiceWeb.API.ServiceTicketAPI
 
             Response.Write(response);
         }
+
+        private void TriggerUpdateStatus(ERPW_TRIGGER_STATUS triggerData)
+        {
+            JObject response = new JObject();
+
+            try
+            {
+                string[] splitTransactionID = triggerData.TransactionID.Split('|');
+                string statusBegin = splitTransactionID[1];
+                string statusTarget = splitTransactionID[2];
+
+                DataTable dtAUSConfig = libmasterConfig.GetMasterConfigTicketStatusAuto(triggerData.SID, triggerData.CompanyCode, statusBegin);
+
+                if (dtAUSConfig.Rows.Count > 0)
+                {
+                    bool isWorking = Convert.ToBoolean(dtAUSConfig.Rows[0]["WorkingStatus"].ToString());
+                    DataTable TicketStatusTargetData = libmasterConfig.GetMasterConfigTicketStatus(triggerData.SID, triggerData.CompanyCode, statusTarget, null);
+
+                    if (isWorking && TicketStatusTargetData.Rows.Count > 0)
+                    {
+                        string TICKET_STATUS_EVENT_TARGET_TYPE = TicketStatusTargetData.Rows[0]["EventType"].ToString();
+                        string sql = @"SELECT ObjectID FROM cs_servicecall_header 
+                            WHERE SID = '" + triggerData.SID + "' AND CompanyCode = '" + triggerData.CompanyCode + @"' 
+                            AND DocType = '" + triggerData.DocumentType + "' AND CallerID = '" + triggerData.DocumentNo + @"' 
+                            AND FiscalYear = '" + triggerData.FiscalYear + "'" + @"
+                            AND Docstatus = '" + statusBegin + "'";
+
+                        DataTable dtHeader = dbService.selectDataFocusone(sql);
+
+                        if (dtHeader.Rows.Count > 0)
+                        {
+                            switch (TICKET_STATUS_EVENT_TARGET_TYPE)
+                            {
+                                case ServiceTicketLibrary.TICKET_STATUS_EVENT_INPROGRESS:
+                                    doTicketInprogess(triggerData, statusBegin);
+                                    break;
+                                case ServiceTicketLibrary.TICKET_STATUS_EVENT_CLOSED:
+                                    doTicketClosed(triggerData);
+                                    break;
+                                default:
+                                    throw new Exception("access denied.");
+                            }
+                        }
+                    } else
+                    {
+                        TriggerService.GetInstance().CancelTrigger(triggerData.TransactionID);
+                    }
+
+                }
+
+                Response.Write(response);
+                AGResponse.generate(response, HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                AGResponse.generateError(response, e);
+                AGResponse.generate(response, HttpStatusCode.BadRequest);
+
+                using (EventLog eventLog = new EventLog("Application"))
+                {
+                    eventLog.Source = "Application";
+                    eventLog.WriteEntry(e.Message, EventLogEntryType.Information, 101, 1);
+                }
+            }  
+            
+        }
+
+        ServiceTicketLibrary lib = new ServiceTicketLibrary();
+
+        #region inprogress status
+        private void doTicketInprogess(ERPW_TRIGGER_STATUS triggerData, string statusBegin)
+        {
+            string TICKET_STATUS_EVENT_INPROGRESS_CODE = lib.GetTicketStatusFromEvent(triggerData.SID, triggerData.CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_INPROGRESS);
+            AfterSaleService.getInstance().UpdateStatus(
+                triggerData.SID, 
+                triggerData.CompanyCode,
+                TICKET_STATUS_EVENT_INPROGRESS_CODE,
+                triggerData.DocumentType,
+                triggerData.FiscalYear,
+                triggerData.DocumentNo,
+                triggerData.Created_By, 
+                Validation.getCurrentServerStringDateTime());
+
+            string TICKET_STATUS_EVENT_BEGIN_DESC = ServiceTicketLibrary.GetTicketDocStatusDesc(triggerData.SID, triggerData.CompanyCode, statusBegin);
+
+
+            string quoteMessage = "Update status from \"" + TICKET_STATUS_EVENT_BEGIN_DESC + "\" to \"" + ServiceTicketLibrary.TICKET_STATUS_EVENT_INPROGRESS_DESC + "\"";
+            List<logValue_OldNew> enLog = new List<logValue_OldNew>();
+            enLog.Add(new logValue_OldNew
+            {
+                Value_Old = "",
+                Value_New = quoteMessage,
+                TableName = "",
+                FieldName = "",
+                AccessCode = LogServiceLibrary.AccessCode_Change
+            });
+            SaveLog(triggerData, enLog);
+
+            NotificationLibrary.GetInstance().TicketAlertEvent(
+               NotificationLibrary.EVENT_TYPE.TICKET_UPDATESTATUS,
+               triggerData.SID,
+               triggerData.CompanyCode,
+               triggerData.DocumentNo,
+               triggerData.Created_By,
+               ThisPage
+           );
+
+        }
+        #endregion
+
+        #region close status
+        private void doTicketClosed(ERPW_TRIGGER_STATUS triggerData)
+        {
+            string TICKET_STATUS_EVENT_CLOSED_CODE = lib.GetTicketStatusFromEvent(triggerData.SID, triggerData.CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_CLOSED);
+            string sql = @"SELECT * FROM cs_servicecall_header 
+                            WHERE SID = '" + triggerData.SID + "' AND CompanyCode = '" + triggerData.CompanyCode + @"' 
+                            AND DocType = '" + triggerData.DocumentType + "' AND CallerID = '" + triggerData.DocumentNo + @"' 
+                            AND FiscalYear = '" + triggerData.FiscalYear + "'";
+
+
+            DataTable dtHeader = dbService.selectDataFocusone(sql);
+
+            string objectID = dtHeader.Rows[0]["ObjectID"].ToString();
+                 
+            string sqlItem = @"SELECT * FROM cs_servicecall_item 
+                            WHERE SID = '" + triggerData.SID + "' AND CompanyCode = '" + triggerData.CompanyCode + @"' 
+                            AND ObjectID = '" + objectID + "'";
+
+            DataTable dtItem = dbService.selectDataFocusone(sqlItem);
+
+            List<logValue_OldNew> enLog = new List<logValue_OldNew>();
+
+            foreach (DataRow drHeader in dtHeader.Rows)
+            {
+                string textOldValue = "";
+                if (Convert.ToString(drHeader["AffectSLA"]) == "")
+                {
+                    textOldValue = "";
+                }
+                else if (Convert.ToString(drHeader["AffectSLA"]) == "True")
+                {
+                    textOldValue = "Affect SLA";
+                }
+                else if (Convert.ToString(drHeader["AffectSLA"]) == "False")
+                {
+                    textOldValue = "Not Affect SLA";
+                }
+
+                string textNewValue = "";
+
+                enLog.Add(new logValue_OldNew
+                {
+                    Value_Old = textOldValue,
+                    Value_New = textNewValue,
+                    TableName = "cs_servicecall_header",
+                    FieldName = "Affect SLA",
+                    AccessCode = LogServiceLibrary.AccessCode_Change
+                });
+            }
+
+            foreach (DataRow drItem in dtItem.Rows)
+            {
+                enLog.Add(new logValue_OldNew
+                {
+                    Value_Old = Convert.ToString(drItem["SummaryProblem"]),
+                    Value_New = "",
+                    TableName = "cs_servicecall_item",
+                    FieldName = "Summary Problem",
+                    AccessCode = LogServiceLibrary.AccessCode_Change
+                });
+  
+                enLog.Add(new logValue_OldNew
+                {
+                    Value_Old = Convert.ToString(drItem["SummaryCause"]),
+                    Value_New = "",
+                    TableName = "cs_servicecall_item",
+                    FieldName = "Summary Cause",
+                    AccessCode = LogServiceLibrary.AccessCode_Change
+                });
+
+
+                enLog.Add(new logValue_OldNew
+                {
+                    Value_Old = Convert.ToString(drItem["SummaryResolution"]),
+                    Value_New = "",
+                    TableName = "cs_servicecall_item",
+                    FieldName = "Summary Resolution",
+                    AccessCode = LogServiceLibrary.AccessCode_Change
+                });
+
+            }
+
+            #region close servicecall
+            string canceldate = Validation.getCurrentServerStringDateTime().Substring(0, 8);
+            string canceltime = Validation.getCurrentServerDateTime().ToString("HHmmss");
+            string cancelby = triggerData.Created_By;
+            string cancelcomment = triggerData.Created_By;
+            string close_status = ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE;
+
+            if (dtItem.Rows.Count != 0)
+            {
+                saveCloseDetailtoItem(
+                    objectID,
+                    canceldate, 
+                    canceltime,
+                    cancelcomment,
+                    cancelby,
+                    close_status
+                    );
+                // get new data after update
+                dtItem = dbService.selectDataFocusone(sqlItem);
+
+            }
+
+            bool isopen = false;
+
+            foreach (DataRow dr in dtItem.Rows)
+            {
+                if (dr.RowState != DataRowState.Deleted)
+                {
+                    if ("".Equals(dr["CloseStatus"].ToString()) || "01".Equals(dr["CloseStatus"].ToString()))
+                    {
+                        isopen = true;
+                    }
+                }
+            }
+
+            if (!isopen)
+            {
+                
+
+                saveCloseDetailtoHeader(
+                    triggerData.DocumentNo,
+                    ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE,
+                    TICKET_STATUS_EVENT_CLOSED_CODE,
+                    cancelby,
+                    Validation.getCurrentServerStringDateTime()
+                    );
+
+                // get new data after update
+                dtHeader = dbService.selectDataFocusone(sql);
+            }
+
+            #endregion
+
+            enLog.Add(new logValue_OldNew
+            {
+                Value_Old = "",
+                Value_New = "Close Ticket",
+                TableName = "",
+                FieldName = "",
+                AccessCode = LogServiceLibrary.AccessCode_Change
+            });
+            SaveLog(triggerData, enLog);   
+
+            AfterSaleService.getInstance().UpdateStatus(
+                triggerData.SID,
+                triggerData.CompanyCode,
+                TICKET_STATUS_EVENT_CLOSED_CODE,
+                triggerData.DocumentType,
+                triggerData.FiscalYear,
+                triggerData.DocumentNo,
+                triggerData.Created_By,
+                Validation.getCurrentServerStringDateTime());
+
+            
+            NotificationLibrary.GetInstance().TicketAlertEvent(
+                NotificationLibrary.EVENT_TYPE.TICKET_CLOSE,
+                triggerData.SID,
+                triggerData.CompanyCode,
+                triggerData.DocumentNo,
+                triggerData.Created_By,
+                ThisPage
+            );
+        }
+        private void saveCloseDetailtoItem(string ObjectId, string canceldate, string canceltime, string cancelcomment, string cancelby, string close_status )
+        {
+            string where = "WHERE ObjectID = '" + ObjectId + "'";
+            string sql = @"UPDATE cs_servicecall_item 
+                            SET ClosedOnDate = '" + canceldate + @"'
+                            ,ClosedOnTime = '" + canceltime + @"'
+                            ,CloseComment = '" + cancelcomment + @"'
+                            ,CloseBy = '" + cancelby + @"'
+                            ,CloseStatus = '" + close_status + "' " + where;
+
+            dbService.executeSQLForFocusone(sql);
+        }
+        private void saveCloseDetailtoHeader(string DocumentNo, string CallStatus, string Docstatus, string UPDATED_BY, string UPDATED_ON)
+        {
+            string where = "WHERE CallerID = '" + DocumentNo + "'";
+            string sql = @"UPDATE cs_servicecall_header
+                            SET CallStatus = '" + CallStatus + @"'
+                            ,Docstatus = '" + Docstatus + @"'
+                            ,UPDATED_BY = '" + UPDATED_BY + @"'
+                            ,UPDATED_ON = '" + UPDATED_ON + "' " + where;
+
+            dbService.executeSQLForFocusone(sql);
+        }
+
+        #endregion
+
+        private void SaveLog(ERPW_TRIGGER_STATUS triggerData, List<logValue_OldNew> enLog)
+        {
+
+            if (enLog.Count == 0)
+            {
+                return;
+            }
+
+            string DocType = triggerData.DocumentType;
+
+            List<Main_LogService> en = AfterSaleService.getInstance().SaveLogTicket(triggerData.SID, DocType, triggerData.FiscalYear, triggerData.DocumentNo, triggerData.CompanyCode,
+                triggerData.Created_By, enLog);
+
+        }
+
 
     }
 }

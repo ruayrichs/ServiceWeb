@@ -218,6 +218,8 @@
                                         <th>Moblie Phone</th>
                                         <th>E-mail</th>
                                         <th>Active</th>
+                                        <th>Owner Service</th>
+                                        <th>Responsible Organization</th>
                                     </tr>
                                 </thead>
                                 <%--<tbody>--%>
@@ -496,7 +498,9 @@
                     Customer.TelNo1,
                     Customer.Mobile,
                     Customer.EMail,
-                    Customer.Active
+                    Customer.Active,
+                    Customer.OwnerService,
+                    Customer.ResponsibleOrganization
                 ]);
             }
 

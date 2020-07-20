@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceWeb.crm.Master.Equipment {
-    
-    
-    public partial class EquipmentDetail {
-        
+namespace ServiceWeb.crm.Master.Equipment
+{
+
+
+    public partial class EquipmentDetail
+    {
+
         /// <summary>
         /// btnOpenDiagram control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnOpenDiagram;
-        
+
         /// <summary>
         /// btnSaveEquipment control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSaveEquipment;
-        
+
         /// <summary>
         /// btnReloadLog control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnReloadLog;
-        
+
         /// <summary>
         /// btnLoadBindingOwnerAssignment control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnLoadBindingOwnerAssignment;
-        
+
         /// <summary>
         /// btnLoadBindingTicket control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnLoadBindingTicket;
-        
+
         /// <summary>
         /// udppanelHeader control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udppanelHeader;
-        
+
         /// <summary>
         /// txtCompanyCode control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompanyCode;
-        
+
         /// <summary>
         /// txtEquipmentCode control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEquipmentCode;
-        
+
         /// <summary>
         /// txtEquipmentName control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEquipmentName;
-        
+
         /// <summary>
         /// ddlEquipmentType control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEquipmentType;
-        
+
         /// <summary>
         /// txtEquipmentDateFrom control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEquipmentDateFrom;
-        
+
         /// <summary>
         /// txtEquipmentDateTo control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEquipmentDateTo;
-        
+
         /// <summary>
         /// ddlEMClass control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEMClass;
-        
+
         /// <summary>
         /// ddlCategory control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCategory;
-        
+
         /// <summary>
         /// ddlStatus control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
-        
+
         /// <summary>
         /// ddlOwnerService control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlOwnerService;
-        
+
         /// <summary>
         /// udpAttributes control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpAttributes;
-        
+
         /// <summary>
         /// rptAttributes control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptAttributes;
-        
+
         /// <summary>
         /// udpGeneral control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpGeneral;
-        
+
         /// <summary>
         /// txtGeneralBox_Weight control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_Weight;
-        
+
         /// <summary>
         /// ddlGeneralBox_Weight_WeightUnit control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGeneralBox_Weight_WeightUnit;
-        
+
         /// <summary>
         /// txtGeneralBox_Size_Dimension control.
         /// </summary>
@@ -209,16 +211,16 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_Size_Dimension;
-        
+
         /// <summary>
-        /// txtGeneralBox_MaterialNo control.
+        /// txtdata_3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_MaterialNo;
-        
+        protected global::System.Web.UI.WebControls.TextBox txtdata_3;
+
         /// <summary>
         /// txtGeneralBox_Start_UpDate control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_Start_UpDate;
-        
+
         /// <summary>
         /// txtGeneralBox_ActiveBy control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_ActiveBy;
-        
+
         /// <summary>
         /// txtGeneralBox_ActiveTime control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_ActiveTime;
-        
+
         /// <summary>
         /// txtGeneralBox_ActiveDate control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtGeneralBox_ActiveDate;
-        
+
         /// <summary>
         /// txtReferenceDataBox_AcquisitionValue control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtReferenceDataBox_AcquisitionValue;
-        
+
         /// <summary>
         /// txtReferenceDataBox_CategoryCode control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtReferenceDataBox_CategoryCode;
-        
+
         /// <summary>
         /// txtReferenceDataBox_AcquisitionDate control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtReferenceDataBox_AcquisitionDate;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_Manufacturer control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_Manufacturer;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_AuthorizeGroup control.
         /// </summary>
@@ -299,7 +301,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_AuthorizeGroup;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_ManufacturerCountry control.
         /// </summary>
@@ -308,7 +310,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_ManufacturerCountry;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_ModelNo control.
         /// </summary>
@@ -317,7 +319,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_ModelNo;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_Reference control.
         /// </summary>
@@ -326,7 +328,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_Reference;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_Constr_Yr control.
         /// </summary>
@@ -335,7 +337,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_Constr_Yr;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_Constr_Mn control.
         /// </summary>
@@ -344,7 +346,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_Constr_Mn;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_MenuPartNo control.
         /// </summary>
@@ -353,7 +355,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_MenuPartNo;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_InventoryNO control.
         /// </summary>
@@ -362,7 +364,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_InventoryNO;
-        
+
         /// <summary>
         /// txtManufacturerDataBox_SerialNo control.
         /// </summary>
@@ -371,7 +373,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtManufacturerDataBox_SerialNo;
-        
+
         /// <summary>
         /// UpdatePanel1 control.
         /// </summary>
@@ -380,7 +382,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-        
+
         /// <summary>
         /// txtLocationDataBox_Location control.
         /// </summary>
@@ -389,7 +391,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_Location;
-        
+
         /// <summary>
         /// udpLocationDataBox_Location control.
         /// </summary>
@@ -398,7 +400,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpLocationDataBox_Location;
-        
+
         /// <summary>
         /// txtLocationDataBox_Flow_Phase control.
         /// </summary>
@@ -407,7 +409,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_Flow_Phase;
-        
+
         /// <summary>
         /// txtLocationDataBox_Room control.
         /// </summary>
@@ -416,7 +418,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_Room;
-        
+
         /// <summary>
         /// txtLocationDataBox_Cabinet control.
         /// </summary>
@@ -425,7 +427,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_Cabinet;
-        
+
         /// <summary>
         /// txtLocationDataBox_CategoryCode control.
         /// </summary>
@@ -434,7 +436,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_CategoryCode;
-        
+
         /// <summary>
         /// txtLocationDataBox_Shelf control.
         /// </summary>
@@ -443,7 +445,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_Shelf;
-        
+
         /// <summary>
         /// txtLocationDataBox_Slot control.
         /// </summary>
@@ -452,7 +454,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocationDataBox_Slot;
-        
+
         /// <summary>
         /// txtAddressBox_Name_1 control.
         /// </summary>
@@ -461,7 +463,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Name_1;
-        
+
         /// <summary>
         /// txtAddressBox_Name_2 control.
         /// </summary>
@@ -470,7 +472,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Name_2;
-        
+
         /// <summary>
         /// txtAddressBox_Address_Zip control.
         /// </summary>
@@ -479,7 +481,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Address_Zip;
-        
+
         /// <summary>
         /// txtAddressBox_Address_City control.
         /// </summary>
@@ -488,7 +490,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Address_City;
-        
+
         /// <summary>
         /// txtAddressBox_Address_Code_1 control.
         /// </summary>
@@ -497,7 +499,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Address_Code_1;
-        
+
         /// <summary>
         /// txtAddressBox_Address_Code_2 control.
         /// </summary>
@@ -506,7 +508,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Address_Code_2;
-        
+
         /// <summary>
         /// txtAddressBox_Street control.
         /// </summary>
@@ -515,7 +517,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Street;
-        
+
         /// <summary>
         /// txtAddressBox_Telephone control.
         /// </summary>
@@ -524,7 +526,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Telephone;
-        
+
         /// <summary>
         /// txtAddressBox_Fax control.
         /// </summary>
@@ -533,7 +535,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddressBox_Fax;
-        
+
         /// <summary>
         /// udpOganization control.
         /// </summary>
@@ -542,7 +544,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpOganization;
-        
+
         /// <summary>
         /// txtAccountAssignmentBox_CompanyCode control.
         /// </summary>
@@ -551,7 +553,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAccountAssignmentBox_CompanyCode;
-        
+
         /// <summary>
         /// txtAccountAssignmentBox_CompanyName control.
         /// </summary>
@@ -560,7 +562,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAccountAssignmentBox_CompanyName;
-        
+
         /// <summary>
         /// ddlAccountAssignmentBox_BusinessArea_Code control.
         /// </summary>
@@ -569,7 +571,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAccountAssignmentBox_BusinessArea_Code;
-        
+
         /// <summary>
         /// txtAccountAssignmentBox_AssetDesc control.
         /// </summary>
@@ -578,7 +580,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAccountAssignmentBox_AssetDesc;
-        
+
         /// <summary>
         /// hddAccountAssignmentBox_AssetCode control.
         /// </summary>
@@ -587,7 +589,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddAccountAssignmentBox_AssetCode;
-        
+
         /// <summary>
         /// btnSearchAsset control.
         /// </summary>
@@ -596,7 +598,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSearchAsset;
-        
+
         /// <summary>
         /// ddlAccountAssignmentBox_CoustCenter control.
         /// </summary>
@@ -605,7 +607,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAccountAssignmentBox_CoustCenter;
-        
+
         /// <summary>
         /// txtResponsibilitiesBox_PlanningPlant control.
         /// </summary>
@@ -614,7 +616,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResponsibilitiesBox_PlanningPlant;
-        
+
         /// <summary>
         /// txtResponsibilitiesBox_PlannerGroup control.
         /// </summary>
@@ -623,7 +625,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResponsibilitiesBox_PlannerGroup;
-        
+
         /// <summary>
         /// txtResponsibilitiesBox_MainWorkCtr_1 control.
         /// </summary>
@@ -632,7 +634,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResponsibilitiesBox_MainWorkCtr_1;
-        
+
         /// <summary>
         /// txtResponsibilitiesBox_MainWorkCtr_2 control.
         /// </summary>
@@ -641,7 +643,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResponsibilitiesBox_MainWorkCtr_2;
-        
+
         /// <summary>
         /// txtResponsibilitiesBox_CatalogProfile control.
         /// </summary>
@@ -650,7 +652,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResponsibilitiesBox_CatalogProfile;
-        
+
         /// <summary>
         /// udpTableOwnerAssignment control.
         /// </summary>
@@ -659,7 +661,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpTableOwnerAssignment;
-        
+
         /// <summary>
         /// btnAddRowTableOwnerAssignment control.
         /// </summary>
@@ -668,7 +670,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddRowTableOwnerAssignment;
-        
+
         /// <summary>
         /// btnRemoveRowTableOwnerAssignment control.
         /// </summary>
@@ -677,7 +679,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnRemoveRowTableOwnerAssignment;
-        
+
         /// <summary>
         /// btnEditRowTableOwnerAssignment control.
         /// </summary>
@@ -686,7 +688,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEditRowTableOwnerAssignment;
-        
+
         /// <summary>
         /// hddOwnerAssign_LineNumber control.
         /// </summary>
@@ -695,7 +697,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddOwnerAssign_LineNumber;
-        
+
         /// <summary>
         /// panel_data_owner_assign control.
         /// </summary>
@@ -704,7 +706,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl panel_data_owner_assign;
-        
+
         /// <summary>
         /// udpPanelSale control.
         /// </summary>
@@ -713,7 +715,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpPanelSale;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_BillingDocTypeCode control.
         /// </summary>
@@ -722,7 +724,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_BillingDocTypeCode;
-        
+
         /// <summary>
         /// txtSalesAndDistribution_BillingDocYear control.
         /// </summary>
@@ -731,7 +733,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSalesAndDistribution_BillingDocYear;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_BillingDocNumber control.
         /// </summary>
@@ -740,7 +742,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_BillingDocNumber;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_SalseOrganization control.
         /// </summary>
@@ -749,7 +751,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_SalseOrganization;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_SaleOffice control.
         /// </summary>
@@ -758,7 +760,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_SaleOffice;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_SaleGroup control.
         /// </summary>
@@ -767,7 +769,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_SaleGroup;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_DistChanal control.
         /// </summary>
@@ -776,7 +778,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_DistChanal;
-        
+
         /// <summary>
         /// ddlSalesAndDistribution_Division control.
         /// </summary>
@@ -785,7 +787,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSalesAndDistribution_Division;
-        
+
         /// <summary>
         /// txtLicenseBox_LicenseNumber control.
         /// </summary>
@@ -794,7 +796,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLicenseBox_LicenseNumber;
-        
+
         /// <summary>
         /// txtPartnerDataBox_Sold_ToParty control.
         /// </summary>
@@ -803,7 +805,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPartnerDataBox_Sold_ToParty;
-        
+
         /// <summary>
         /// txtPartnerDataBox_Ship_ToParty control.
         /// </summary>
@@ -812,7 +814,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPartnerDataBox_Ship_ToParty;
-        
+
         /// <summary>
         /// udpTableSerialData control.
         /// </summary>
@@ -821,7 +823,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpTableSerialData;
-        
+
         /// <summary>
         /// rptTableSerialData control.
         /// </summary>
@@ -830,7 +832,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptTableSerialData;
-        
+
         /// <summary>
         /// btnAddRowTableSerialData control.
         /// </summary>
@@ -839,7 +841,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddRowTableSerialData;
-        
+
         /// <summary>
         /// udpTableWarranty control.
         /// </summary>
@@ -848,7 +850,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpTableWarranty;
-        
+
         /// <summary>
         /// txtMaintenanceStartDate control.
         /// </summary>
@@ -857,7 +859,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMaintenanceStartDate;
-        
+
         /// <summary>
         /// txtMaintenanceEndDate control.
         /// </summary>
@@ -866,7 +868,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMaintenanceEndDate;
-        
+
         /// <summary>
         /// ddlMaintenanceType control.
         /// </summary>
@@ -875,7 +877,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMaintenanceType;
-        
+
         /// <summary>
         /// txtPeriod control.
         /// </summary>
@@ -884,7 +886,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPeriod;
-        
+
         /// <summary>
         /// txtLastMaintenanceDate control.
         /// </summary>
@@ -893,7 +895,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLastMaintenanceDate;
-        
+
         /// <summary>
         /// txtLastMaintenanceTime control.
         /// </summary>
@@ -902,7 +904,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLastMaintenanceTime;
-        
+
         /// <summary>
         /// txtNextMaintenanceDate control.
         /// </summary>
@@ -911,7 +913,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNextMaintenanceDate;
-        
+
         /// <summary>
         /// txtNextMaintenanceTime control.
         /// </summary>
@@ -920,7 +922,43 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNextMaintenanceTime;
-        
+
+        /// <summary>
+        /// txtShowDaySend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtShowDaySend;
+
+        /// <summary>
+        /// RegularExpressionValidator1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidator1;
+
+        /// <summary>
+        /// txtDaySend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDaySend;
+
+        /// <summary>
+        /// CheckBoxDaySend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox CheckBoxDaySend;
+
         /// <summary>
         /// txtWarrantyStartDate control.
         /// </summary>
@@ -929,7 +967,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtWarrantyStartDate;
-        
+
         /// <summary>
         /// txtWarrantyEndDate control.
         /// </summary>
@@ -938,7 +976,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtWarrantyEndDate;
-        
+
         /// <summary>
         /// udpWarrantyNextMaintenance control.
         /// </summary>
@@ -947,7 +985,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpWarrantyNextMaintenance;
-        
+
         /// <summary>
         /// btnWarrantyNextMaintenanceRefStartDate control.
         /// </summary>
@@ -956,7 +994,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnWarrantyNextMaintenanceRefStartDate;
-        
+
         /// <summary>
         /// btnWarrantyNextMaintenanceRefEndDate control.
         /// </summary>
@@ -965,7 +1003,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnWarrantyNextMaintenanceRefEndDate;
-        
+
         /// <summary>
         /// btnWarrantyNextMaintenanceRefPeriod control.
         /// </summary>
@@ -974,7 +1012,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnWarrantyNextMaintenanceRefPeriod;
-        
+
         /// <summary>
         /// udpTableAssitionalDate control.
         /// </summary>
@@ -983,7 +1021,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpTableAssitionalDate;
-        
+
         /// <summary>
         /// rptTableAssitionalDate control.
         /// </summary>
@@ -992,7 +1030,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptTableAssitionalDate;
-        
+
         /// <summary>
         /// TimeLineControl control.
         /// </summary>
@@ -1001,7 +1039,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.widget.usercontrol.TimeLineControl TimeLineControl;
-        
+
         /// <summary>
         /// FlowChartDiagramRelationControl control.
         /// </summary>
@@ -1010,7 +1048,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.LinkFlowChart.FlowChartDiagramRelationControl FlowChartDiagramRelationControl;
-        
+
         /// <summary>
         /// udpnItems control.
         /// </summary>
@@ -1019,7 +1057,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpnItems;
-        
+
         /// <summary>
         /// rptSearchSale control.
         /// </summary>
@@ -1028,7 +1066,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptSearchSale;
-        
+
         /// <summary>
         /// btnLinkTransactionSearch control.
         /// </summary>
@@ -1037,7 +1075,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnLinkTransactionSearch;
-        
+
         /// <summary>
         /// hddCallerID_Criteria control.
         /// </summary>
@@ -1046,7 +1084,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddCallerID_Criteria;
-        
+
         /// <summary>
         /// EquipmentChangeLog control.
         /// </summary>
@@ -1055,7 +1093,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.UserControl.ChangeLogControl EquipmentChangeLog;
-        
+
         /// <summary>
         /// udpListTicketItems control.
         /// </summary>
@@ -1064,7 +1102,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpListTicketItems;
-        
+
         /// <summary>
         /// rptListTicketItems control.
         /// </summary>
@@ -1073,7 +1111,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptListTicketItems;
-        
+
         /// <summary>
         /// btnOpenTicketNewWindow control.
         /// </summary>
@@ -1082,7 +1120,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnOpenTicketNewWindow;
-        
+
         /// <summary>
         /// hddCallerID control.
         /// </summary>
@@ -1091,7 +1129,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddCallerID;
-        
+
         /// <summary>
         /// udpAssetList control.
         /// </summary>
@@ -1100,7 +1138,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpAssetList;
-        
+
         /// <summary>
         /// rptListAsset control.
         /// </summary>
@@ -1109,7 +1147,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptListAsset;
-        
+
         /// <summary>
         /// udpDataOwnerAssign control.
         /// </summary>
@@ -1118,7 +1156,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpDataOwnerAssign;
-        
+
         /// <summary>
         /// txtOwnerAssignmentBox_ItemNo control.
         /// </summary>
@@ -1127,7 +1165,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOwnerAssignmentBox_ItemNo;
-        
+
         /// <summary>
         /// ddlOwnerAssignmentBox_OwnerType control.
         /// </summary>
@@ -1136,7 +1174,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlOwnerAssignmentBox_OwnerType;
-        
+
         /// <summary>
         /// btnOwnerAssignmentBox_LoadOwner control.
         /// </summary>
@@ -1145,7 +1183,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnOwnerAssignmentBox_LoadOwner;
-        
+
         /// <summary>
         /// hddOwnerAssignmentBox_OwnerType control.
         /// </summary>
@@ -1154,7 +1192,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddOwnerAssignmentBox_OwnerType;
-        
+
         /// <summary>
         /// udpBox_CustomerSelect control.
         /// </summary>
@@ -1163,7 +1201,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpBox_CustomerSelect;
-        
+
         /// <summary>
         /// Complete_OwnerAssignmentBox_CustomerSelect control.
         /// </summary>
@@ -1172,7 +1210,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.widget.usercontrol.AutoCompleteControl Complete_OwnerAssignmentBox_CustomerSelect;
-        
+
         /// <summary>
         /// txtOwnerAssignmentBox_BeginDate control.
         /// </summary>
@@ -1181,7 +1219,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOwnerAssignmentBox_BeginDate;
-        
+
         /// <summary>
         /// txtOwnerAssignmentBox_EndDate control.
         /// </summary>
@@ -1190,7 +1228,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOwnerAssignmentBox_EndDate;
-        
+
         /// <summary>
         /// ddlSLAGroup control.
         /// </summary>
@@ -1199,7 +1237,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSLAGroup;
-        
+
         /// <summary>
         /// chkOwnerAssignmentBox_ActiveStatus control.
         /// </summary>
@@ -1208,7 +1246,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkOwnerAssignmentBox_ActiveStatus;
-        
+
         /// <summary>
         /// btnSaveOwnerAssignmentModal control.
         /// </summary>
@@ -1217,7 +1255,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSaveOwnerAssignmentModal;
-        
+
         /// <summary>
         /// updAttachFile control.
         /// </summary>
@@ -1226,7 +1264,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updAttachFile;
-        
+
         /// <summary>
         /// lbHeadAttach control.
         /// </summary>
@@ -1235,7 +1273,7 @@ namespace ServiceWeb.crm.Master.Equipment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbHeadAttach;
-        
+
         /// <summary>
         /// AttachFileUserControl control.
         /// </summary>

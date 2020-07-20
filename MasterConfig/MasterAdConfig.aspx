@@ -26,13 +26,15 @@
             <div class="card-header">
                 <h5 class="mb-0">Active Directory</h5>
             </div>
-
-
+            
             <div class="card-body panel-body-customer-search PANEL-DEFAULT-BUTTON">
                 <div class="form-row">
                     <div class="col-md-12">
                         <div class="card border-default" style="margin-bottom: 10px;">
                             <div class="card-body card-body-sm">
+                                <div>
+                                    <label class="font-weight-bold" >Config Active Directory</label>
+                                </div>
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <div>
@@ -57,9 +59,25 @@
                                         <div>
                                             <label>BaseDN </label>
                                         </div>
-                                        <asp:TextBox runat="server" CssClass="form-control form-control-sm " ID="ADBaseDN" />
+                                        <asp:TextBox runat="server" CssClass="form-control form-control-sm required" ID="ADBaseDN" />
                                     </div>
-                                    <div class="form-group col-lg-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+                </div>
+            </div>
+            
+            <div class="card-body panel-body-customer-search PANEL-DEFAULT-BUTTON">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="card border-default" style="margin-bottom: 10px;">
+                            <div class="card-body card-body-sm">
+                            <div >
+                                <label class="font-weight-bold">For Check Connect </label>
+                            </div>
+                                <div class="form-row">
+                                     <div class="form-group col-lg-6">
                                         <div>
                                             <label>Username</label>
                                         </div>
@@ -84,8 +102,9 @@
                                     </div>
                                 </div>
                             </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
 </asp:Content>

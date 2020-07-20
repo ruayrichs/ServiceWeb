@@ -664,6 +664,7 @@ namespace ServiceWeb.Accountability.UserControl
 
         protected void btnRejectRequestApprvelInitiative_Click(object sender, EventArgs e)
         {
+            string sPath = System.Web.HttpContext.Current.Request.Url.AbsolutePath;
             try
             {
                 string curDateTime = Validation.getCurrentServerStringDateTimeMillisecond();
@@ -700,9 +701,20 @@ namespace ServiceWeb.Accountability.UserControl
 
                 // cancel
                 //new ServiceCallTransactionChange().btnCancelDocTran_click(null,null);
-                ServiceCallTransactionChange c = (ServiceCallTransactionChange)this.Parent.Page;
-                c.btnCancelDocTran_click(null, null);
-                c.MailAlertOwner();
+                if (sPath == "/crm/AfterSale/ServiceCallTransactionChange.aspx")
+                {
+                    ServiceCallTransactionChange c = (ServiceCallTransactionChange)this.Parent.Page;
+                    c.btnCancelDocTran_click(null, null);
+                    c.MailAlertOwner();
+                }
+                else if(sPath == "/crm/AfterSale/ServiceCallTransaction.aspx") 
+                {
+                    ServiceCallTransaction c = (ServiceCallTransaction)this.Parent.Page;
+                    c.btnCancelDocTran_click(null, null);
+                    c.MailAlertOwner();
+                }
+                else
+                { ClientService.AGError(ObjectUtil.Err(sPath)); }
                 // cancel
 
                 sendEmail("REJECT_UPGARDE_STATEGATE");

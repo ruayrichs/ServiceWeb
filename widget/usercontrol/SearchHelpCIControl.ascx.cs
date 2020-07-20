@@ -1,4 +1,5 @@
-﻿using ERPW.Lib.Authentication;
+﻿using Agape.Lib.Web.Bean.CS;
+using ERPW.Lib.Authentication;
 using ERPW.Lib.F1WebService.ICMUtils;
 using ERPW.Lib.Master.Config;
 using Newtonsoft.Json;
@@ -21,6 +22,65 @@ namespace ServiceWeb.widget.usercontrol
         private UniversalService universalService = new UniversalService();
         private MasterConfigLibrary config = MasterConfigLibrary.GetInstance();
         private EquipmentService ServiceEquipment = new EquipmentService();
+        private EquipmentService libCI = new EquipmentService();
+        private string _idGen;
+        private string idGen
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_idGen))
+                {
+                    _idGen = Request["id"];
+                }
+                return _idGen;
+            }
+        }
+
+        private tmpServiceCallDataSet _serviceCallEntity;
+        private tmpServiceCallDataSet serviceCallEntity
+        {
+            get
+            {
+                if (_serviceCallEntity == null)
+                {
+                    if (Session["ServicecallEntity" + idGen] == null)
+                    {
+                        Session["ServicecallEntity" + idGen] = new tmpServiceCallDataSet();
+                    }
+
+                    _serviceCallEntity = (tmpServiceCallDataSet)Session["ServicecallEntity" + idGen];
+                }
+
+                if (_serviceCallEntity.cs_servicecall_header.PrimaryKey.Length == 6)
+                    _serviceCallEntity.cs_servicecall_header.PrimaryKey = new DataColumn[] {
+                        _serviceCallEntity.cs_servicecall_header.Columns["SID"],
+                        _serviceCallEntity.cs_servicecall_header.Columns["CompanyCode"],
+                        _serviceCallEntity.cs_servicecall_header.Columns["CallerID"],
+                        _serviceCallEntity.cs_servicecall_header.Columns["CustomerCode"],
+                        _serviceCallEntity.cs_servicecall_header.Columns["Doctype"],
+                        _serviceCallEntity.cs_servicecall_header.Columns["Fiscalyear"]
+                    };
+
+                if (_serviceCallEntity.cs_servicecall_item.PrimaryKey.Length == 4)
+                    _serviceCallEntity.cs_servicecall_item.PrimaryKey = new DataColumn[] {
+                        _serviceCallEntity.cs_servicecall_item.Columns["SID"],
+                        _serviceCallEntity.cs_servicecall_item.Columns["CompanyCode"],
+                        _serviceCallEntity.cs_servicecall_item.Columns["xLineNo"],
+                        _serviceCallEntity.cs_servicecall_item.Columns["ObjectID"]
+                    };
+
+                return _serviceCallEntity;
+            }
+            set
+            {
+                Session["ServicecallEntity" + idGen] = value;
+                if (_serviceCallEntity != null)
+                {
+                    _serviceCallEntity = value;
+                }
+            }
+        }
+
         private DataTable dtEquipmentStatus_;
         private DataTable dtEquipmentStatus
         {
@@ -57,13 +117,35 @@ namespace ServiceWeb.widget.usercontrol
             }
         }
 
+        public void openAddCI()
+        {
+            hddClearCheck.Value = "false";
+            txtSearchHelp_DataCISelect.Text = "";
+            udpHddCISelect.Update();
+            udpSearchConfigurationItem.Update();
+        }
+        public void removeCIformSearchwithButton(string CIcode)
+        {
+            string CI = txtSearchHelp_DataCISelect.Text.ToString();
+            List<string> CIList = CI.Split(',').ToList();
+
+            CIList.Remove(CIcode);
+
+            txtSearchHelp_DataCISelect.Text = String.Join(",", CIList.ToArray());
+
+            udpHddCISelect.Update();
+            udpSearchConfigurationItem.Update();
+            ClientService.AGLoading(false);
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 setDefaultSearchCI();
             }
+            
         }
+
         private void setDefaultSearchCI()
         {
             txtEquipmentCode.Text = "";
@@ -105,13 +187,26 @@ namespace ServiceWeb.widget.usercontrol
                 ddlOwnerService.Items.Insert(0, new ListItem("All", ""));
             }
         }
-
         protected void search_ci_btn_Click(object sender, EventArgs e)
         {
             try
             {
-
                 DataTable dt = new DataTable();
+               
+                List<string> listEquipment = new List<string>();
+                List<string> listEquipmentNew = new List<string>();
+                foreach (DataRow drCI in serviceCallEntity.cs_servicecall_item.Rows)
+                {
+                    if (drCI.RowState == DataRowState.Unchanged)
+                    {
+                        listEquipment.Add(Convert.ToString(drCI["EquipmentNo"]));
+                    } else
+                    {
+                        listEquipmentNew.Add(Convert.ToString(drCI["EquipmentNo"])); // list for set checkbox
+                    }
+                }
+                DataTable dtCI = libCI.getEquipmentDetail(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, listEquipment);
+
                 List<EquipmentService.EquipmentItemData> listEquipmentItem = ServiceEquipment.getListEquipment(
                     ERPWAuthentication.SID,
                     ERPWAuthentication.CompanyCode,
@@ -121,7 +216,8 @@ namespace ServiceWeb.widget.usercontrol
                     ddlEquipmentStatus.SelectedValue,
                     ddlSearch_EMClass.SelectedValue,
                     ddlSearch_Category.SelectedValue,
-                    ddlOwnerService.SelectedValue
+                    ddlOwnerService.SelectedValue,
+                    dtCI
                     );
                 //dt = listEquipmentItem.toDataTable();
                 //rptCI.DataSource = dt;
@@ -137,7 +233,8 @@ namespace ServiceWeb.widget.usercontrol
                     s.Status,
                     s.EquipmentClassName,
                     s.CategoryCode,
-                    s.OwnerGroupName
+                    s.OwnerGroupName,
+                    Selected = listEquipmentNew.Contains(s.EquipmentCode)
                 });
                 JArray data = JsonConvert.DeserializeObject<JArray>(JsonConvert.SerializeObject(dataSource));
                 JArray datastatus = JsonConvert.DeserializeObject<JArray>(JsonConvert.SerializeObject(dtEquipmentStatus));
@@ -166,6 +263,20 @@ namespace ServiceWeb.widget.usercontrol
             {
                 System.Diagnostics.Debug.WriteLine(CIList[index]);
                 listCICode.Add(CIList[index]);
+            }
+        }
+
+        protected void clear_ci_btn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                listCICode.Clear();
+                hddClearCheck.Value = "true";
+                udpSearchConfigurationItem.Update();
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ObjectUtil.Err(ex.Message));
             }
         }
     }

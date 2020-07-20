@@ -78,7 +78,10 @@
                                             CssClass="btn btn-info DEFAULT-BUTTON-CLICK"
                                             OnClick="btn_search"
                                             OnClientClick="AGLoading(true);" />
+                                        &nbsp;
+                                        <asp:Button runat="server" CssClass="btn btn-success" Text="Export Data" ID="ui_export_button" OnClick="ui_export_button_Click" OnClientClick="AGLoading(true);" />
                                     </div>
+                                    <a id="download-report-excel" class="hide" target="_blank" href="<%= Page.ResolveUrl("~/API/ExportExcelAPI.ashx") %>"></a>
                                 </div>
                             </div>
                         </ContentTemplate>
@@ -153,6 +156,10 @@
         </div>
 
         <script>
+            function exportExcelAPI() {
+                $("#download-report-excel")[0].click();
+            }
+
             function afterSearch() {
                 var reportsList = JSON.parse($("#<%= divDataJson.ClientID %>").html());
                 var data = [];

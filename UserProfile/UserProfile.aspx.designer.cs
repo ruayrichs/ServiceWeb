@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceWeb.UserProfile {
-    
-    
-    public partial class UserProfile {
-        
+namespace ServiceWeb.UserProfile
+{
+
+
+    public partial class UserProfile
+    {
+
         /// <summary>
         /// hfdStudentLinkId control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hfdStudentLinkId;
-        
+
         /// <summary>
         /// hdfMyLinkId control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdfMyLinkId;
-        
+
         /// <summary>
         /// divImageProfile_Redesign control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divImageProfile_Redesign;
-        
+
         /// <summary>
         /// udpTitle control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpTitle;
-        
+
         /// <summary>
         /// lbHeaderName control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbHeaderName;
-        
+
         /// <summary>
         /// divImageProfile control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divImageProfile;
-        
+
         /// <summary>
         /// udpName control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpName;
-        
+
         /// <summary>
         /// lbName control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbName;
-        
+
         /// <summary>
         /// lbResume control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbResume;
-        
+
         /// <summary>
         /// UpdatePanel1 control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-        
+
         /// <summary>
         /// udpProfile control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpProfile;
-        
+
         /// <summary>
         /// lbEmail control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbEmail;
-        
+
         /// <summary>
         /// lbPosition control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbPosition;
-        
+
         /// <summary>
         /// lbfacebook control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbfacebook;
-        
+
         /// <summary>
         /// lbinstagram control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbinstagram;
-        
+
         /// <summary>
         /// lbtwitter control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbtwitter;
-        
+
         /// <summary>
         /// UploadPictureTitle control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.UserControl.AGapeGallery.UploadGallery.UploadGallery UploadPictureTitle;
-        
+
         /// <summary>
         /// txtFirstNameEdit control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFirstNameEdit;
-        
+
         /// <summary>
         /// txtLastNameEdit control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLastNameEdit;
-        
+
         /// <summary>
         /// txtResumeEdit control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResumeEdit;
-        
+
         /// <summary>
         /// ddlPostionEdit control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPostionEdit;
-        
+
         /// <summary>
         /// txtPositionOtherEdit control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPositionOtherEdit;
-        
+
         /// <summary>
         /// txtFaceBookEdit control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFaceBookEdit;
-        
+
         /// <summary>
         /// txtInstagramEdit control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtInstagramEdit;
-        
+
         /// <summary>
         /// txtTwitterEdit control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtTwitterEdit;
-        
+
         /// <summary>
         /// btnCancel control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancel;
-        
+
         /// <summary>
         /// btnSave control.
         /// </summary>
@@ -254,5 +256,14 @@ namespace ServiceWeb.UserProfile {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
+
+        /// <summary>
+        /// btnUnlink control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnUnlink;
     }
 }

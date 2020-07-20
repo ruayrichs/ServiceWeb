@@ -24,15 +24,6 @@ namespace ServiceWeb
         protected global::System.Web.UI.WebControls.Label lblCountOpen;
 
         /// <summary>
-        /// lblCountDelay control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCountDelay;
-
-        /// <summary>
         /// lblCountSuccess control.
         /// </summary>
         /// <remarks>
@@ -49,6 +40,15 @@ namespace ServiceWeb
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCountAll;
+
+        /// <summary>
+        /// lblCountDelay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCountDelay;
 
         /// <summary>
         /// btnLinkTransactionSearch control.
@@ -78,15 +78,6 @@ namespace ServiceWeb
         protected global::System.Web.UI.WebControls.Repeater rptOpenTask;
 
         /// <summary>
-        /// Repeater2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater Repeater2;
-
-        /// <summary>
         /// Repeater3 control.
         /// </summary>
         /// <remarks>
@@ -103,6 +94,78 @@ namespace ServiceWeb
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater Repeater4;
+
+        /// <summary>
+        /// Repeater2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater Repeater2;
+
+        /// <summary>
+        /// udpnCICountFamily control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel udpnCICountFamily;
+
+        /// <summary>
+        /// rptCICountFamily control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptCICountFamily;
+
+        /// <summary>
+        /// udpnCICountClass control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel udpnCICountClass;
+
+        /// <summary>
+        /// rptCICountClass control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptCICountClass;
+
+        /// <summary>
+        /// hddSearchCIKey control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddSearchCIKey;
+
+        /// <summary>
+        /// hddSearchCIValue control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddSearchCIValue;
+
+        /// <summary>
+        /// btnLinkTransactionSearchCI control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLinkTransactionSearchCI;
 
         /// <summary>
         /// udpTS control.

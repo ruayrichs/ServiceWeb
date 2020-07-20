@@ -247,8 +247,29 @@ namespace ServiceWeb.crm.AfterSale
             {
                 if (_dtTicketDocStatus == null)
                 {
-                    _dtTicketDocStatus = lib.GetTicketDocStatus(SID, CompanyCode, false);
-                    _dtTicketDocStatus.Merge(lib.GetTicketDocStatus(SID, CompanyCode, true));
+                    var NotChage = lib.GetTicketDocStatus(SID, CompanyCode, false);
+                    var Chage = lib.GetTicketDocStatus(SID, CompanyCode, true);
+
+                    _dtTicketDocStatus = NotChage;
+                    if (NotChage != Chage)
+                    {
+                        foreach (DataRow dtRow in NotChage.Rows)
+                        {
+                            for (int i = Chage.Rows.Count - 1; i >= 0; i--)
+                            {
+                                DataRow dtRoww = Chage.Rows[i];
+                                if (dtRoww["DocumentStatusDesc"].ToString() == dtRow["DocumentStatusDesc"].ToString())
+                                    dtRoww.Delete();
+                            }
+                            Chage.AcceptChanges();
+                        }
+
+                        _dtTicketDocStatus.Merge(Chage);
+
+                        DataView dv = _dtTicketDocStatus.DefaultView;
+                        dv.Sort = "DocumentStatusDesc asc";
+                        _dtTicketDocStatus = dv.ToTable();
+                    }
                 }
                 return _dtTicketDocStatus;
             }
@@ -1505,6 +1526,7 @@ namespace ServiceWeb.crm.AfterSale
 
         private void bindDataEquipment()
         {
+            DataTable ciSelect = new DataTable();
             List<EquipmentService.EquipmentItemData> listEquipmentItem = ServiceEquipment.getListEquipment(
                 SID,
                 CompanyCode,
@@ -1514,7 +1536,8 @@ namespace ServiceWeb.crm.AfterSale
                 ddlEquipmentStatus.SelectedValue,
                 ddlSearch_EMClass.SelectedValue,
                 ddlSearch_Category.SelectedValue,
-                ddlOwnerService.SelectedValue
+                ddlOwnerService.SelectedValue,
+                ciSelect
             );
 
             var dataSource = listEquipmentItem.Select(s => new
@@ -1707,7 +1730,7 @@ namespace ServiceWeb.crm.AfterSale
             if (!string.IsNullOrEmpty(ddlOwnerService_SearchCustomer.SelectedValue))
             {
                 //ListCustomer = ListCustomer.Where(w => w.OwnerService == ddlOwnerService.SelectedValue).ToList(); old code
-                ListCustomer = ListCustomer.Where(w => w.OwnerService == ddlOwnerService_SearchCustomer.SelectedValue).ToList();
+                ListCustomer = ListCustomer.Where(w => w.OwnerServiceCode == ddlOwnerService_SearchCustomer.SelectedValue).ToList();
 
             }
 

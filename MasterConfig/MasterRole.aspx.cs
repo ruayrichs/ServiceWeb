@@ -98,9 +98,8 @@ namespace ServiceWeb.MasterConfig
                     roleMaster.UserManagementModify = "False";
                     roleMaster.RoleConfigView = "False";
                     roleMaster.RoleConfigModify = "False";
-                    //roleMaster.DefaultPage = drDownDefaultPage.Text;
-                    //roleMaster.DefaultPage = drDownDefaultPage.Items[drDownDefaultPage.SelectedIndex].Value;
                     roleMaster.DefaultPage = drDownDefaultPage.SelectedItem.Value;
+                    roleMaster.LevelControl = "0";
                     roleMaster.MyQueueView = "False";
                     roleMaster.MyGroupView = "False";
                     roleMaster.MyOverDueView = "False";
@@ -196,6 +195,7 @@ namespace ServiceWeb.MasterConfig
                     roleMaster.RoleConfigView = (item.FindControl("cbRoleConfigView") as CheckBox).Checked.ToString();
                     roleMaster.RoleConfigModify = (item.FindControl("cbRoleConfigModify") as CheckBox).Checked.ToString();
                     roleMaster.DefaultPage = (item.FindControl("ddDefaultPage") as DropDownList).SelectedValue;
+                    roleMaster.LevelControl = (item.FindControl("ddLevelControl") as DropDownList).SelectedValue;
                     libMasConf.UpdateMasterRole(roleMaster);
                         
                        
@@ -239,9 +239,11 @@ namespace ServiceWeb.MasterConfig
         {
             DataRowView dr = (DataRowView)e.Item.DataItem;
             DropDownList ddDefaultPage = (DropDownList)e.Item.FindControl("ddDefaultPage");
+            DropDownList ddLevelControl = (DropDownList)e.Item.FindControl("ddLevelControl");
             try
             {
                 ddDefaultPage.SelectedValue = Convert.ToString(dr["DefaultPage"]);
+                ddLevelControl.SelectedValue = Convert.ToString(dr["LevelControl"]);
             }
             catch (Exception)
             {

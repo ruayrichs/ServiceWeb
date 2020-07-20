@@ -81,7 +81,8 @@ namespace ServiceWeb.API.v1
                 "StatusCode",
                 "StatusDesc",
                 "OwnerGroupService",
-                "CustomerCritical"
+                "CustomerCritical",
+                "WorkFlowStatus"
             );
             dsFinalDatas.Tables["my_ticket"].Merge(dt);
             Response.Write(JsonConvert.SerializeObject(dsFinalDatas));

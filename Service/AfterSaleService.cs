@@ -18,6 +18,9 @@ using Newtonsoft.Json;
 using System.Web.Configuration;
 using ServiceWeb.API.Model.Respond;
 using Link.Lib.Model.Model.Timeline;
+using ERPW.Lib.Service.Entity;
+using agape.proxy.data.dataset;
+using ERPW.Lib.F1WebService.ICMUtils;
 
 namespace ServiceWeb.Service
 {
@@ -950,7 +953,7 @@ namespace ServiceWeb.Service
 
                           where item.SID='" + SID + @"'
                           and item.TierCode='" + TierCode + @"'
-                          order by item.sequence";
+                          order by item.sequence, map.created_on asc";
 
             return dbService.selectDataFocusone(sql);
         }
@@ -1244,7 +1247,7 @@ namespace ServiceWeb.Service
                 sql += " and ItemNo='" + ItemNo + "' ";
             }
 
-            sql += " order by Tier DESC ";
+            sql += " order by created_on DESC ";
 
             DataTable dt = dbService.selectDataFocusone(sql);
 
@@ -1500,15 +1503,97 @@ namespace ServiceWeb.Service
             DataTable dt = dbService.selectDataFocusone(sql);
             return dt;
         }
+        //=========================== validation end work time ====================================
+        public double validationWorkTime(double resolutionTime)
+        {
+            MasterWorkingTimeConfigLib workingtimeConfigLib = new MasterWorkingTimeConfigLib();
+            List<WorkingTimeConfig> lst_wtEn = workingtimeConfigLib.GetWorkingTime_Config(
+                   ERPWAuthentication.SID,
+                   ERPWAuthentication.CompanyCode
+            );
 
+            if (lst_wtEn.Count > 0)
+            {
+                WorkingTimeConfig wtEn = lst_wtEn[0];
 
-        // Edit by Coffee KK 16-12-2019 0625916411
+                DateTime timeNow = Validation.Convert2RadTimeDisplay(Validation.getCurrentServerTime());//เวลาสร้าง ticket
+                DateTime dateTimeNow = Validation.getCurrentServerDateTime(); //วันและเวลาสร้าง ticket
+                DateTime startTime = Validation.Convert2RadTimeDisplay(wtEn.StartTime);//เวลาเริ่มงาน
+                DateTime endTime = Validation.Convert2RadTimeDisplay(wtEn.EndTime);//เวลาเลิกงาน
+                DateTime overdueTime= timeNow.AddSeconds(resolutionTime);
+                TimeSpan workTime =  endTime - startTime;
+                double oneDay = 24 * 60 * 60; //แปลงเวลา 1 วันเป็น วินาที
+                double gapTime = oneDay - workTime.TotalSeconds; //หาระยะเวลาที่ไม่ได้ทำงาน
+
+                if(checkHoliday(resolutionTime, dateTimeNow, wtEn.Workday) || timeNow >= endTime)//เปิด ticket หลังเลิกงาน และวันหยุด
+                {
+                    TimeSpan gap = startTime.AddDays(1) - timeNow;
+                    resolutionTime += Convert.ToDouble((int)gap.TotalSeconds);
+                }
+               
+                if (timeNow >= startTime && timeNow < endTime) { //ถ้าเปิด ticket ในเวลางาน ให้เข้ามาทำใน if
+                        if (overdueTime >= endTime)
+                        {
+                            resolutionTime += gapTime;
+                        }
+                }
+                else if (timeNow < startTime)
+                {
+                    TimeSpan gapTimeBeforWorkTime = startTime - timeNow;
+                    resolutionTime +=Convert.ToDouble( (int)gapTimeBeforWorkTime.TotalSeconds);
+                }
+                resolutionTime = validationHoliday(resolutionTime, dateTimeNow, wtEn.Workday);//เช็ควันหยุดในอีกวันถัดไป
+            }
+            return resolutionTime;
+        }
+        public double validationHoliday(double resolutionTime, DateTime nowDate, string workDay)
+        {
+            
+            double gapTimeHoliday = 24*60*60; //แปลง 1 วัน เป็นวินาที
+            while (checkHoliday(resolutionTime, nowDate, workDay))
+            {
+                resolutionTime += gapTimeHoliday;
+            }
+            return resolutionTime;
+        }
+        public bool checkHoliday(double resolutionTime, DateTime nowDate, string workDay)
+        {
+            CultureInfo _cultureEnInfo = new CultureInfo("en-US");
+            bool isHoliday = false;
+            int indexDay = (int)nowDate.AddSeconds(resolutionTime).DayOfWeek;
+            MasterWorkingTimeConfigLib lib = new MasterWorkingTimeConfigLib();
+            List<string> list_holidays = lib.GetHolidaysByDate(
+                                        ERPWAuthentication.SID, 
+                                        ERPWAuthentication.CompanyCode,
+                                        MasterWorkingTimeConfigLib.Holidays_TYPE,
+                                        Convert.ToDateTime(nowDate.AddSeconds(resolutionTime), _cultureEnInfo).ToString("yyyyMMdd", _cultureEnInfo));
+
+            if (list_holidays.Count > 0 || workDay[indexDay] == '0')
+            {
+                isHoliday = true;
+            }
+            return isHoliday;
+        }
+          public string ConvertdbDateToDisplayDate(string dbDate)
+        {
+            DateTime datetime_date = DateTime.ParseExact(dbDate,
+                                    "yyyyMMdd",
+                                     CultureInfo.CurrentCulture);
+            string dispDate = String.Format("{0:yyyy/MM/dd}", datetime_date);
+            return dispDate;
+        }
+
+        // Edit 16-12-2019
         public string StartTicket(string sid, string companyCode, string ticketType, string ticketNo, string ticketYear,
             string tierCode, string tierStart, string tierStartDescription, double resolutionTime, double requesterTime, string OwnerSevice,/*string incidentArea,*/ 
             string equipmentNo, string remark, string createdUserName, string createdEmployeeCode, string createdFullName,
             Boolean AutoTriggerEscalate, string SLAGroupCode,
             DataTable dtFile = null, string UploadFileUrl = "", string UploadFilePath = "")
         {
+
+
+            resolutionTime = validationWorkTime(resolutionTime);// test validationWorkTime 
+
             ServiceTicketLibrary lib = new ServiceTicketLibrary();
             remark = remark.Replace("'", "''");
 
@@ -1590,6 +1675,7 @@ namespace ServiceWeb.Service
 
             #region Send Mail
             //NotificationLibrary.GetInstance().OpenAndEscalateTicket(sid, companyCode, ticketCode, createdEmployeeCode);
+
             #endregion
 
 
@@ -1602,8 +1688,13 @@ namespace ServiceWeb.Service
 
             string ticketTypeDesc = lib.GetDocumentTypeDesc(sid, companyCode, ticketType);
 
-            string logMessage = "Create a new " + ticketTypeDesc + ". Ticket No. " + displayTicketNo;
+            string Description = ServiceTicketLibrary.LookUpTable("b.Remark", 
+                "cs_servicecall_header a inner join cs_servicecall_item b on a.SID = b.SID and a.CompanyCode = b.CompanyCode and a.ObjectID = b.ObjectID",
+                "WHERE a.SID='" + sid + "' AND a.CompanyCode='" + companyCode + "' AND a.CallerID='" + ticketNo + "'");
+            string DescriptionDisplay = "";
+            if (Description != "") { DescriptionDisplay = " : " + Description; }
 
+            string logMessage = "Create a new " + ticketTypeDesc + ". Ticket No. " + displayTicketNo + DescriptionDisplay;
             //Add comment
             string AttachFileKey = "";
             if (dtFile != null && dtFile.Rows.Count > 0)
@@ -1618,6 +1709,7 @@ namespace ServiceWeb.Service
 
         public void SetTriggerBeforeOverdue(string ticketCode, string ticketType, string ticketNo, string ticketYear, double resolutionTime, double requesterTime, string createdUserName)
         {
+
             if (requesterTime != 0)
             {
                 if (resolutionTime - requesterTime > 0)
@@ -1628,11 +1720,22 @@ namespace ServiceWeb.Service
             }
         }
 
+        public void SetTriggerUpdateStatus(string ticketCode, string ticketType, string ticketNo, string ticketYear, double delayTime, string createdUserName, string statusbegin, string statustarget)
+        {
+         
+            if (delayTime != 0)
+            {
+                TriggerService.GetInstance().UpdateTicketStatus(ticketCode + "updatestatus|" + statusbegin + "|" + statustarget, ticketType, ticketNo, ticketYear, delayTime.ToString(), createdUserName);
+            }
+
+        }      
 
         public string StartTicketChange(string sid, string companyCode, string ticketType, string ticketNo,
             string ticketYear, string StartDescription, string MainDelegate, string[] participantsArray,
             string remark, string createdUserName, string createdEmployeeCode, string createdFullName,
-            double resolutionTime, string startDateTime)
+            double resolutionTime, string startDateTime,
+            DataTable dtFile = null, string UploadFileUrl = "", string UploadFilePath = ""
+            )
         {
             ServiceTicketLibrary lib = new ServiceTicketLibrary();
             remark = remark.Replace("'", "''");
@@ -1668,11 +1771,16 @@ namespace ServiceWeb.Service
             string ticketTypeDesc = lib.GetDocumentTypeDesc(sid, companyCode, ticketType);
             //Add comment
             string logMessage = "Create a new " + ticketTypeDesc + ". Ticket No. " + displayTicketNo;
+            string AttachFileKey = "";
+            if (dtFile != null && dtFile.Rows.Count > 0)
+            {
+                AttachFileKey = SaveFileForCreatedTicket(ticketServiceCode, logMessage, UploadFilePath, UploadFileUrl, dtFile);
+            }
             lib.SaveActivityDetail(
                 sid, companyCode, companyCode, createdEmployeeCode, 
                 createdEmployeeCode, createdFullName, 
                 ticketServiceCode, "", logMessage, "",
-                startDateTime, "Initial", "", "", ""
+                startDateTime, "Initial", "", "", AttachFileKey
             );
 
             return ticketServiceCode;
@@ -1815,7 +1923,7 @@ namespace ServiceWeb.Service
             );
             #endregion
 
-            string logMessage = "Escalate group from \"" + oldTierDesc.Trim() + "\" to \"" + tierDescription.Trim() + "\"";
+            string logMessage = "Escalate group from\"" + escalateUserName + "\" \"" + oldTierDesc.Trim() + "\" to \"" + MainDelegate + "\" \"" + tierDescription.Trim() + "\"";
 
             #region Add Log
             //List<logValue_OldNew> enLog = new List<logValue_OldNew>();
@@ -2273,6 +2381,17 @@ namespace ServiceWeb.Service
 
             return aobjectlink;
         }
+        public string getTierByTicketNumber(string AobjectLink)
+        {
+            string Tier = "";
+            Tier = ServiceLibrary.LookUpTable(
+                "Tier",
+                "CRM_SERVICECALL_MAPPING_ACTIVITY",
+                "where SNAID = 'INET' AND AOBJECTLINK = '" + AobjectLink + @"' order by Tier desc"
+            );
+
+            return Tier;
+        }
 
         #region Data KeysValue
 
@@ -2434,7 +2553,7 @@ namespace ServiceWeb.Service
             string curActivityCode = ServiceLibrary.LookUpTable(
                 "AOBJECTLINK", 
                 "CRM_SERVICECALL_MAPPING_ACTIVITY",
-                "WHERE SNAID = '" + CompanyCode + "' AND ServiceDocNo = '" + TicketNumber + "' AND TierCode <> '' order by Tier desc"
+                "WHERE SNAID = '" + CompanyCode + "' AND ServiceDocNo = '" + TicketNumber + "' AND TierCode <> '' order by created_on desc"
             );
 
             if (!string.IsNullOrEmpty(curActivityCode))
@@ -2619,6 +2738,107 @@ namespace ServiceWeb.Service
             DataTable dt = dbService.selectDataFocusone(sql);
             return dt;
         }
+        
+
+
+        #region Get & Update Ticket API
+
+        public DataTable GetTicketDetailByTicketNumber(string sid, string companyCode, string ticketNumber)
+        {
+            string sql = @"
+                select Fiscalyear, Doctype, CallerID, Docstatus, CustomerCode, HeaderText from cs_servicecall_header with(nolock)
+                 WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + "' and CallerID = '" + ticketNumber + @"'
+                 order by CREATED_BY desc
+            ";
+            DataTable dt = dbService.selectDataFocusone(sql);
+            return dt;
+        }
+
+        public string ConvertToTicketDB(string ticketNumber)
+        {
+            if (string.IsNullOrEmpty(ticketNumber))
+            {
+                return "";
+            }
+            if (ticketNumber.Split('-').Length == 2)
+            {
+                var _tk = ticketNumber.Split('-');
+                ticketNumber = _tk[0] + "-" + _tk[1].PadLeft(10, '0');
+            }
+            return ticketNumber;
+        }
+
+        public tmpServiceCallDataSet GetTicketBeanStandard(string sessionid,string companyCode
+            , string doctype, string docnumber, string fiscalyear)
+        {
+            tmpServiceCallDataSet serviceTempCallEntity = new tmpServiceCallDataSet();
+            Object[] objParam = new Object[] { "1500117",sessionid, companyCode,doctype,docnumber,fiscalyear};
+            DataSet[] objDataSet = new DataSet[] { new tmpServiceCallDataSet() };
+            ICMUtils ICMService = ERPW.Lib.F1WebService.F1WebService.getICMUtils();
+            DataSet objReturn = ICMService.ICMDataSetInvoke(objParam, objDataSet);
+            if (objReturn != null)
+            {
+
+                serviceTempCallEntity.Merge(objReturn.Copy());
+            }
+            return serviceTempCallEntity;
+        }
+
+        public void UpdateTicketBeanStandard(string sessionid,string sid,string companyCode,
+            string fiscalyear, string docType, string ticketNo, string UserName
+            , tmpServiceCallDataSet serviceCallEntity, List<logValue_OldNew> enLog)
+        {
+            
+            Object[] objParam = new Object[] { "1500141", sessionid };
+
+            DataSet[] objDataSet = new DataSet[] { serviceCallEntity };
+            ICMUtils ICMService = ERPW.Lib.F1WebService.F1WebService.getICMUtils();
+            DataSet objReturn = ICMService.ICMDataSetInvoke(objParam, objDataSet);
+            try
+            {
+                if (enLog == null || enLog.Count <= 0)
+                {
+                    return;
+                }
+                List<Main_LogService> en = AfterSaleService.getInstance().SaveLogTicket(sid, docType, fiscalyear, ticketNo, companyCode,
+                    UserName, enLog);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public DataTable GetEndDateTimelByTicketNumber(string sid, string companyCode, string ticketNumber)
+        {
+            string sql = @"
+                SELECT * FROM (select xa.ServiceDocNo,  xb.EndDateTime,  xb.MainDelegate, xb.TicketCode
+										from (
+										  select SNAID, DOCYEAR, ServiceDocNo, max(Tier) as Tier
+										  from CRM_SERVICECALL_MAPPING_ACTIVITY
+										  where SNAID = '" + companyCode +  @"'
+										  group by SNAID, DOCYEAR, ServiceDocNo
+										) a
+										inner join CRM_SERVICECALL_MAPPING_ACTIVITY xa
+										  on  xa.SNAID = a.SNAID 
+										  AND xa.DOCYEAR = a.DOCYEAR 
+										  AND xa.ServiceDocNo = a.ServiceDocNo 
+										  AND xa.Tier = a.Tier
+  
+										left join ticket_service_header xb
+										  on xa.AOBJECTLINK = xb.TicketCode
+										  and xb.SID = '"+ sid + @"' 
+										  AND xb.CompanyCode = '"+ companyCode + @"'
+				                          AND xb.EndDateTime != '') z								  
+			WHERE ServiceDocNo = '" + ticketNumber + @"'
+            ";
+            DataTable dt = dbService.selectDataFocusone(sql);
+            return dt;
+        }
+
+        #endregion
+
+
     }
 
 

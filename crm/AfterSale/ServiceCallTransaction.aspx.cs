@@ -267,7 +267,7 @@ namespace ServiceWeb.crm.AfterSale
         private tmpServiceCallDataSet _serviceCallEntity;
         private tmpServiceCallDataSet serviceCallEntity
         {
-            get 
+            get
             {
                 if (_serviceCallEntity == null)
                 {
@@ -280,7 +280,7 @@ namespace ServiceWeb.crm.AfterSale
                 }
 
                 if (_serviceCallEntity.cs_servicecall_header.PrimaryKey.Length != 6)
-                    _serviceCallEntity.cs_servicecall_header.PrimaryKey = new DataColumn[] { 
+                    _serviceCallEntity.cs_servicecall_header.PrimaryKey = new DataColumn[] {
                         _serviceCallEntity.cs_servicecall_header.Columns["SID"],
                         _serviceCallEntity.cs_servicecall_header.Columns["CompanyCode"],
                         _serviceCallEntity.cs_servicecall_header.Columns["CallerID"],
@@ -290,7 +290,7 @@ namespace ServiceWeb.crm.AfterSale
                     };
 
                 if (_serviceCallEntity.cs_servicecall_item.PrimaryKey.Length != 4)
-                    _serviceCallEntity.cs_servicecall_item.PrimaryKey = new DataColumn[] { 
+                    _serviceCallEntity.cs_servicecall_item.PrimaryKey = new DataColumn[] {
                         _serviceCallEntity.cs_servicecall_item.Columns["SID"],
                         _serviceCallEntity.cs_servicecall_item.Columns["CompanyCode"],
                         _serviceCallEntity.cs_servicecall_item.Columns["xLineNo"],
@@ -299,8 +299,8 @@ namespace ServiceWeb.crm.AfterSale
 
                 return _serviceCallEntity;
             }
-            set 
-            { 
+            set
+            {
                 Session["ServicecallEntity" + idGen] = value;
                 if (_serviceCallEntity != null)
                 {
@@ -322,7 +322,8 @@ namespace ServiceWeb.crm.AfterSale
         KMServiceLibrary libkm = KMServiceLibrary.getInstance();
         WorkflowService libWorkFlow = WorkflowService.getInstance();
         EquipmentService libCI = new EquipmentService();
-        private TierZeroLibrary libTierZero = TierZeroLibrary.GetInstance();        
+        private TierZeroLibrary libTierZero = TierZeroLibrary.GetInstance();
+        private MasterConfigLibrary libmasterConfig = new MasterConfigLibrary();
 
         private const string TicketTypeChangeOrder = "C";
 
@@ -334,7 +335,7 @@ namespace ServiceWeb.crm.AfterSale
                 if (_mode_stage == null)
                 {
                     if (Session["SC_MODE" + idGen] == null)
-                    { 
+                    {
                         Session["SC_MODE" + idGen] = ApplicationSession.CREATE_MODE_STRING;
                         _mode_stage = ApplicationSession.CREATE_MODE_STRING;
                     }
@@ -345,8 +346,8 @@ namespace ServiceWeb.crm.AfterSale
                 }
                 return _mode_stage;
             }
-            set 
-            { 
+            set
+            {
                 Session["SC_MODE" + idGen] = value;
                 _mode_stage = value;
             }
@@ -368,7 +369,7 @@ namespace ServiceWeb.crm.AfterSale
         private string _sc_bobjectid;
         private string sc_bobjectid
         {
-            get 
+            get
             {
                 if (_sc_bobjectid == null)
                 {
@@ -376,8 +377,8 @@ namespace ServiceWeb.crm.AfterSale
                 }
                 return _sc_bobjectid;
             }
-            set 
-            { 
+            set
+            {
                 Session["SCT_BObjectID" + idGen] = value;
                 _sc_bobjectid = value;
             }
@@ -516,14 +517,14 @@ namespace ServiceWeb.crm.AfterSale
                 {
                     _dtGrouTemp = AfterSaleService.getInstance().GetDTProblemGroup(SID, businessObject);
                 }
-                return _dtGrouTemp; 
+                return _dtGrouTemp;
             }
         }
 
         DataTable _dtSCType;
         DataTable dtSCType
         {
-            get 
+            get
             {
                 if (_dtSCType == null)
                 {
@@ -560,7 +561,7 @@ namespace ServiceWeb.crm.AfterSale
         DataTable _dtCustomer;
         DataTable dtCustomer
         {
-            get 
+            get
             {
                 if (_dtCustomer == null)
                 {
@@ -573,7 +574,7 @@ namespace ServiceWeb.crm.AfterSale
         DataTable _dtDocstatus;
         DataTable dtDocstatus
         {
-            get 
+            get
             {
                 if (_dtDocstatus == null)
                 {
@@ -600,7 +601,7 @@ namespace ServiceWeb.crm.AfterSale
         DataTable _dtContactPerson;
         DataTable dtContactPerson
         {
-            get 
+            get
             {
                 if (_dtContactPerson == null)
                 {
@@ -653,14 +654,14 @@ namespace ServiceWeb.crm.AfterSale
         DataTable _dtProjectElement;
         DataTable dtProjectElement
         {
-            get 
+            get
             {
                 if (_dtProjectElement == null)
                 {
                     string projectcode = _ddl_projectcode.SelectedIndex != -1 ? _ddl_projectcode.SelectedValue : "";
                     _dtProjectElement = AfterSaleService.getInstance().getProjectElement(SID, CompanyCode, projectcode);
                 }
-                
+
                 return _dtProjectElement;
             }
         }
@@ -692,7 +693,7 @@ namespace ServiceWeb.crm.AfterSale
         private DataTable _dtMaterialMaster;
         private DataTable dtMaterialMaster
         {
-            get 
+            get
             {
                 if (_dtMaterialMaster == null)
                 {
@@ -735,8 +736,8 @@ namespace ServiceWeb.crm.AfterSale
                 if (string.IsNullOrEmpty(_isCritical))
                 {
                     string cusCri = ServiceLibrary.LookUpTable(
-                        "CustomerCritical", 
-                        "ERPW_Master_Customer_General_Data", 
+                        "CustomerCritical",
+                        "ERPW_Master_Customer_General_Data",
                         "WHERE SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CustomerCode = '" + CustomerCode + "'"
                     );
                     _isCritical = false.ToString();
@@ -753,18 +754,18 @@ namespace ServiceWeb.crm.AfterSale
         public string _EquipmentSelect;
         public string EquipmentSelect
         {
-            get 
+            get
             {
                 if (_EquipmentSelect == null)
                 {
-                    _EquipmentSelect = Session["EquipmentSelect_saleservice" + idGen] == null 
-                        ? serviceCallEntity.cs_servicecall_item.Rows[0]["EquipmentNo"].ToString() 
-                        : (string)Session["EquipmentSelect_saleservice" + idGen]; 
+                    _EquipmentSelect = Session["EquipmentSelect_saleservice" + idGen] == null
+                        ? serviceCallEntity.cs_servicecall_item.Rows[0]["EquipmentNo"].ToString()
+                        : (string)Session["EquipmentSelect_saleservice" + idGen];
                 }
                 return _EquipmentSelect;
             }
-            set 
-            { 
+            set
+            {
                 Session["EquipmentSelect_saleservice" + idGen] = value;
                 _EquipmentSelect = value;
             }
@@ -773,18 +774,18 @@ namespace ServiceWeb.crm.AfterSale
         public string _EquipmentItemNo;
         public string EquipmentItemNo
         {
-            get 
+            get
             {
                 if (_EquipmentItemNo == null)
                 {
                     _EquipmentItemNo = Session["EquipmentItemNo_saleservice" + idGen] == null
-                        ? serviceCallEntity.cs_servicecall_item.Rows[0]["xLineNo"].ToString() 
+                        ? serviceCallEntity.cs_servicecall_item.Rows[0]["xLineNo"].ToString()
                         : (string)Session["EquipmentItemNo_saleservice" + idGen];
                 }
                 return _EquipmentItemNo;
             }
-            set 
-            { 
+            set
+            {
                 Session["EquipmentItemNo_saleservice" + idGen] = value;
                 _EquipmentItemNo = value;
             }
@@ -846,7 +847,7 @@ namespace ServiceWeb.crm.AfterSale
                 _IDCurentTabView = value;
             }
         }
-        
+
         #region Function On Page
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -878,18 +879,20 @@ namespace ServiceWeb.crm.AfterSale
                 sw2 = Stopwatch.StartNew();
                 if (mode_stage == ApplicationSession.CREATE_MODE_STRING)
                 {
-                    initData_CreateMode();                    
+                    initData_CreateMode();
                 }
                 else if (mode_stage == ApplicationSession.CHANGE_MODE_STRING || mode_stage == ApplicationSession.DISPLAY_MODE_STRING)
                 {
                     initData_ChangeMode();
                 }
                 sw2.Stop();
-                Debug.WriteLine("Total Time taken mode_stage "+ mode_stage + ": {0}ms", sw2.Elapsed.TotalMilliseconds);
+                Debug.WriteLine("Total Time taken mode_stage " + mode_stage + ": {0}ms", sw2.Elapsed.TotalMilliseconds);
 
                 initData_AfterInitMode();
 
                 checkResolveStatus();
+
+                ClientService.DoJavascript("UserLV(" + (Permission.LevelControl) + ");");
             }
 
             sw.Stop();
@@ -947,6 +950,10 @@ namespace ServiceWeb.crm.AfterSale
             else if (mode_stage == ApplicationSession.CHANGE_MODE_STRING)
             {
                 hddPageTicketMode.Value = "Change";
+                ddlProblemGroup.CssClass = ddlProblemType.CssClass + " ticket-allow-editor";
+                ddlProblemType.CssClass = ddlProblemType.CssClass + " ticket-allow-editor";
+                ddlProblemSource.CssClass = ddlProblemType.CssClass + " ticket-allow-editor";
+                ddlServiceSource.CssClass = ddlProblemType.CssClass + " ticket-allow-editor";
             }
 
             string docStatus = "";
@@ -1153,7 +1160,7 @@ namespace ServiceWeb.crm.AfterSale
 
             AutoCompleteEmployee.AfterSelectedChange = "bindDataTableInEmployeeParticipantSelected(v, 'TransferParticipant', '" + AutoCompleteEmployee.ClientID + "');";
             AutoCompleteEmployee_Escalate.AfterSelectedChange = "bindDataTableInEmployeeParticipantSelected(v, 'EscalateSetParticipant', '" + AutoCompleteEmployee_Escalate.ClientID + "');";
-            
+
         }
 
         private void initData_CreateMode()
@@ -1290,7 +1297,7 @@ namespace ServiceWeb.crm.AfterSale
 
 
             //hddAobjectlink.Value = AfterSaleService.getInstance().getActivityFromDocno("", _txt_docnumberTran.Value, _txt_docdateTran.Value.Substring(6, 4));
-        }                
+        }
 
         private void initData_AfterInitMode()
         {
@@ -1394,6 +1401,7 @@ namespace ServiceWeb.crm.AfterSale
             tbCallbackDate.Text = "";
             tbCallbackTime.Text = "";
             tbRefer.Text = "";
+            tbRemark1.Text = "";
             tbEquipmentRemark.Text = "";
         }
         #endregion
@@ -1403,6 +1411,12 @@ namespace ServiceWeb.crm.AfterSale
         {
             try
             {
+                string txt_customertran_responsible_organization = Session["_txt_customertran_responsible_organization" + idGen] as String;
+                if (txt_customertran_responsible_organization != _txt_customertran_responsible_organization.Value)
+                {
+                    ResponsibleOrganization();
+                }
+
                 if (mode_stage == ApplicationSession.CREATE_MODE_STRING)
                 {
                     CreateServiceCall();
@@ -1552,7 +1566,7 @@ namespace ServiceWeb.crm.AfterSale
                             DBService.SaveTransactionForFocusone(dtMaterialPurchase);
 
                             PreparePropertyValue();
-                            SavePropertyValue((string)Session["SCT_created_fiscalyear" + idGen],DocType, hddDocnumberTran.Value.Trim());
+                            SavePropertyValue((string)Session["SCT_created_fiscalyear" + idGen], DocType, hddDocnumberTran.Value.Trim());
                             Session["SCF_SAVESUCCESS" + idGen] = "Update Success Document Number : " + _txt_docnumberTran.Value;
                             getdataToedit(DocType, hddDocnumberTran.Value.Trim(), (string)Session["SCT_created_fiscalyear" + idGen]);
                         }
@@ -1674,7 +1688,7 @@ namespace ServiceWeb.crm.AfterSale
                             SID, CompanyCode, ticketType, returnMessage
                         );
                         PreparePropertyValue();
-                        SavePropertyValue(ticketYear,ticketType,ticketNo);
+                        SavePropertyValue(ticketYear, ticketType, ticketNo);
                         Session["SCF_SAVESUCCESS" + idGen] = "Save Success Document Number : " + displayDocNumber;
 
 
@@ -1682,7 +1696,12 @@ namespace ServiceWeb.crm.AfterSale
                         //{
                         //}
 
-                        AssignWork_SLA(ticketType, ticketNo, ticketYear, remark);
+                        string ticketCode =AssignWork_SLA(ticketType, ticketNo, ticketYear, remark);
+
+                        string TICKET_STATUS_EVENT_START_CODE = ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(SID, CompanyCode, ServiceLibrary.TICKET_STATUS_EVENT_START);
+                        
+                        setTriggerUpdateStatus(ticketCode, TICKET_STATUS_EVENT_START_CODE, ticketType, ticketNo, ticketYear);
+                        updateAffect(ticketNo, "");
 
                         NotificationLibrary.GetInstance().TicketAlertEvent(
                             NotificationLibrary.EVENT_TYPE.TICKET_OPEN,
@@ -1737,14 +1756,17 @@ namespace ServiceWeb.crm.AfterSale
 
                         DBService.SaveTransactionForFocusone(dtMaterialPurchase);
 
-                        NotificationLibrary.GetInstance().TicketAlertEvent(
-                            NotificationLibrary.EVENT_TYPE.ChangeOrder_Approval,
-                            SID,
-                            CompanyCode,
-                            ticketNo + "|L0",
-                            EmployeeCode,
-                            ThisPage + "Change_CreateTicket"
-                        );
+                        if (ddlAccountability.SelectedValue != "")
+                        {
+                            NotificationLibrary.GetInstance().TicketAlertEvent(
+                                NotificationLibrary.EVENT_TYPE.ChangeOrder_Approval,
+                                SID,
+                                CompanyCode,
+                                ticketNo + "|L0",
+                                EmployeeCode,
+                                ThisPage + "Change_CreateTicket"
+                            );
+                        }
 
                         getdataToedit(ticketType, ticketNo, ticketYear, true, false, ApplicationSession.CHANGE_MODE_STRING);
                     }
@@ -1808,6 +1830,7 @@ namespace ServiceWeb.crm.AfterSale
             drHeader["ProjectCode"] = _ddl_projectcode.SelectedValue;
             drHeader["ProjectElement"] = _ddl_project_elementTran.SelectedValue;
             drHeader["ReferenceDocument"] = tbRefer.Text;
+            drHeader["Remark1"] = tbRemark1.Text;
             drHeader["Impact"] = ddlImpact.SelectedValue;
             drHeader["Urgency"] = ddlUrgency.SelectedValue;
             drHeader["Priority"] = _ddl_priorityTran.SelectedValue;
@@ -1927,6 +1950,7 @@ namespace ServiceWeb.crm.AfterSale
                 dr["ProjectCode"] = _ddl_projectcode.SelectedValue;
                 dr["ProjectElement"] = _ddl_project_elementTran.SelectedValue;
                 dr["ReferenceDocument"] = tbRefer.Text;
+                dr["Remark1"] = tbRemark1.Text;
                 dr["Impact"] = ddlImpact.SelectedValue;
                 dr["Urgency"] = ddlUrgency.SelectedValue;
                 dr["Priority"] = _ddl_priorityTran.SelectedValue;
@@ -2135,13 +2159,18 @@ namespace ServiceWeb.crm.AfterSale
                 lblTicketNo_Modal.Text = dr["CallerID"].ToString();
 
                 txt_problem_topic.Text = dr["HeaderText"].ToString();
+                if (Session["SCT_created_subject" + idGen] != null)
+                {
+                    txt_problem_topic.Text = (string)Session["SCT_created_subject" + idGen];
+                    Session["SCT_created_subject" + idGen] = null;
+                }
                 hddOldValue_problem_topic.Value = dr["HeaderText"].ToString();
 
                 _txt_doctypeTran.Value = GetSCTypeDesc(dr["DocType"].ToString());
 
                 ////Lebel////
-                
-                string []TicketType = GetSCTypeDesc(dr["DocType"].ToString()).Split(':');
+
+                string[] TicketType = GetSCTypeDesc(dr["DocType"].ToString()).Split(':');
                 ltrTicketType.Text = TicketType[1];
                 //labelDocumentType.Text = TicketType[1] + " Type";
                 //labelDocumentNumber.Text = TicketType[1] + " No.";
@@ -2162,7 +2191,7 @@ namespace ServiceWeb.crm.AfterSale
                 _txt_fiscalyear.Value = dr["FiscalYear"].ToString();
                 _txt_customerTran.Value = GetCustomerDesc(dr["CustomerCode"].ToString());
                 _txt_customertran_responsible_organization.Value = ServiceTicketLibrary.LookUpTable(
-                    "ResponsibleOrganization", 
+                    "ResponsibleOrganization",
                     "ERPW_Master_Customer_General_Data",
                     "where SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CustomerCode = '" + dr["CustomerCode"].ToString() + "'"
                 );
@@ -2186,6 +2215,7 @@ namespace ServiceWeb.crm.AfterSale
                 Session["SCT_created_doctype_code" + idGen] = dr["DocType"].ToString();
                 Session["SCT_created_fiscalyear" + idGen] = dr["Fiscalyear"].ToString();
                 Session["responsecall_objid" + idGen] = dr["ObjectID"].ToString();
+                Session["_txt_customertran_responsible_organization" + idGen] = _txt_customertran_responsible_organization.Value;
 
                 sw = Stopwatch.StartNew();
                 GetContactPerson();
@@ -2209,11 +2239,12 @@ namespace ServiceWeb.crm.AfterSale
                 _ddl_project_elementTran.SelectedValue = dr["ProjectElement"].ToString();
 
                 _txt_companyTran.Value = CompanyName;
-                _txt_docdateTran.Value = Validation.Convert2DateDisplay(dr["DOCDATE"].ToString());
+                _txt_docdateTran.Value = Validation.Convert2DateTimeDisplay(dr["CREATED_ON"].ToString());//Validation.Convert2DateDisplay(dr["DOCDATE"].ToString());
                 _txt_docstatusTran.Value = GetDocStatusDesc(dr["CallStatus"].ToString());
                 _txt_TicketStatusTran.Value = dr["Docstatus"].ToString() + " : " + ServiceTicketLibrary.GetTicketDocStatusDesc(SID, CompanyCode, dr["Docstatus"].ToString());
 
                 tbRefer.Text = dr["ReferenceDocument"].ToString();
+                tbRemark1.Text = dr["Remark1"].ToString();
                 ddlImpact.SelectedValue = dr["Impact"].ToString();
                 ddlUrgency.SelectedValue = dr["Urgency"].ToString();
 
@@ -2233,6 +2264,19 @@ namespace ServiceWeb.crm.AfterSale
                 chkMajorIncident.Checked = majorIncident;
 
                 ddlAffectSLA.SelectedValue = dr["AffectSLA"].ToString();
+                if (!string.IsNullOrEmpty(dr["CallerID"].ToString()))
+                {
+                    string sql = @"SELECT Affect, Affect00, Affect01
+                        FROM cs_servicecall_header
+                        WHERE SID = '" + SID + @"'
+	                        AND CompanyCode = '" + CompanyCode + @"'
+	                        AND CallerID = '" + dr["CallerID"].ToString() + @"'";
+                    DataTable dt = DBService.selectDataFocusone(sql);
+
+                    ddlAffect.SelectedValue = dt.Rows[0]["Affect"].ToString();
+                    ddlAffect00.SelectedValue = dt.Rows[0]["Affect00"].ToString();
+                    ddlAffect01.SelectedValue = dt.Rows[0]["Affect01"].ToString();
+                }
 
                 tbCallbackDate.Text = Validation.Convert2DateDisplay(dr["CallbackDate"].ToString());
 
@@ -2301,7 +2345,7 @@ namespace ServiceWeb.crm.AfterSale
                     }
                     catch (Exception)
                     {
-                        
+
                     }
                 }
 
@@ -2406,6 +2450,7 @@ namespace ServiceWeb.crm.AfterSale
                 tbSummaryCause.Enabled = false;
                 tbSummaryResolution.Enabled = false;
                 tbRefer.Enabled = false;
+                tbRemark1.Enabled = false;
                 tbCallbackDate.Enabled = false;
                 tbCallbackTime.Enabled = false;
                 txt_problem_topic.Enabled = false;
@@ -2625,8 +2670,8 @@ namespace ServiceWeb.crm.AfterSale
             string desc = "";
             if (drr.Length > 0)
             {
-                desc = drr[0]["CustomerName"].ToString();              
-            }           
+                desc = drr[0]["CustomerName"].ToString();
+            }
             return desc;
         }
 
@@ -2954,7 +2999,19 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
-        protected void btnCancelDocTran_click(object sender, EventArgs e)
+        public void MailAlertOwner()
+        {
+            NotificationLibrary.GetInstance().TicketAlertEvent(
+                NotificationLibrary.EVENT_TYPE.OWNER,
+                SID,
+                CompanyCode,
+                hddDocnumberTran.Value,
+                EmployeeCode,
+                ThisPage
+            );
+        }
+
+        public void btnCancelDocTran_click(object sender, EventArgs e)
         {
             try
             {
@@ -3154,7 +3211,7 @@ namespace ServiceWeb.crm.AfterSale
                     if (dtTier_Default.Rows.Count > 0)
                     {
                         tierCode = dtTier_Default.Rows[0]["tierCode"].ToString();
-                    }                   
+                    }
                 }
                 else
                 {
@@ -3227,7 +3284,7 @@ namespace ServiceWeb.crm.AfterSale
                     if (dtTier.Rows.Count > 0)
                     {
                         TierCode = dtTier.Rows[0]["tierCode"].ToString();
-                    }                    
+                    }
                 }
                 else
                 {
@@ -3251,7 +3308,7 @@ namespace ServiceWeb.crm.AfterSale
                     if (dtTier_Default.Rows.Count > 0)
                     {
                         TierCode = dtTier_Default.Rows[0]["tierCode"].ToString();
-                    }                    
+                    }
                 }
             }
 
@@ -3307,6 +3364,7 @@ namespace ServiceWeb.crm.AfterSale
 
             Button btnTransfer = e.Item.FindControl("btnTransfer") as Button;
             Button btnForwardWork = e.Item.FindControl("btnForwardWork") as Button;
+            Button btnForwardWorkRollback = e.Item.FindControl("btnForwardWorkRollback") as Button;
             Button btnAssignWork = e.Item.FindControl("btnAssignWork") as Button;
             Button btnCloseWork = e.Item.FindControl("btnCloseWork") as Button;
 
@@ -3371,7 +3429,7 @@ namespace ServiceWeb.crm.AfterSale
             }
 
 
-            
+
 
             rptMainDelegate.DataSource = dtMain;
             rptMainDelegate.DataBind();
@@ -3412,18 +3470,22 @@ namespace ServiceWeb.crm.AfterSale
 
             btnAssignWork.Attributes.Add("disabled", "disabled");
             btnForwardWork.Attributes.Add("disabled", "disabled");
+            btnForwardWorkRollback.Attributes.Add("disabled", "disabled");
             btnCloseWork.Attributes.Add("disabled", "disabled");
             btnTransfer.Attributes.Add("disabled", "disabled");
 
             btnForwardWork.CommandArgument = "FALSE";
+            btnForwardWorkRollback.CommandArgument = "FALSE";
             //btnCloseWork.CommandArgument = "FALSE";
             btnTransfer.CommandArgument = "FALSE";
 
+            if (hddHeaderStatus.Value == "Open") { countActivity = countround; }
             if (countround == 1)
             {
                 if (countActivity == 0)
                 {
                     btnForwardWork.Style["display"] = "none";
+                    btnForwardWorkRollback.Style["display"] = "none";
                     btnTransfer.Style["display"] = "none";
                     btnCloseWork.Style["display"] = "none";
 
@@ -3441,6 +3503,7 @@ namespace ServiceWeb.crm.AfterSale
                         if (CallStatus != ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE && CallStatus != ServiceTicketLibrary.SERVICE_CALL_STATUS_CANCEL)
                         {
                             btnForwardWork.Attributes.Remove("disabled");
+                            btnForwardWorkRollback.Style["display"] = "none";
                             btnTransfer.Attributes.Remove("disabled");
                             btnCloseWork.Attributes.Remove("disabled");
 
@@ -3449,7 +3512,9 @@ namespace ServiceWeb.crm.AfterSale
                             if (!IsAuthen(dtMain, dtParticipant, CharacterService.Authen_TransferTask))
                             {
                                 btnForwardWork.Attributes.Add("disabled", "disabled");
+                                btnForwardWorkRollback.Attributes.Add("disabled", "disabled");
                                 btnForwardWork.CommandArgument = "FALSE";
+                                btnForwardWorkRollback.CommandArgument = "FALSE";
 
                                 btnTransfer.Attributes.Add("disabled", "disabled");
                                 btnTransfer.CommandArgument = "FALSE";
@@ -3457,6 +3522,7 @@ namespace ServiceWeb.crm.AfterSale
                             else
                             {
                                 btnForwardWork.CommandArgument = "TRUE";
+                                btnForwardWorkRollback.CommandArgument = "TRUE";
                                 isTransfer = true;
                             }
 
@@ -3493,6 +3559,7 @@ namespace ServiceWeb.crm.AfterSale
                     if (CallStatus != ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE && CallStatus != ServiceTicketLibrary.SERVICE_CALL_STATUS_CANCEL)
                     {
                         btnForwardWork.Attributes.Remove("disabled");
+                        btnForwardWorkRollback.Attributes.Remove("disabled");
                         btnCloseWork.Attributes.Remove("disabled");
                         btnTransfer.Attributes.Remove("disabled");
                         bool isTransfer = false;
@@ -3500,12 +3567,15 @@ namespace ServiceWeb.crm.AfterSale
                         if (!IsAuthen(dtMain, dtParticipant, CharacterService.Authen_TransferTask))
                         {
                             btnForwardWork.Attributes.Add("disabled", "disabled");
+                            btnForwardWorkRollback.Attributes.Add("disabled", "disabled");
                             btnForwardWork.CommandArgument = "FALSE";
+                            btnForwardWorkRollback.CommandArgument = "FALSE";
                         }
                         else
                         {
                             isTransfer = true;
                             btnForwardWork.CommandArgument = "TRUE";
+                            btnForwardWorkRollback.CommandArgument = "TRUE";
                         }
 
                         if (!IsAuthen(dtMain, dtParticipant, CharacterService.Authen_CloseTask))
@@ -3548,10 +3618,12 @@ namespace ServiceWeb.crm.AfterSale
             {
                 btnAssignWork.Attributes.Add("disabled", "disabled");
                 btnForwardWork.Attributes.Add("disabled", "disabled");
+                btnForwardWorkRollback.Attributes.Add("disabled", "disabled");
                 btnCloseWork.Attributes.Add("disabled", "disabled");
                 btnTransfer.Attributes.Add("disabled", "disabled");
 
                 btnForwardWork.CommandArgument = "FALSE";
+                btnForwardWorkRollback.CommandArgument = "FALSE";
                 //btnCloseWork.CommandArgument = "FALSE";
                 btnTransfer.CommandArgument = "FALSE";
             }
@@ -3577,13 +3649,15 @@ namespace ServiceWeb.crm.AfterSale
                 //set ค่าให้ hidden field
                 hddDataRating_TicketCode.Value = ticketNo;
                 hddDataRating_EmpCode.Value = emCode;
-                
+
                 //========================================================================================================
             }
             else
             {
                 panelFeedActivityComment.Visible = false;
             }
+
+            if (hddTier.Value == "TC1") { btnForwardWorkRollback.Style["display"] = "none"; }
 
             countround++;
         }
@@ -3685,8 +3759,33 @@ namespace ServiceWeb.crm.AfterSale
                 throw ex;
             }
         }
+        protected void setTriggerUpdateStatus(string ticketCode, string DocStatusCode, string ticketType, string ticketNo, string ticketYear)
+        {
+            // set trigger update status
 
+            DataTable dtAUSConfig = libmasterConfig.GetMasterConfigTicketStatusAuto(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, DocStatusCode);
 
+            if (dtAUSConfig.Rows.Count > 0)
+            {
+                DataRow dr = dtAUSConfig.Rows[0];
+                double delaytime = Double.Parse(dr["DelayTime"].ToString());
+                string statusBegin = dr["TicketStatusCodeBegin"].ToString();
+                string statusTarget = dr["TicketStatusCodeTarget"].ToString();
+
+                AfterSaleService.getInstance().SetTriggerUpdateStatus(
+                    ticketCode,
+                    ticketType,
+                    ticketNo,
+                    ticketYear,
+                    delaytime,
+                    "System Auto",
+                    statusBegin,
+                    statusTarget
+                );
+
+            }
+
+        }
         protected void saveUpdateTicketDocStatus(string DocStatusCode)
         {
             try
@@ -3697,7 +3796,7 @@ namespace ServiceWeb.crm.AfterSale
 
                 AfterSaleService.getInstance().UpdateStatus(SID, CompanyCode, DocStatusCode, ticketType, ticketYear, ticketNo,
                     UserName, Validation.getCurrentServerStringDateTime());
-
+          
                 _txt_docstatusTran.Value = GetDocStatusDesc(DocStatusCode);
                 _txt_TicketStatusTran.Value = DocStatusCode + " : " +
                     ServiceTicketLibrary.GetTicketDocStatusDesc(
@@ -3713,7 +3812,7 @@ namespace ServiceWeb.crm.AfterSale
             {
                 throw ex;
             }
-        }
+        }    
 
         protected void saveCloseCall2(string closedate, string closetime, string closeby, string closecomment, string close_status)
         {
@@ -3800,6 +3899,7 @@ namespace ServiceWeb.crm.AfterSale
                 string remark = txt_problem_topic.Text;
 
                 string ticketCode = AssignWork_SLA(ticketType, ticketNo, ticketYear, remark);
+
                 BindDataTierOperation();
 
                 ClientService.AGSuccess("Start ticket success.");
@@ -3839,7 +3939,7 @@ namespace ServiceWeb.crm.AfterSale
                     SLAGroupCode = dtTier.Rows[0]["TierGroupCode"].ToString();
                 }
 
-              
+
 
                 double resolutionTime = 0;
 
@@ -3948,6 +4048,11 @@ namespace ServiceWeb.crm.AfterSale
                 hddTransfer_ListEMPCode.Value = "";
                 udpEscalateSetParticipant.Update();
                 AutoCompleteEmployee_Escalate.SelectedValueRefresh = "";
+                if (btn.Text == "Rollback Escalate")
+                {
+                    hddEscalate_TierCode.Value = hddTierCode.Value;
+                    hddEscalate_TierNext.Value = (hddTier.Value).Remove(2) + ((Int16.Parse((hddTier.Value).Remove(0, 2))) - 1).ToString();
+                }
 
 
                 string ticketType = "";
@@ -4125,11 +4230,16 @@ namespace ServiceWeb.crm.AfterSale
                     double.TryParse(dtTierSelecDetail.Rows[0]["Resolution"].ToString(), out resolutionTime);
                 }
                 string aobjectLink = "";
+                string hddTierNextTo = hddTierNext.Value;
+                if (Roll_Escalate.SelectedValue != "")
+                {
+                    hddTierNextTo = Roll_Escalate.SelectedValue;
+                }
                 try
                 {
                     aobjectLink = AfterSaleService.getInstance().EscalateTicket(
                         SID, CompanyCode,
-                        ticketType, ticketNo, ticketYear, hddTierCode.Value, hddTierNext.Value, tierDesc, resolutionTime,
+                        ticketType, ticketNo, ticketYear, hddTierCode.Value, hddTierNextTo, tierDesc, resolutionTime,
                         requesterTime,
                         ddlOwnerGroupService.SelectedValue, /*hddIncidentAreaCode.Value,*/ EquipmentSelect, txt_problem_topic.Text, UserName,
                         EmployeeCode, FullNameEN, true,
@@ -4144,8 +4254,8 @@ namespace ServiceWeb.crm.AfterSale
                 }
 
                 AfterSaleService.getInstance().updateCurDateTimeActivityActionManual(
-                    SID, 
-                    CompanyCode, 
+                    SID,
+                    CompanyCode,
                     hhdAOBJECTLINK.Value
                 );
 
@@ -4311,7 +4421,7 @@ namespace ServiceWeb.crm.AfterSale
                 //    ClientService.DoJavascript("focusRemarkBox(true);");
                 //    throw new Exception("Please update status to In progress before Resolve!");
                 //}
-                
+
                 HiddenField hddTier = (sender as Button).Parent.FindControl("hddTier") as HiddenField;
                 HiddenField hhdAOBJECTLINK = (sender as Button).Parent.FindControl("hhdAOBJECTLINK") as HiddenField;
 
@@ -4344,6 +4454,16 @@ namespace ServiceWeb.crm.AfterSale
 
                 Session["SCF_SAVESUCCESS" + idGen] = "Ticket No. " + displayTicketNo + " has been resolved by \"" + tierDesc.Trim() + "\"";
 
+                string TICKET_STATUS_EVENT_RESOLVE_CODE = ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(SID, CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_RESOLVE);
+                
+                setTriggerUpdateStatus(
+                    hhdAOBJECTLINK.Value, 
+                    TICKET_STATUS_EVENT_RESOLVE_CODE,
+                    ticketType,
+                    ticketNo,
+                    ticketYear
+                    );
+
                 NotificationLibrary.GetInstance().TicketAlertEvent(
                     NotificationLibrary.EVENT_TYPE.TICKET_RESOLVE,
                     SID,
@@ -4354,6 +4474,7 @@ namespace ServiceWeb.crm.AfterSale
                 );
 
                 TriggerService.GetInstance().CancelTrigger(hhdAOBJECTLINK.Value);
+
                 getdataToedit(ticketType, ticketNo, ticketYear);
                 if (chkIsLoad_TicketChangeLog.Checked)
                     bindDataChangeLog();
@@ -4413,9 +4534,9 @@ namespace ServiceWeb.crm.AfterSale
             //}
             //catch (Exception)
             //{
-                
+
             //}
-            
+
             //listMailCC.AddRange(
             //    libCus.getContactEmail(
             //        SID, CompanyCode,
@@ -4471,7 +4592,7 @@ namespace ServiceWeb.crm.AfterSale
                     "EMail",
                     "ERPW_OWNER_GROUP",
                     "where SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND OwnerGroupCode = '" + ddlOwnerGroupService.SelectedValue + "'"
-                )    
+                )
             );
 
             ActivitySendMailModal.EmailMainAssignee = string.Join(",", listMailTo);
@@ -4479,8 +4600,8 @@ namespace ServiceWeb.crm.AfterSale
 
             ActivitySendMailModal.EmailCustomer = string.Join(",",
                 ServiceTicketLibrary.LookUpTable(
-                    "EMail", 
-                    "master_customer_general", 
+                    "EMail",
+                    "master_customer_general",
                     "where SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CustomerCode = '" + CustomerCode + "'"
                 )
             );
@@ -4889,6 +5010,15 @@ namespace ServiceWeb.crm.AfterSale
             if (serviceCallEntity.cs_servicecall_header.Rows.Count > 0)
             {
                 serviceCallEntity.cs_servicecall_header.Rows[0]["AffectSLA"] = ddlAffectSLA.SelectedValue;
+                var header = ServiceLibrary.LookUpTable(
+                                "COUNT(*)",
+                                "cs_servicecall_header",
+                                "WHERE SID = '" + dr["SID"].ToString() + "' AND CompanyCode = '" + dr["CompanyCode"].ToString() + "' AND ObjectID = '" + dr["ObjectID"].ToString() + "'"
+                            );
+                if (Int16.Parse(header) > 0)
+                {
+                    updateAffect("", dr["ObjectID"].ToString());
+                }
             }
         }
 
@@ -5289,6 +5419,7 @@ namespace ServiceWeb.crm.AfterSale
 
 
                     saveUpdateTicketDocStatus(hddTicketStatus_New.Value);
+
                     if (hddTicketStatus_Old.Value == SERVICE_DOC_STATUS_RESOLVE)
                     {
                         lib.reOpenTicketTask_SLA(SID, CompanyCode, hddDocnumberTran.Value);
@@ -5338,13 +5469,14 @@ namespace ServiceWeb.crm.AfterSale
         {
             try
             {
-                
 
-                
-                if (ddlAffectSLA.SelectedValue.ToString().Trim() == "" || tbSummaryProblem.Text.Trim() == ""  || tbSummaryCause.Text.Trim() =="" || tbSummaryResolution.Text.Trim() == "") {
-                    ClientService.DoJavascript("tabSummaryIsNotNull();");
-                    throw new Exception("All input in summary tab is not null");
-                }
+
+
+                //if (ddlAffectSLA.SelectedValue.ToString().Trim() == "" || tbSummaryProblem.Text.Trim() == "" || tbSummaryCause.Text.Trim() == "" || tbSummaryResolution.Text.Trim() == "")
+                //{
+                //    ClientService.DoJavascript("tabSummaryIsNotNull();");
+                //    throw new Exception("All input in summary tab is not null");
+                //}
 
                 string DocStatusResolve = ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(
                     SID,
@@ -5695,15 +5827,26 @@ namespace ServiceWeb.crm.AfterSale
             string stopTime = "";
             string totalTime = "";
             string totalTimeWithoutStop = "";
-
+            string ticketEndDateTime = "";
             double sumStopSeconds = 0;
+            string ticketNO = "";
+            string overduetime = "";
 
-            #region Get assign, resolve, close
+            #region Get assign, resolve, close, EndDatetime
             foreach (DataRow dr in serviceCallEntity.cs_servicecall_item.Rows)
             {
                 assignDateTime = dr["AssignDate"].ToString() + dr["AssignTime"].ToString();
                 resolveDateTime = dr["ResolutionOnDate"].ToString() + dr["ResolutionOnTime"].ToString();
                 closeDateTime = dr["ClosedOnDate"].ToString() + dr["ClosedOnTime"].ToString();
+            }
+            foreach (DataRow dr in serviceCallEntity.cs_servicecall_header.Rows)
+            {
+                ticketNO = Convert.ToString(dr["CallerID"]);
+            }
+            DataTable dtTicket = AfterSaleService.getInstance().GetEndDateTimelByTicketNumber(SID, CompanyCode, ticketNO);
+            if (dtTicket.Rows.Count > 0)
+            {
+                ticketEndDateTime = dtTicket.Rows[0].Field<String>("EndDateTime").ToString();
             }
             #endregion
 
@@ -5757,6 +5900,24 @@ namespace ServiceWeb.crm.AfterSale
 
             #endregion
 
+            #region Calculate Overdue time
+            if(ticketEndDateTime != "" && resolveDateTime != "")
+            {
+                DateTime overdue = ObjectUtil.ConvertDateTimeDBToDateTime(ticketEndDateTime);
+                DateTime resolve = ObjectUtil.ConvertDateTimeDBToDateTime(resolveDateTime);
+
+                TimeSpan ts = resolve - overdue;
+                if (ts.TotalSeconds <= 0)
+                {
+                    overduetime = "0";
+                }
+                else
+                {
+                    overduetime = ConvertToTime(ts.TotalSeconds.ToString(), true);
+                }
+            }
+            #endregion
+
             #region Calculate total time
             if (assignDateTime != "" && resolveDateTime != "")
             {
@@ -5769,6 +5930,9 @@ namespace ServiceWeb.crm.AfterSale
                 totalTimeWithoutStop = ConvertToTime((ts.TotalSeconds - sumStopSeconds).ToString(), true);
             }
             #endregion
+            // Overdue 
+            txtLog_OverdueTime.Text = overduetime;
+
 
             // Assign & created
             txtlog_OpenDateTime.Text = assignDateTime == "" ? "" : Validation.Convert2DateTimeDisplay(assignDateTime).Substring(0, 16);
@@ -6806,8 +6970,8 @@ namespace ServiceWeb.crm.AfterSale
 
         private DataTable GetMaterialUOM(string materialCode)
         {
-            DataTable dt = materialService.getInSatnce().GetMaterialSalesUnit(SID, materialCode);            
-         
+            DataTable dt = materialService.getInSatnce().GetMaterialSalesUnit(SID, materialCode);
+
             return dt;
         }
 
@@ -6818,14 +6982,14 @@ namespace ServiceWeb.crm.AfterSale
             DataTable DTSourceMaterial = new DataTable();
             DTSourceMaterial.Columns.Add("code");
             DTSourceMaterial.Columns.Add("desc");
-            DTSourceMaterial.Columns.Add("display");            
+            DTSourceMaterial.Columns.Add("display");
 
             foreach (DataRow dr in dtMaterialMaster.Rows)
             {
                 DataRow drNew = DTSourceMaterial.NewRow();
                 drNew["code"] = Convert.ToString(dr["ItmNumber"]);
                 drNew["desc"] = Convert.ToString(dr["ItmDescription"]);
-                drNew["display"] = Convert.ToString(dr["ItmNumber"]) + " : " + Convert.ToString(dr["ItmDescription"]);                
+                drNew["display"] = Convert.ToString(dr["ItmNumber"]) + " : " + Convert.ToString(dr["ItmDescription"]);
                 DTSourceMaterial.Rows.Add(drNew);
             }
 
@@ -6844,7 +7008,7 @@ namespace ServiceWeb.crm.AfterSale
             foreach (RepeaterItem e in rptMaterial.Items)
             {
                 HiddenField hdfItemNo = e.FindControl("hdfItemNo") as HiddenField;
-                
+
                 DataRow[] drr = dtMaterialPurchase.Select("ItemNo = '" + hdfItemNo.Value + "'");
 
                 foreach (DataRow dr in drr)
@@ -6853,7 +7017,7 @@ namespace ServiceWeb.crm.AfterSale
                     {
                         continue;
                     }
-                  
+
                     TextBox tbUnitPrice = e.FindControl("tbUnitPrice") as TextBox;
                     TextBox tbQty = e.FindControl("tbQty") as TextBox;
 
@@ -6880,7 +7044,7 @@ namespace ServiceWeb.crm.AfterSale
             if (update)
             {
                 udpnMaterial.Update();
-            }            
+            }
         }
 
         protected void rptMaterial_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -6919,7 +7083,7 @@ namespace ServiceWeb.crm.AfterSale
                             ddlUom.SelectedValue = hdfMaterialUOM.Value;
                         }
                     }
-                }               
+                }
             }
             catch (Exception ex)
             {
@@ -6968,7 +7132,7 @@ namespace ServiceWeb.crm.AfterSale
                 DropDownList ddlUom = rptItem.FindControl("ddlUom") as DropDownList;
 
                 DataTable dt = GetMaterialUOM(hdfMaterialCode.Text.Trim());
-                
+
                 ddlUom.DataSource = dt;
                 ddlUom.DataBind();
             }
@@ -7014,12 +7178,14 @@ namespace ServiceWeb.crm.AfterSale
 
         #region Property Value 
         //04/01/2562 by born kk
-        private void setHeaderPropertyValue() {
+        private void setHeaderPropertyValue()
+        {
 
             AfterSaleService after = new AfterSaleService();
             List<AfterSaleService.ERPWPropertyValueHeader> lhdpv = after.GetERPWPropertyHeader(SID, CompanyCode);
-            
-            foreach (AfterSaleService.ERPWPropertyValueHeader prop in lhdpv) {
+
+            foreach (AfterSaleService.ERPWPropertyValueHeader prop in lhdpv)
+            {
                 DataTable dt = new DataTable();
                 dt.TableName = prop.PostingType + prop.HeaderCode + idGen;
                 dt.Columns.Add("ItemNo");
@@ -7028,7 +7194,7 @@ namespace ServiceWeb.crm.AfterSale
                 dt.Columns.Add("ItemCode");
                 dt.Columns.Add("ItemDesc");
                 dt.Columns.Add("Value");
-                Session[prop.PostingType + prop.HeaderCode+ idGen] = dt;
+                Session[prop.PostingType + prop.HeaderCode + idGen] = dt;
             }
             rptHeaderProperty.DataSource = lhdpv;
             rptHeaderPropertyDeatail.DataSource = lhdpv;
@@ -7037,9 +7203,11 @@ namespace ServiceWeb.crm.AfterSale
 
         }
 
-        protected void btnAddNewRowPropertyValueItem_click(object sender ,EventArgs e) {
+        protected void btnAddNewRowPropertyValueItem_click(object sender, EventArgs e)
+        {
             PreparePropertyValue();
-            try {
+            try
+            {
                 string postheaderselect = hddPostHeader.Value;
                 foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
                 {
@@ -7048,12 +7216,13 @@ namespace ServiceWeb.crm.AfterSale
                     HiddenField headercode = item.FindControl("hddHeaderCodeInRpt") as HiddenField;
                     if (postheader.Value == postheaderselect)
                     {
-                        DataTable dt = Session[postheader.Value+ idGen] as DataTable;
+                        DataTable dt = Session[postheader.Value + idGen] as DataTable;
                         string itemNo = "00001";
-                        if (dt.Rows.Count == 5 ) {
+                        if (dt.Rows.Count == 5)
+                        {
                             break;
                         }
-                        if (dt.Rows.Count > 0 )
+                        if (dt.Rows.Count > 0)
                         {
                             itemNo = Convert.ToString(Convert.ToInt32(dt.Compute("MAX(ItemNo)", "")) + 1).PadLeft(5, '0');
                         }
@@ -7063,14 +7232,15 @@ namespace ServiceWeb.crm.AfterSale
                         row["HeaderCode"] = headercode.Value;
                         row["ItemCode"] = itemNo;
                         dt.Rows.Add(row);
-                        Session[postheader.Value+ idGen] = dt;
+                        Session[postheader.Value + idGen] = dt;
                         break;
                     }
 
                 }
-               
+
                 BindingPropertyValue();
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 ClientService.AGError(ex.Message);
             }
@@ -7078,16 +7248,18 @@ namespace ServiceWeb.crm.AfterSale
             {
                 ClientService.AGLoading(false);
             }
-           
+
         }
 
-        private void BindingPropertyValue() {
-           
-            foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items) {
+        private void BindingPropertyValue()
+        {
+
+            foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
+            {
                 Repeater rpt = item.FindControl("rptPropertyItem") as Repeater;
                 HiddenField postheader = item.FindControl("hddPostHeaderInRpt") as HiddenField;
                 UpdatePanel udp = item.FindControl("udpPropertyDetail") as UpdatePanel;
-                DataTable dt = Session[postheader.Value+ idGen] as DataTable;
+                DataTable dt = Session[postheader.Value + idGen] as DataTable;
                 rpt.DataSource = dt;
                 rpt.DataBind();
                 udp.Update();
@@ -7095,16 +7267,19 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
-        private void PreparePropertyValue() {
+        private void PreparePropertyValue()
+        {
             foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
             {
                 Repeater rpt = item.FindControl("rptPropertyItem") as Repeater;
                 HiddenField postheader = item.FindControl("hddPostHeaderInRpt") as HiddenField;
                 DataTable dt = Session[postheader.Value + idGen] as DataTable;
-                foreach (RepeaterItem itemInRpt in rpt.Items) {
+                foreach (RepeaterItem itemInRpt in rpt.Items)
+                {
                     HiddenField hdfItemNo = itemInRpt.FindControl("hdfItemNo") as HiddenField;
                     DataRow[] dtr = dt.Select("ItemNo = '" + hdfItemNo.Value + "'");
-                    foreach (DataRow row in dtr) {
+                    foreach (DataRow row in dtr)
+                    {
                         if (row.RowState == DataRowState.Deleted)
                         {
                             continue;
@@ -7118,11 +7293,12 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
-        private void SavePropertyValue(string fiscalYear, string documentType, string documentNo) {
-            
-                foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
-                {
-                    HiddenField postheader = item.FindControl("hddPostHeaderInRpt") as HiddenField;
+        private void SavePropertyValue(string fiscalYear, string documentType, string documentNo)
+        {
+
+            foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
+            {
+                HiddenField postheader = item.FindControl("hddPostHeaderInRpt") as HiddenField;
                 HiddenField postingtype = item.FindControl("hddPostigTypeInRpt") as HiddenField;
                 HiddenField headercode = item.FindControl("hddHeaderCodeInRpt") as HiddenField;
                 DataTable dt = Session[postheader.Value + idGen] as DataTable;
@@ -7140,13 +7316,14 @@ namespace ServiceWeb.crm.AfterSale
                            headercode.Value
                         );
 
-                }
-            
-            
-            
+            }
+
+
+
         }
 
-        private void GetPropertyValueItem() {
+        private void GetPropertyValueItem()
+        {
             AfterSaleService after = new AfterSaleService();
             foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
             {
@@ -7165,7 +7342,8 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
-        protected void btnDeleteRowPropertyValue_click(object sender ,EventArgs e) {
+        protected void btnDeleteRowPropertyValue_click(object sender, EventArgs e)
+        {
             try
             {
                 PreparePropertyValue();
@@ -7182,7 +7360,7 @@ namespace ServiceWeb.crm.AfterSale
                         DataRow[] dtr = dt.Select("ItemNo = '" + itemNo + "'");
                         if (dtr.Length > 0)
                         {
-                            
+
                             dtr[0].Delete();
                         }
                         Session[postheader.Value + idGen] = dt;
@@ -7204,14 +7382,15 @@ namespace ServiceWeb.crm.AfterSale
 
         }
 
-        private void validateDuplicatePropertyValue() {
+        private void validateDuplicatePropertyValue()
+        {
             List<string> listValue = new List<string>();
 
             foreach (RepeaterItem item in rptHeaderPropertyDeatail.Items)
             {
                 Repeater rpt = item.FindControl("rptPropertyItem") as Repeater;
                 HiddenField headerDesc = item.FindControl("hddHeaderDescInRpt") as HiddenField;
-             
+
                 foreach (RepeaterItem itemInRpt in rpt.Items)
                 {
                     TextBox txtValue = itemInRpt.FindControl("txtValue") as TextBox;
@@ -7222,14 +7401,16 @@ namespace ServiceWeb.crm.AfterSale
               .Where(g => g.Count() > 1)
               .Select(y => new { Element = y.Key, Counter = y.Count() })
               .ToList();
-                if (query.Count>0) {
-                    if (query[0].Counter > 0) {
-                        throw new Exception("Document Number : " + _txt_docnumberTran.Value + "\n Configuration Item tab "+ headerDesc.Value + " \n { " + query[0].Element+ " } ซ้ำ กรุณากรอกใหม่");
+                if (query.Count > 0)
+                {
+                    if (query[0].Counter > 0)
+                    {
+                        throw new Exception("Document Number : " + _txt_docnumberTran.Value + "\n Configuration Item tab " + headerDesc.Value + " \n { " + query[0].Element + " } ซ้ำ กรุณากรอกใหม่");
                     }
                 }
             }
 
-            
+
         }
         #endregion
 
@@ -7439,12 +7620,12 @@ namespace ServiceWeb.crm.AfterSale
         {
             try
             {
-                    // todo
-                    bindDataReview();
+                // todo
+                bindDataReview();
 
-                    chkIsLoad_reviews.Checked = true;
-                    udpIsLoad_reviews.Update();
-               
+                chkIsLoad_reviews.Checked = true;
+                udpIsLoad_reviews.Update();
+
             }
             catch (Exception ex)
             {
@@ -7463,20 +7644,90 @@ namespace ServiceWeb.crm.AfterSale
 
             DataTable rating = AfterSaleService.getInstance().getRating(ticketNo, emCode);
 
-            if(rating.Rows.Count != 0)
+            if (rating.Rows.Count != 0)
             {
                 Rating1.CurrentRating = Convert.ToInt32(rating.Rows[0]["Rating"]);
                 tbCommentforReviews.Text = rating.Rows[0]["Comment"].ToString();
             }
-           
+
             udp_reviews_detail.Update();
 
         }
 
         protected void OnRatingChanged(object sender, RatingEventArgs e)
         {
-            
+
         }
+        protected void ResponsibleOrganization()
+        {
+            string sqll = " SELECt * FROM ERPW_Master_Customer_General_Data WHERE SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CustomerCode = '" + Session["SCT_created_cust_code" + idGen] + "'; ";
+            DataTable dt = DBService.selectDataFocusone(sqll);
+
+            if (dt.Rows.Count == 0)
+            {
+                string sql = @"INSERT INTO [dbo].[ERPW_Master_Customer_General_Data]
+                                           ([SID]
+                                           ,[CompanyCode]
+                                           ,[CustomerCode]
+                                           ,[CustomerCritical]
+                                           ,[ResponsibleOrganization]
+                                           ,[Created_By]
+                                           ,[Created_On]
+                                           ,[Updated_By]
+                                           ,[Updated_On])
+                                     VALUES
+                                           ('" + SID + @"'
+                                           , '" + CompanyCode + @"'
+                                           , '" + Session["SCT_created_cust_code" + idGen] + @"'
+                                           , ''
+                                           , '" + _txt_customertran_responsible_organization.Value + @"'
+                                           , '" + EmployeeCode + @"'
+                                           , '" + DateTime.Now.ToString("yyyyMMddHHmmss") + @"'
+                                           , ''
+                                           , ''
+                                           )";
+                DBService.executeSQLForFocusone(sql);
+            }
+            else
+            {
+                string sql = " UPDATE ERPW_Master_Customer_General_Data " +
+                             " SET ResponsibleOrganization = '" + _txt_customertran_responsible_organization.Value + "', Updated_By = '" + EmployeeCode + "', Updated_On = '" + DateTime.Now.ToString("yyyyMMddHHmmss") + "' " +
+                             " WHERE SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CustomerCode = '" + Session["SCT_created_cust_code" + idGen] + "'";
+
+                System.Diagnostics.Debug.WriteLine(sql);
+                DBService.executeSQLForFocusone(sql);
+            }
+        }
+        protected void updateAffect(string CallerID, string ObjectID)
+        {
+            try
+            {
+                string sql = null;
+                if (CallerID != "")
+                {
+                    sql = " UPDATE cs_servicecall_header " +
+                             " SET Affect = '" + ddlAffect.SelectedValue + "' " +
+                             " , Affect00 = '" + ddlAffect00.SelectedValue + "' " +
+                             " , Affect01 = '" + ddlAffect01.SelectedValue + "' " +
+                             " WHERE SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CallerID = '" + CallerID + "'";
+                }
+                if (ObjectID != "")
+                {
+                    sql = " UPDATE cs_servicecall_header " +
+                             " SET Affect = '" + ddlAffect.SelectedValue + "' " +
+                             " , Affect00 = '" + ddlAffect00.SelectedValue + "' " +
+                             " , Affect01 = '" + ddlAffect01.SelectedValue + "' " +
+                             " WHERE SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND ObjectID = '" + ObjectID + "'";
+                }
+                System.Diagnostics.Debug.WriteLine(sql);
+                DBService.executeSQLForFocusone(sql);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         //=========================================== review funtion ===========================================================
         protected void btnSubmitReviews_Click(object sender, EventArgs e)
         {
@@ -7485,7 +7736,7 @@ namespace ServiceWeb.crm.AfterSale
             string commentStr = tbCommentforReviews.Text.Trim();
             if (commentStr != "" && Rating1.CurrentRating != 0)
             {
-                AfterSaleService.getInstance().saveRating(ticketNo, emCode, Rating1.CurrentRating.ToString() , tbCommentforReviews.Text);
+                AfterSaleService.getInstance().saveRating(ticketNo, emCode, Rating1.CurrentRating.ToString(), tbCommentforReviews.Text);
 
                 string valueStr = "Ticket rewiewed , Rating:" + Rating1.CurrentRating.ToString();
                 List<logValue_OldNew> enLog = new List<logValue_OldNew>();
@@ -7511,8 +7762,8 @@ namespace ServiceWeb.crm.AfterSale
                 ClientService.AGError("Please fill up this form.");
                 ClientService.AGLoading(false);
             }
-            
-          
+
+
         }
         //========================================================================================================================================
         //===================================================== chechk status ticket for review ==================================================
@@ -7520,19 +7771,19 @@ namespace ServiceWeb.crm.AfterSale
         {
             string ticketNo = hddDataRating_TicketCode.Value;
             string emCode = hddDataRating_EmpCode.Value;
-            string SERVICE_DOC_STATUS_RESOLVE = lib.GetTicketStatusFromEvent(SID, CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_RESOLVE);
+            string SERVICE_DOC_STATUS_OPEN = lib.GetTicketStatusFromEvent(SID, CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_START);
             //เช็คสถานะ resolve เพื่ออนุญาติการแก้ไข 
-            if (hddTicketStatus_New.Value != SERVICE_DOC_STATUS_RESOLVE)
+            if (hddTicketStatus_New.Value == SERVICE_DOC_STATUS_OPEN)
             {
                 udp_reviews_detail.Visible = false;
                 tbCommentforReviews.Enabled = true;
                 btnSubmitReviews.Visible = true;
                 Rating1.ReadOnly = false;
-                
+
             }
             else
             {
-               
+
                 DataTable rating = AfterSaleService.getInstance().getRating(ticketNo, emCode);
                 if (rating.Rows.Count != 0)
                 {

@@ -8,6 +8,7 @@ using ServiceWeb.auth;
 using ServiceWeb.Service;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -93,6 +94,31 @@ namespace ServiceWeb.UserProfile
             }
         }
 
+        public bool ISExistLineLink
+        {
+            get
+            {
+                bool found = false;
+                DataTable dt = userProfileService.getStudentProfile(
+                    ERPWAuthentication.SID,
+                    ERPWAuthentication.CompanyCode,
+                    ERPWAuthentication.EmployeeCode
+                    );
+
+                if (dt.Rows.Count > 0)
+                {
+                    DataRow dr = dt.Rows[0];
+
+                    if(dr["AboutMe"].ToString() != "")
+                    {
+                        found = true;
+                    }
+                }
+
+                return found;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -136,7 +162,7 @@ namespace ServiceWeb.UserProfile
 
         private void BindingScreen()
         {
-           
+    
         }
 
         private void BindingItems()
@@ -387,7 +413,17 @@ namespace ServiceWeb.UserProfile
         //    }
         //}
 
+        
+        public string GetEmpCode()
+        {
+            string EmployeeCode = ERPWAuthentication.EmployeeCode;
+            return EmployeeCode;
+        }
 
-
+        protected void btnUnlink_Click(object sender, EventArgs e)
+        {
+            userProfileService.saveAboutMe(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ERPWAuthentication.EmployeeCode, "");
+            Response.Redirect(Page.ResolveUrl("~/UserProfile/UserProfile.aspx"));
+        }
     }
 }

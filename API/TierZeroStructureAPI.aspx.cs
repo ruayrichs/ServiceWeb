@@ -328,6 +328,14 @@ namespace ServiceWeb.API
                         string ObjKeyTicketNo = enResult.ResultTicket.Fiscalyear + enResult.ResultTicket.TicketType +  enResult.ResultTicket.TicketNo;
                         TierZeroLibrary.GetInstance().updateOTPUseInProcess(SID, CompanyCode, ObjKeyTicketNo, Data.EMail, Data.TelNo, otpid);
                     }
+                    NotificationLibrary.GetInstance().TicketAlertEvent(
+                            NotificationLibrary.EVENT_TYPE.TICKET_OPEN,
+                            SID,
+                            CompanyCode,
+                            enResult.ResultTicket.TicketNo,
+                            EmployeeCode,
+                            "ServiceCallTransaction"
+                        );
                 }
                 listResponse.Add(ResponseStr);
             }

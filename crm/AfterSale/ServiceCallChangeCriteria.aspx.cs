@@ -1592,6 +1592,7 @@ namespace ServiceWeb.crm.AfterSale
 
         private void bindDataEquipment()
         {
+            DataTable ciSelect = new DataTable();
             List<EquipmentService.EquipmentItemData> listEquipmentItem = ServiceEquipment.getListEquipment(
                 SID,
                 CompanyCode,
@@ -1601,7 +1602,8 @@ namespace ServiceWeb.crm.AfterSale
                 ddlEquipmentStatus.SelectedValue,
                 ddlSearch_EMClass.SelectedValue,
                 ddlSearch_Category.SelectedValue,
-                ddlOwnerService.SelectedValue
+                ddlOwnerService.SelectedValue,
+                ciSelect
             );
 
             var dataSource = listEquipmentItem.Select(s => new

@@ -163,7 +163,38 @@
         };
 
         //window.onload = webOnLoad();
-        $(document).ready(function () { webOnLoad(); })
+        $(document).ready(function () {
+            webOnLoad();
+            // QR
+            var small = { width: "48px", height: "48px" };
+            var large = { width: "200px", height: "200px" };
+            var count = 1;
+            $("#qrCodeTicket").css(small).on('click', function () {
+                $(this).animate((count == 1) ? large : small);
+                count = 1 - count;
+            });
+            // \QR
+        })
+
+        function UserLV(lv) {
+            if (lv == '1') {
+                hideTicketType();
+                $("#buttonClose").remove();
+            }
+        };
+        function hideTicketType() {
+            $("#<%= ddlImpact.ClientID%>").parent().parent().hide();
+        };
+        function SummaryAutoCreate() {
+            $("#ddlAffectSLA").val("False");
+            $("#tbSummaryProblem").val("Auto-Create");
+            $("#tbSummaryCause").val("Auto-Create");
+            $("#tbSummaryResolution").val("Auto-Create");
+        };
+        function editTicketType() {
+            $("#<%= ddlImpact.ClientID%>").removeAttr("disabled");
+            $("#<%= ddlUrgency.ClientID%>").removeAttr("disabled");
+        };
 
         var isPageChange = false;
         var TicketType = "<%= (string)Session["SCT_created_doctype_code"] %>";
@@ -273,7 +304,11 @@
                         <button type="button" class="btn btn-info btn-sm mb-1 d-none" onclick="$('#Modal-UpdateStatus').modal('show');">
                             <i class="fa fa-tasks"></i>&nbsp;&nbsp;Update Status
                         </button>
-                        <button type="button" class="btn btn-success btn-sm mb-1" onclick="$('#Modal-CloseTicket').modal('show');">
+                        <button type="button" id="buttonClose" class="btn btn-success btn-sm mb-1" onclick="
+                            <% if (Permission.LevelControl == "1") { %>
+                                SummaryAutoCreate();
+                            <% } %>
+                            $('#Modal-CloseTicket').modal('show'); ">
                             <i class="fa fa-check-square-o"></i>&nbsp;&nbsp;Close Ticket
                         </button>
                         <button type="button" class="btn btn-danger btn-sm mb-1" onclick="$(this).next().click();">
@@ -400,7 +435,14 @@
                         <span id="ticketName_span">
                             <asp:Label Text="" runat="server" ID="lbl_docnumberTran" CssClass="h5 mb-0" />
                         </span>
-                        <asp:CheckBox ID="chkMajorIncident" runat="server" Text="Major Incident" CssClass="form-check" Style="float: right;" />
+                        <div class="float-right">
+                            <asp:CheckBox ID="chkMajorIncident" runat="server" Text="Major Incident" CssClass="form-check" Style="float: left;" />
+                            &nbsp;&nbsp;&nbsp;
+                            <img class="float-right" id="qrCodeTicket" style="height : 48px; Margin:-12px 2px -12px;" 
+                                src="https://chart.googleapis.com/chart?chs=200x200&amp;cht=qr&amp;chl=
+                                <%= HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + "/Login.aspx?q=ticket%26key=" + lblTicketNo_Modal.Text %>" 
+                                alt="<%= _txt_docnumberTran.Value %>">
+                        </div>
                     </div>
                     <div class="card-body">
                         <nav>
@@ -415,6 +457,7 @@
                                 </asp:UpdatePanel>
                                 </a>
                                 <a class="header-tab nav-item nav-link" id="nav-sla-tab" data-toggle="tab" href="#nav-sla" role="tab" aria-controls="nav-sla" aria-selected="false" onclick="onCommentClick();">Comment</a>
+                                <% if (Permission.LevelControl != "1") { %>
                                 <a class="header-tab nav-item nav-link" id="nav-summary-tab" data-toggle="tab" href="#nav-summary" role="tab" aria-controls="nav-summary" aria-selected="false">Summary</a>
                                 <a id="lichatTran" runat="server" class="header-tab nav-item nav-link d-none" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat</a>
                                 <a id="liDate-Time-logTran" class="header-tab nav-item nav-link <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " d-none " : "" %>"
@@ -426,21 +469,20 @@
                                 <a id="liattachTran" class="header-tab nav-item nav-link <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " d-none " : "" %>"
                                     data-toggle="tab" href="#nav-attachment" role="tab" aria-controls="nav-attachment" aria-selected="false"
                                     onclick="$('#btnIsLoad_Attachment').click();">Attachment
+                                </a>
+                                <a id="lichangelogTran" class="header-tab nav-item nav-link <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " d-none " : "" %>"
+                                    data-toggle="tab" href="#nav-changelog" role="tab" aria-controls="nav-changelog" aria-selected="true"
+                                    onclick="$('#btnIsLoad_TicketChangeLog').click();">Change Log</a>
+                                <% } %>
+                                <%--add Reviews tab--%>
+                                <a id="reviewsTran" class="header-tab nav-item nav-link <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " d-none " : "" %>"
+                                    data-toggle="tab" href="#nav-reviews" role="tab" aria-controls="nav-reviews" aria-selected="true"
+                                    onclick="$('#btn_reviews').click();">Reviews</a>
                                 <asp:UpdatePanel ID="updcountfile" runat="server" UpdateMode="Conditional" class="d-none">
                                     <ContentTemplate>
                                         <label id="lb_menu_count_fileTran" runat="server" class="badge badge-primary"></label>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
-                                </a>
-                                <a id="lichangelogTran" class="header-tab nav-item nav-link <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " d-none " : "" %>"
-                                    data-toggle="tab" href="#nav-changelog" role="tab" aria-controls="nav-changelog" aria-selected="true"
-                                    onclick="$('#btnIsLoad_TicketChangeLog').click();">Change Log</a>
-                                <%--add Reviews tab--%>
-                                
-                                    <a id="reviewsTran" class="header-tab nav-item nav-link <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " d-none " : "" %>"
-                                        data-toggle="tab" href="#nav-reviews" role="tab" aria-controls="nav-reviews" aria-selected="true"
-                                        onclick="$('#btn_reviews').click();">Reviews</a>
-                                
                             </div>
                         </nav>
                         <br />
@@ -482,7 +524,7 @@
                                                                     </asp:UpdatePanel>
                                                                 </div>
                                                                 <div class="form-group col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                                                                    <asp:Label runat="server" ID="labelDocumentDate" Text="Ticket Date"></asp:Label>
+                                                                    <asp:Label runat="server" ID="labelDocumentDate" Text="Ticket Date Time"></asp:Label>
                                                                     <input id="_txt_docdateTran" type="text" class="form-control form-control-sm" runat="server" clientidmode="Static"
                                                                         disabled="disabled" />
                                                                 </div>
@@ -519,6 +561,14 @@
                                                                 <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Created On</label>
                                                                     <asp:TextBox ID="tbCreatedOn" runat="server" CssClass="form-control form-control-sm" Enabled="false"></asp:TextBox>
+                                                                </div>
+                                                                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                    <asp:UpdatePanel ID="UpdatePanel7" runat="server" UpdateMode="Conditional">
+                                                                        <ContentTemplate>
+                                                                            <label>Operator</label>
+                                                                            <asp:TextBox ID="tbRemark1" runat="server" CssClass="form-control form-control-sm ticket-allow-editor"></asp:TextBox>
+                                                                        </ContentTemplate>
+                                                                    </asp:UpdatePanel>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -566,9 +616,10 @@
                                                                 </div>
                                                                 <div class="form-group col-lg-6 col-md-5 col-sm-12 col-xs-12">
                                                                     <label>Responsible Organization</label>
-                                                                    <input id="_txt_customertran_responsible_organization" type="text" class="form-control form-control-sm box-highlight"
+                                                                    <%--<input id="_txt_customertran_responsible_organization" type="text" class="form-control form-control-sm box-highlight"
                                                                         style="color: red !important;font-weight: 900 !important; background-color: yellow !important;" runat="server" 
-                                                                        clientidmode="Static" disabled="disabled" />
+                                                                        clientidmode="Static" disabled="disabled" />--%>
+                                                                    <input type="text" id="_txt_customertran_responsible_organization" class="form-control form-control-sm ticket-allow-editor" runat="server">
                                                                 </div>
                                                                 <div class="form-group col-lg-7 col-md-12 col-sm-7 col-xs-12">
                                                                     <label>Contact E-Mail</label>
@@ -583,16 +634,56 @@
                                                                     <asp:TextBox ID="txtContactRemark" Enabled="false" runat="server"
                                                                         CssClass="form-control form-control-sm"></asp:TextBox>
                                                                 </div>
+                                                                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                    <label>&nbsp;</label>
+                                                                    <br />
+                                                                    <label>&nbsp;</label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="form-group col-md-12 col-sm-12">
+                                                    <div class="card">
+                                                        <div class="card-body card-body-sm">
+                                                            <div class="form-row">
+                                                                <div class="form-group col-sm-4">
+                                                                    <asp:Label runat="server" ID="labelDocumentStatus" Text="Ticket Status"></asp:Label>
+                                                                    <input id="_txt_docstatusTran" type="text" class="form-control form-control-sm" runat="server" clientidmode="Static" disabled="disabled" />
+                                                                </div>
+                                                                <div class="form-group col-sm-4">
+                                                                    <asp:Label ID="lbWorkFlowStats" runat="server" Text="Work Flow Status"></asp:Label>
+                                                                    <asp:TextBox ID="tbWorkFlowStatus" runat="server" CssClass="form-control form-control-sm" Enabled="false"></asp:TextBox>
+                                                                </div>
+                                                                <div class="form-group col-sm-4">
+                                                                    <asp:Label runat="server" ID="labelFiscalYear" Text="Fiscal Year"></asp:Label>
+                                                                    <input id="_txt_fiscalyear" type="text" class="form-control form-control-sm" runat="server" disabled="disabled" />
+                                                                </div>
+                                                            </div>
+                                                            <asp:Label ID="lbApprovalStatus" runat="server" Text="Wait Approval By"></asp:Label>
+                                                            <asp:TextBox ID="tbApprovalStatus" runat="server" CssClass="form-control form-control-sm" Enabled="false"></asp:TextBox>
+                                                            <asp:Panel runat="server" ID="panelAccountability" CssClass="form-group">
+                                                                <asp:Label ID="lbAccountability" runat="server" Text="Accountability" />
+                                                                <asp:DropDownList runat="server" ID="ddlAccountability" CssClass="form-control form-control-sm">
+                                                                </asp:DropDownList>
+                                                            </asp:Panel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div class="form-group col-md-12 col-sm-12">
                                                     <div class="card">
                                                         <div class="card-body card-body-sm">
                                                             <asp:UpdatePanel ID="udpnSeverity" runat="server" UpdateMode="Conditional">
                                                                 <ContentTemplate>
                                                                     <div class="form-row">
+                                                                    <%
+	                                                                    if (mode_stage == agape.lib.constant.ApplicationSession.CHANGE_MODE_STRING) 
+        	                                                                    { 
+                	                                                                if (Permission.LevelControl == "2") { ClientService.DoJavascript("editTicketType();"); } 
+                                                                                } 
+                                                                    %>
                                                                         <div class="form-group col-sm-4">
                                                                             <asp:Label ID="lebelImpact" runat="server" Text="Impact"></asp:Label>                                                                            
                                                                             <asp:DropDownList ID="ddlImpact" runat="server" class="form-control form-control-sm required" AutoPostBack="true"
@@ -644,26 +735,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="">
-                                                <asp:Label runat="server" ID="labelDocumentStatus" Text="Ticket Status"></asp:Label>
-                                                <input id="_txt_docstatusTran" type="text" class="form-control form-control-sm" runat="server" clientidmode="Static"
-                                                    disabled="disabled" />
-
-                                                <asp:Label ID="lbApprovalStatus" runat="server" Text="Wait Approval By"></asp:Label>
-                                                <asp:TextBox ID="tbApprovalStatus" runat="server" CssClass="form-control form-control-sm" Enabled="false"></asp:TextBox>
-
-                                                <asp:Label ID="lbWorkFlowStats" runat="server" Text="Work Flow Status"></asp:Label>
-                                                <asp:TextBox ID="tbWorkFlowStatus" runat="server" CssClass="form-control form-control-sm" Enabled="false"></asp:TextBox>
-
-                                                <asp:Label runat="server" ID="labelFiscalYear" Text="Fiscal Year"></asp:Label>
-                                                <input id="_txt_fiscalyear" type="text" class="form-control form-control-sm" runat="server" disabled="disabled" />
-
-                                                <asp:Panel runat="server" ID="panelAccountability" CssClass="form-group">
-                                                    <asp:Label ID="lbAccountability" runat="server" Text="Accountability" />
-                                                    <asp:DropDownList runat="server" ID="ddlAccountability" CssClass="form-control form-control-sm">
-                                                    </asp:DropDownList>
-                                                </asp:Panel>
                                             </div>
 
                                             <%--<div class="form-row">
@@ -1024,6 +1095,9 @@
                                                         <div class="tab-pane fade show active" id="nav-material" role="tabpanel" aria-labelledby="nav-material-tab">
                                                             <asp:UpdatePanel ID="udpnMaterial" runat="server" UpdateMode="Conditional">
                                                                 <ContentTemplate>
+                                                                    <script>
+                                                                        var TotalAmount = 0.00;
+                                                                    </script>
                                                                     <asp:HiddenField ID="hddJsonMat" runat="server" ClientIDMode="Static" />
                                                                     <asp:Button ID="btnAddRowMaterial" runat="server" CssClass="d-none" OnClick="btnAddRowMaterial_Click" />
                                                                     <div>
@@ -1034,6 +1108,7 @@
                                                                                 <th class="text-nowrap">Price / Unit</th>
                                                                                 <th class="text-nowrap">QTY</th>
                                                                                 <th class="text-nowrap">UOM</th>
+                                                                                <th class="text-nowrap">Amount</th>
                                                                                 <th class="text-nowrap<%= PageEnableEdit ? "" : " d-none" %>"></th>
                                                                             </thead>
                                                                             <tbody>
@@ -1069,6 +1144,14 @@
                                                                                                     </ContentTemplate>
                                                                                                 </asp:UpdatePanel>                                                                                                
                                                                                             </td>
+                                                                                            <td style="width: 100px;">
+                                                                                                <asp:TextBox ID="tbAmount" runat="server" CssClass="form-control form-control-sm text-right"
+                                                                                                    Text='<%# String.Format("{0:0.00}", (Convert.ToDouble(Eval("UnitPrice", "{0:N2}")) * Convert.ToDouble(Eval("Qty", "{0:N2}")))) %>' onkeypress="return isNumberKey(event);" onchange="decimalFormatNumber(this, 2);">
+                                                                                                </asp:TextBox>
+                                                                                                <script>
+                                                                                                    TotalAmount += parseFloat(<%# String.Format("{0:0.00}", (Convert.ToDouble(Eval("UnitPrice", "{0:N2}")) * Convert.ToDouble(Eval("Qty", "{0:N2}")))) %>);
+                                                                                                </script>
+                                                                                            </td>
                                                                                             <td class="text-nowrap text-center align-middle<%= PageEnableEdit ? "" : " d-none" %>">
                                                                                                 <i class="fa fa-trash-o text-danger c-pointer" title="Delete Row" onclick="materialConfirmDeleteRow(this);"></i>
                                                                                                 <asp:Button ID="btnDeleteRowMaterial" runat="server" CssClass="d-none ticket-allow-editor" CommandArgument='<%# Eval("ItemNo") %>' OnClick="btnDeleteRowMaterial_Click" />
@@ -1076,6 +1159,22 @@
                                                                                         </tr>
                                                                                     </ItemTemplate>
                                                                                 </asp:Repeater>
+                                                                                        <tr>
+                                                                                            <td class="text-nowrap text-center align-middle" colspan="5">
+                                                                                                Totals
+                                                                                                <asp:HiddenField ID="xhdfItemNo" runat="server" Value='<%# Eval("ItemNo") %>' />
+                                                                                            </td>
+                                                                                            <td style="width: 100px;">
+                                                                                                <asp:TextBox ID="tbTotals" runat="server" CssClass="form-control form-control-sm text-right" onkeypress="return isNumberKey(event);" onchange="decimalFormatNumber(this, 2);">
+                                                                                                </asp:TextBox>
+                                                                                                <script>
+                                                                                                    $("#<%= tbTotals.ClientID%>").val(TotalAmount.toFixed(2));
+                                                                                                </script>
+                                                                                            </td>
+                                                                                            <td class="text-nowrap text-center align-middle<%= PageEnableEdit ? "" : " d-none" %>">
+                                                                                                
+                                                                                            </td>
+                                                                                        </tr>
                                                                             </tbody>
                                                                             <tfoot>
                                                                                 <tr class="c-pointer bg-info text-white<%= PageEnableEdit ? "" : " d-none" %>" onclick="addMaterialRow();">
@@ -1178,7 +1277,7 @@
                                                                                                         <tr>
                                                                                                             <td class="text-nowrap text-center align-middle">
                                                                                                                 <%# Convert.ToInt32(Eval("ItemNo")) %>
-                                                                                                                <asp:HiddenField ID="hdfItemNo" runat="server" Value='<%# Eval("ItemNo") %>' />
+                                                                                                                <asp:HiddenField ID="HiddenField1" runat="server" Value='<%# Eval("ItemNo") %>' />
                                                                                                             </td>
                                                                                                             <td>                                                                                                                                                                                                                                                                                                                                                                                                                                  
                                                                                                                 <asp:TextBox ID="txtValue" runat="server" CssClass="form-control form-control-sm ticket-allow-editor" Text='<%# Eval("Value") %>'></asp:TextBox>                                                                                                
@@ -1231,6 +1330,38 @@
                                             <asp:ListItem Text="Not Affect SLA" Value="False"></asp:ListItem>
                                         </asp:DropDownList>
                                         <%--<asp:HiddenField runat="server" ID="hddOldValue_AffectSLA" />--%>
+                                    </div>
+
+                                    <div class="form-group d-none">
+                                        <label>Affect</label>
+                                        <asp:DropDownList ID="ddlAffect" runat="server" CssClass="form-control form-control-sm ticket-allow-editor" ClientIDMode="Static">
+                                            <asp:ListItem Text="" Value=""></asp:ListItem>
+                                            <asp:ListItem Text="มีผลกระทบเป็นตัวเงิน" Value="01"></asp:ListItem>
+                                            <asp:ListItem Text="มีผลกระทบไม่เป็นตัวเงิน" Value="02"></asp:ListItem>
+                                            <asp:ListItem Text="ไม่มีผลกระทบ" Value="03"></asp:ListItem>
+                                        </asp:DropDownList>
+                                        <%--<asp:HiddenField runat="server" ID="hddOldValue_Affect" />--%>
+                                    </div>
+                                    
+                                    <div class="form-group d-none">
+                                        <label>Affect00</label>
+                                        <asp:DropDownList ID="ddlAffect00" runat="server" CssClass="form-control form-control-sm ticket-allow-editor" ClientIDMode="Static">
+                                            <asp:ListItem Text="" Value=""></asp:ListItem>
+                                            <asp:ListItem Text="ระบบงานไม่หยุดชะงัก" Value="01"></asp:ListItem>
+                                            <asp:ListItem Text="ระบบงานหยุดชะงักกระทบลูกค้า" Value="02"></asp:ListItem>
+                                            <asp:ListItem Text="ระบบงานหยุดชะงักไม่กระทบลูกค้า" Value="03"></asp:ListItem>
+                                        </asp:DropDownList>
+                                        <%--<asp:HiddenField runat="server" ID="hddOldValue_Affect" />--%>
+                                    </div>
+                                    
+                                    <div class="form-group d-none">
+                                        <label>Affect01</label>
+                                        <asp:DropDownList ID="ddlAffect01" runat="server" CssClass="form-control form-control-sm ticket-allow-editor" ClientIDMode="Static">
+                                            <asp:ListItem Text="" Value=""></asp:ListItem>
+                                            <asp:ListItem Text="แก้ไขเสร็จสิ้น" Value="01"></asp:ListItem>
+                                            <asp:ListItem Text="อยู่ระหว่างดำเนินการแก้ไข " Value="02"></asp:ListItem>
+                                        </asp:DropDownList>
+                                        <%--<asp:HiddenField runat="server" ID="hddOldValue_Affect" />--%>
                                     </div>
 
                                     <div class="form-group control-max-length">
@@ -1298,6 +1429,7 @@
                                                                             <asp:Button ID="btnAssignWork" runat="server" CssClass="btn btn-success btn-sm" Text="Start" OnClick="btnAssignWork_Click" OnClientClick="AGLoading(true);" />
                                                                             <asp:Button ID="btnTransfer" runat="server" CssClass="btn btn-warning btn-sm AUTH_MODIFY" Text="Transfer" OnClick="btnTransfer_Click" OnClientClick="AGLoading(true);" />
                                                                             <asp:Button ID="btnForwardWork" runat="server" CssClass="btn btn-primary btn-sm AUTH_MODIFY" Text="Escalate" OnClick="btnForwardWork_Click" />
+                                                                            <asp:Button ID="btnForwardWorkRollback" runat="server" CssClass="btn btn-primary btn-sm AUTH_MODIFY d-none" Text="Rollback Escalate" OnClick="btnForwardWork_Click" />
                                                                             <asp:Button ID="btnCloseWork" runat="server" CssClass="btn btn-success btn-sm AUTH_MODIFY" Text="Resolve" OnClick="btnCloseWork_Click" OnClientClick="return resolveTicketClick(this);" />
                                                                         </div>
                                                                     </div>
@@ -1309,7 +1441,7 @@
                                                                         <%--<asp:Label ID="lbJobdescription" runat="server" CssClass="col-md-12"><strong>ชื่องาน : <span class="text-primary"><%# Eval("Subject").ToString() == "" ? "ยังไม่ได้เปิดงาน" : Eval("Subject")%></span></strong></asp:Label>--%>
                                                                         <asp:Label ID="lbRemarks" runat="server" CssClass="col-md-12"><strong>รายละเอียด : </strong><%# string.IsNullOrEmpty(Eval("AOBJECTLINK").ToString()) ? "-" : (Eval("Remark").ToString() == "" ? "ไม่ระบุรายละเอียด" : Eval("Remark"))%></asp:Label>
                                                                         <span class="col-md-12"><strong>Violation Time : </strong><%# ConvertToTime(Eval("Resolution").ToString())%></span>
-                                                                        <span class="col-md-12"><strong>Start Date : </strong><%# DisplayTicketDateTime(Eval("AOBJECTLINK").ToString(), ("StartDateTime").ToString())%></span>
+                                                                        <span class="col-md-12"><strong>Start Date : </strong><%# DisplayTicketDateTime(Eval("AOBJECTLINK").ToString(), Eval("StartDateTime").ToString())%></span>
                                                                         <span class="col-md-12"><strong>End Date : </strong><span id="end_date" class="end_date"><%# DisplayTicketDateTime(Eval("AOBJECTLINK").ToString(), Eval("EndDateTime").ToString())%></span></span>
                                                                     </div>
                                                                 </div>
@@ -1545,6 +1677,11 @@
                                                         <label>Total Time (Without stop)</label>
                                                         <asp:TextBox runat="server" CssClass="form-control form-control-sm" Enabled="false"
                                                             ID="txtLog_TotalTime_WithoutStop" />
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                        <label>Overdue Time </label>
+                                                        <asp:TextBox runat="server" CssClass="form-control form-control-sm" Enabled="false"
+                                                            ID="txtLog_OverdueTime" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1973,6 +2110,20 @@
                                             <label>Select Employee</label>
                                             <ag:AutoCompleteEmployee runat="server" id="AutoCompleteEmployee_Escalate"
                                                 CssClass="form-control form-control-sm ticket-allow-editor" />
+                                        </div>
+                                        <div class="col-lg-6 d-none">
+                                            <asp:UpdatePanel ID="UpdatePanel8" runat="server" UpdateMode="Conditional">
+                                                <ContentTemplate>
+                                                    <label>Select Tier</label>
+                                                    <asp:DropDownList ID="Roll_Escalate" CssClass="form-control form-control-sm ticket-allow-editor"
+                                                        runat="server">
+                                                        <asp:ListItem Enabled="true" Text="- Select Tier -" Value=""></asp:ListItem>
+                                                        <asp:ListItem Text="TC1" Value="TC1"></asp:ListItem>
+                                                        <asp:ListItem Text="TC2" Value="TC2"></asp:ListItem>
+                                                        <asp:ListItem Text="TC3" Value="TC3"></asp:ListItem>
+                                                    </asp:DropDownList>
+                                                </ContentTemplate>
+                                            </asp:UpdatePanel>
                                         </div>
                                     </div>
                                     <hr />

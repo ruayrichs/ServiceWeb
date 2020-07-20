@@ -92,6 +92,10 @@
                         <label>Serial No.</label>
                         <asp:TextBox runat="server" ID="txtSerialNo" CssClass="form-control form-control-sm" />            
                     </div>
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label>Attributes</label>
+                        <asp:TextBox runat="server" ID="txtxValue001" CssClass="form-control form-control-sm" />            
+                    </div>
                     <div class="form-group col-md-6 col-sm-12 d-none">
                         <label>Send Mail before Next Maintenance</label>
                         <asp:TextBox type="number" placeholder="Day" runat="server" ID="txtTimeSendMail" CssClass="form-control form-control-sm border border-success" />            
@@ -117,9 +121,21 @@
                                     function exportExcelAPI() {
                                         $("#download-report-excel")[0].click();
                                     }
-                                </script>
+                                </script>             
                             </ContentTemplate>
                         </asp:UpdatePanel>
+                        <div class="card" style="margin-bottom: 10px; margin-top: 15px;">
+                            <div class="card-body card-body-sm">
+                                <div class="d-flex justify-content-between">
+                                    <div class="col align-self-center">
+                                      <asp:FileUpload runat="server" ID="fuCI" accept=".xls, .xlsx" />
+                                    </div>
+                                    <asp:Button runat="server" ID="btnUpload" Text="Import Data"
+                                        OnClick="btnUpload_Click" 
+                                        CssClass="btn btn-outline-primary" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6 col-sm-12 d-none">
                         <asp:UpdatePanel runat="server" UpdateMode="Conditional">
@@ -153,6 +169,18 @@
                                         <th class="text-nowrap">Configuration Item Category</th>
                                         <th class="text-nowrap">Status</th>
                                         <th class="text-nowrap">Owner Service</th>
+                                        <th class="text-nowrap">xValue001</th>
+                                        <th class="text-nowrap">xValue002</th>
+                                        <th class="text-nowrap">xValue003</th>
+                                        <th class="text-nowrap">xValue004</th>
+                                        <th class="text-nowrap">xValue005</th>
+                                        <th class="text-nowrap">Model</th>
+                                        <th class="text-nowrap">Serial Number</th>
+                                        <th class="text-nowrap">MA Start Date</th>
+                                        <th class="text-nowrap">MA End Date</th>
+                                        <th class="text-nowrap">Warranty Start Date</th>
+                                        <th class="text-nowrap">Warranty End Date</th>
+                                        <th class="text-nowrap">Location</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -192,7 +220,19 @@
                     Equipment.EquipmentClassName,
                     TranslaterEMCategory(Equipment.CategoryCode),
                     TranslaterEMStatus(Equipment.Status),
-                    Equipment.OwnerGroupName
+                    Equipment.OwnerGroupName,
+                    Equipment.xValue001,
+                    Equipment.xValue002,
+                    Equipment.xValue003,
+                    Equipment.xValue004,
+                    Equipment.xValue005,
+                    Equipment.ModelNumber,
+                    Equipment.ManufacturerSerialNO,
+                    Equipment.BeginGuarantee,
+                    Equipment.EndGuaranty,
+                    Equipment.BeginWarrantee,
+                    Equipment.EndWarrantee,
+                    Equipment.CiLocation
                 ]);
             }
 

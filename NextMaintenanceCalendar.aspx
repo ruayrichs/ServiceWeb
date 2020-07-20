@@ -31,8 +31,8 @@
             },
             height: 500,
             events: rawJsonString,
-            timeFormat: 'h:mm A',
-
+            //timeFormat: 'h:mm A',
+            displayEventTime: false,
             eventClick: function (events) {
                 if (events.id) {
                     var value = events.doctype + "|" + events.docnumber + "|" + events.fiscalyear;

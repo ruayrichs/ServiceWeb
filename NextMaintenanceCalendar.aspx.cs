@@ -23,6 +23,7 @@ namespace ServiceWeb
     {
         protected List<CalendarNextMaintenance> calendarEvent;
         protected List<CalendarNextMaintenance> orderChangeEvent;
+        protected List<CalendarNextMaintenance> callbackEvent;
         protected List<CalendarNextMaintenance> eventAll;
         ServiceTicketLibrary ticketLibbrary = new ServiceTicketLibrary();
         CalendarService serviceCalendar = new CalendarService();
@@ -38,12 +39,13 @@ namespace ServiceWeb
 
                 DataTable dt = serviceCalendar.getNextMaintenanceTime();
                 DataTable dtonChange = serviceCalendar.getAllChangeOrder();
+                DataTable dtHaveCallback = serviceCalendar.getAllTicketCallbackDateTime();
                 string customerCode = (string)Session["SCT_created_cust_code"];
 
                 calendarEvent = (from rw in dt.AsEnumerable()
                                  select new CalendarNextMaintenance()
                                   {
-                                  title = Convert.ToString(rw["EquipmentCode"]),
+                                  title = ConvertTimeStrFormatToDisplay(Convert.ToString(rw["NextMaintenanceTime"])) + " | " + Convert.ToString(rw["EquipmentCode"]),
                                   start = ConvertDateStrFormat(Convert.ToString(rw["NextMaintenanceDate"]), Convert.ToString(rw["NextMaintenanceTime"])),
                                   color = "#8AEBF5",
                                   haveUrl = false
@@ -54,9 +56,11 @@ namespace ServiceWeb
                                     select new CalendarNextMaintenance()
                                     {
                                         id = Convert.ToString(rw["CallerID"]),
-                                        title = ticketLibbrary.GetDocumentTypeDesc(SID, CompanyCode, Convert.ToString(rw["Doctype"])) + " " +
-                                                ticketLibbrary.ReplaceTicketNumberToDisplay(Convert.ToString(rw["PrefixCode"]), Convert.ToString(rw["CallerID"])) + " : " +
-                                                Convert.ToString(rw["HeaderText"]),
+                                        //title = ticketLibbrary.ReplaceTicketNumberToDisplay(Convert.ToString(rw["PrefixCode"]), Convert.ToString(rw["CallerID"])) + " : " +
+                                        //        Convert.ToString(rw["HeaderText"]) + " | " +
+                                        //        ticketLibbrary.GetDocumentTypeDesc(SID, CompanyCode, Convert.ToString(rw["Doctype"])),
+                                        title = ticketLibbrary.ReplaceTicketNumberToDisplay(Convert.ToString(rw["PrefixCode"]), Convert.ToString(rw["CallerID"])) + " | " +
+                                                String.Concat(Convert.ToString(rw["FirstName"]), " ", Convert.ToString(rw["LastName"])),
                                         start = ConvertDateStrFormat(Convert.ToString(rw["PlanStartDate"]), Convert.ToString(rw["PlanStartTime"])),
                                         end = ConvertDateStrFormat(Convert.ToString(rw["PlanEndDate"]), Convert.ToString(rw["PlanEndTime"])),
                                         color = "#FBE78F",
@@ -70,8 +74,29 @@ namespace ServiceWeb
                                         haveUrl = true
                                     }).ToList();
 
-                calendarEvent.AddRange(orderChangeEvent);
+                callbackEvent = (from rw in dtHaveCallback.AsEnumerable()
+                                  select new CalendarNextMaintenance()
+                                  {
+                                      id = Convert.ToString(rw["CallerID"]),
+                                      //title =   ticketLibbrary.ReplaceTicketNumberToDisplay(Convert.ToString(rw["PrefixCode"]), Convert.ToString(rw["CallerID"])) + " : " +
+                                      //          Convert.ToString(rw["HeaderText"]) + " | " +
+                                      //          ticketLibbrary.GetDocumentTypeDesc(SID, CompanyCode, Convert.ToString(rw["Doctype"])),
+                                      title = ticketLibbrary.ReplaceTicketNumberToDisplay(Convert.ToString(rw["PrefixCode"]), Convert.ToString(rw["CallerID"])) + " | " +
+                                                String.Concat(Convert.ToString(rw["FirstName"]), " ", Convert.ToString(rw["LastName"])),
+                                      start = ConvertDateStrFormat(Convert.ToString(rw["CallbackDate"]), Convert.ToString(rw["CallbackTime"])),                                    
+                                      color = "#ee98fb",
+                                      doctype = Convert.ToString(rw["Doctype"]),
+                                      docnumber = Convert.ToString(rw["CallerID"]),
+                                      fiscalyear = Convert.ToString(rw["Fiscalyear"]),
+                                      customerCode = customerCode,
+                                      tooltipTitle = ticketLibbrary.GetDocumentTypeDesc(SID, CompanyCode, Convert.ToString(rw["Doctype"])) + " " +
+                                                ticketLibbrary.ReplaceTicketNumberToDisplay(Convert.ToString(rw["PrefixCode"]), Convert.ToString(rw["CallerID"])),
+                                      tooltipContent = Convert.ToString(rw["HeaderText"]),
+                                      haveUrl = true
+                                  }).ToList();
 
+                calendarEvent.AddRange(orderChangeEvent);
+                calendarEvent.AddRange(callbackEvent);
             }
            
 
@@ -101,6 +126,17 @@ namespace ServiceWeb
             DateTime dt = DateTime.ParseExact(datetimeStr, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
             String dt_str_format = String.Format("{0:s}", dt);
             return dt_str_format;
+        }
+
+        private string ConvertTimeStrFormatToDisplay(string time)
+        {
+            if (time == "")
+            {
+                time = "000000";
+            }
+            DateTime dt = DateTime.ParseExact(time, "HHmmss", CultureInfo.InvariantCulture);
+            String t_str_format = dt.ToString("hh:mm tt");
+            return t_str_format;
         }
 
         public string redirectViewToTicketDetail(string customerCode, string doctype, string docnumber, string fiscalyear)

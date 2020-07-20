@@ -15,6 +15,7 @@
 <%@ Register Src="~/widget/usercontrol/SearchHelpCIControl.ascx" TagPrefix="ag" TagName="SearchHelpCIControl" %>
 <%@ Register Src="~/widget/usercontrol/SearchCustomerControl.ascx" TagPrefix="ag" TagName="SearchCustomerControl" %>
 <%@ Register Src="~/UserControl/ActivitySendMailModal.ascx" TagPrefix="ag" TagName="ActivitySendMailModal" %>
+<%@ Register Src="~/UserControl/AGapeGallery/UploadGallery/UploadGallery.ascx" TagPrefix="ag" TagName="UploadGallery" %>
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -383,13 +384,19 @@
                                                                         <asp:Label Text="Ticket Status" runat="server" ID="_lbl_TicketStatusTran" />
                                                                         <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpTicketStatusTran">
                                                                             <ContentTemplate>
-                                                                                <input id="_txt_TicketStatusTran" type="text" class="form-control form-control-sm" runat="server" clientidmode="Static"
+                                                                                <input id="_txt_TicketStatusTran" type="text" class="form-control form-control-sm d-none" runat="server" clientidmode="Static"
                                                                                     disabled="disabled" />
                                                                             </ContentTemplate>
                                                                         </asp:UpdatePanel>
+                                                                        <asp:DropDownList runat="server" ID="ddlTicketStatus_Change" CssClass="form-control form-control-sm"></asp:DropDownList>
+                                                                        <script>
+                                                                            function ddlTicketStatus_Change() {
+                                                                                $("#<%= ddlTicketStatus_Change.ClientID%>").removeAttr("disabled");
+                                                                            }
+                                                                        </script>
                                                                     </div>
                                                                     <div class="form-group col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                                                                        <asp:Label runat="server" ID="labelDocumentDate" Text="Ticket Date"></asp:Label>
+                                                                        <asp:Label runat="server" ID="labelDocumentDate" Text="Ticket Date Time"></asp:Label>
                                                                         <input id="_txt_docdateTran" type="text" class="form-control form-control-sm" runat="server" clientidmode="Static"
                                                                             disabled="disabled" />
                                                                     </div>
@@ -585,6 +592,11 @@
                                                                     <asp:TextBox ID="tbEquipmentRemark" runat="server" CssClass="form-control form-control-sm ticket-allow-editor"
                                                                         onkeypress="return countMaxLengthRemark(event)" onkeyup="validateMaxLengthRemark(event);"
                                                                         TextMode="MultiLine" size="15" Rows="3" Style="resize: none; height: 250px;" data-maxlength="8000"></asp:TextBox>
+                                                                        <asp:Panel ID="galleryLoad" runat="server" CssClass="d-none">
+                                                                            <br />
+                                                                            <ag:uploadgallery runat="server" id="UploadGallery" MultipleMode="true" />
+                                                                            <label>Upload your images or files here.</label>
+                                                                        </asp:Panel>
                                                                     <asp:HiddenField runat="server" ID="hddOldValue_EquipmentRemark" />
                                                                 </div>
                                                             </ContentTemplate>
@@ -982,7 +994,7 @@
                                                     <button type="button" id="btnaddCI" class="btn btn-primary btn-sm mb-1 AUTH_MODIFY" onclick="$('#<%= btnOpenModalSelectConfigurationItem.ClientID  %>').click();">
                                                         <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add CI
                                                     </button>
-                                                    <asp:Button ID="btnOpenModalSelectConfigurationItem" Text="Add" class="d-none" OnClientClick="showInitiativeModal('modalSearchHelpConfigurationItem');" runat="server" />
+                                                    <asp:Button ID="btnOpenModalSelectConfigurationItem" Text="Add" class="d-none" OnClientClick="showInitiativeModal('modalSearchHelpConfigurationItem');" runat="server" OnClick="btnOpenModalSelectConfigurationItem_Click"/>
                                                 </ContentTemplate>
                                             </asp:UpdatePanel>
                                         </div>
@@ -1001,7 +1013,7 @@
                                                         <div class="card item-card-ci-select">
                                                             <div class="card-body">
                                                                 <div class="form-row">
-                                                                    <div class="form-group <%= mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING ? " col-10 " : " col-12 " %>">
+                                                                    <div class="form-group <%# checkCICodeInDB(Eval("EquipmentCode").ToString()) ? " col-12 " : " col-10 " %>">
                                                                         <label>Configuration Item No.</label>
                                                                         <button type="button" class="btn btn-info btn-sm mb-1 ticket-allow-editor-everyone float-right" onclick="$(this).next().click();">Edit</button>
                                                                         
@@ -1012,12 +1024,13 @@
                                                                             Enabled="false" Text='<%# Eval("EquipmentCode") + " - " + Eval("EquipmentName") %>'></asp:TextBox>
                                                                         <asp:HiddenField runat="server" ID="hddEquipmentCode" Value='<%# Eval("EquipmentCode") %>' />
                                                                     </div>
-                                                                    <% if (mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING)
+                                                                    <asp:HiddenField runat="server" ID="HiddenField1" Value='<%# Eval("EquipmentCode") %>' />
+                                                                    <%if (mode_stage == agape.lib.constant.ApplicationSession.CREATE_MODE_STRING)
                                                                         { %>
                                                                     <div class="form-group col-2">
                                                                         <label>&nbsp;</label>
                                                                         <div class="text-right">
-                                                                            <button type="button" class="btn btn-danger btn-sm mb-1"
+                                                                            <button type="button" class="btn btn-danger btn-sm mb-1 "
                                                                                 onclick="removeItemEquipment(this, '<%# Eval("EquipmentCode").ToString().Replace("'", "\'") + " - " + Eval("EquipmentName").ToString().Replace("'", "\'") %>');">
                                                                                 <i class="fa fa-trash"></i>&nbsp;&nbsp;Remove
                                                                             </button>
@@ -1026,7 +1039,20 @@
                                                                                 OnClick="btnRemoveItemEquipment_Click" OnClientClick="AGLoading(true);" />
                                                                         </div>
                                                                     </div>
-                                                                    <% } %>
+                                                                    <% } else {%>
+                                                                        <div class="form-group col-2">
+                                                                            <label>&nbsp;</label>
+                                                                            <div class="text-right">
+                                                                                <button type="button" class="btn btn-danger btn-sm mb-1 <%# checkCICodeInDB(Eval("EquipmentCode").ToString()) ? " d-none " : " " %>"
+                                                                                    onclick="removeItemEquipment(this, '<%# Eval("EquipmentCode").ToString().Replace("'", "\'") + " - " + Eval("EquipmentName").ToString().Replace("'", "\'") %>');">
+                                                                                    <i class="fa fa-trash"></i>&nbsp;&nbsp;Remove
+                                                                                </button>
+                                                                                <asp:Button Text="" runat="server" CssClass="d-none" ID="Button3"
+                                                                                    CommandArgument='<%# Eval("EquipmentCode") %>'
+                                                                                    OnClick="btnRemoveItemEquipment_Click" OnClientClick="AGLoading(true);" />
+                                                                            </div>
+                                                                        </div>
+                                                                     <% }%>
                                                                 </div>
                                                                 <div class="form-row">
                                                                     <div class="form-group col-md-3 col-sm-6">
@@ -1359,6 +1385,11 @@
                                                         <label>Total Time (Without stop)</label>
                                                         <asp:TextBox runat="server" CssClass="form-control form-control-sm" Enabled="false"
                                                             ID="txtLog_TotalTime_WithoutStop" />
+                                                    </div>
+                                                     <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                        <label>Overdue Time </label>
+                                                        <asp:TextBox runat="server" CssClass="form-control form-control-sm" Enabled="false"
+                                                            ID="txtLog_OverdueTime" />
                                                     </div>
                                                 </div>
                                             </div>

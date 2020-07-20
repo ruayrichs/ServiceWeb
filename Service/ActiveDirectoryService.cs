@@ -11,6 +11,7 @@ using System.Web;
 using ERPW.Lib.Service;
 using ERPW.Lib.Service.Entity;
 using System.Collections.Generic;
+using ERPW.Lib.Master;
 
 namespace ServiceWeb.Service
 {
@@ -61,8 +62,8 @@ namespace ServiceWeb.Service
                 string userStr = (AD_En.ADDomain.ToString() + "\\" + userName);
                 DirectoryEntry entry = new DirectoryEntry(strCommu, userStr, passWord);
                 DirectorySearcher search = new DirectorySearcher(entry);
-                //search.Filter = ("(SAMAccountName="+ userName + ")");
-                search.Filter = "(&(objectClass=user)(cn=" + userName + "))";
+                search.Filter = ("(SAMAccountName="+ userName + ")");
+                //search.Filter = "(&(objectClass=user)(cn=" + userName + "))";
                 SearchResult result = search.FindOne();
 
                 if (result != null)
@@ -138,8 +139,8 @@ namespace ServiceWeb.Service
             string EESubGroupCode = "";
             string ChangeDate = "";
             string ChangeDateDetail = "";
-            string CREATED_BY = "";
-            string UPDATED_BY = "";
+            string CREATED_BY = "AD_USER";
+            string UPDATED_BY = "AD_USER";
             string CostCenterGroup = "";
             string FloatCode = "";
             string VendorCode = "";
@@ -169,6 +170,13 @@ namespace ServiceWeb.Service
 
             dbService.selectDataFocusone(sqlMasterEM);
 
+            string currentDateTime = Validation.getCurrentServerStringDateTime();
+            string _current_date = currentDateTime.Substring(0, 8);
+            string _current_time = currentDateTime.Substring(8, 6);
+            string sql_usr01 = @"INSERT INTO usr01
+                                VALUES ('" + sid + "','" + userName + "','" + _current_date + "','" + _current_time + "','" + _current_date + "','" + _current_time + "','A','" + UserManagementService.SYSTEM_ERP + "','C','" + currentDateTime + "', 'AD_USER', '', '')";
+            dbService.selectDataFocusone(sql_usr01);
+
             string sqlAuth_user = @"INSERT INTO auth_user
                                 VALUES ('" + sid + "','" + userName + "','" + userName + "','" + firstName + "','" + dateStr + "','AD_USER','" + dateStr + "','UPDATE_BY_AD_USER','','')";
             dbService.selectDataFocusone(sqlAuth_user);
@@ -184,6 +192,10 @@ namespace ServiceWeb.Service
             string sqlMaster_employee_address = @"INSERT INTO master_employee_address
                                                     VALUES ('" + sid + "','" + companyCode + "','" + userName + "','','','','','','','','THA','','','CREATE_BY_AD_USER','UPDATE_BY_AD_USER','" + dateStr + "','" + dateStr + "','" + userEmail + "','','" + empGroup + "')";
             dbService.selectDataFocusone(sqlMaster_employee_address);
+
+            string sqlMaster_employee_action = @"INSERT INTO master_employee_action
+                                                    VALUES ('" + sid + "','" + companyCode + "','" + userName + "','','','','','','" + CREATED_BY + "','" + UPDATED_BY + "','" + dateStr + "','" + dateStr + "','" + empGroup + "')";
+            dbService.selectDataFocusone(sqlMaster_employee_action);
         }
 
     }

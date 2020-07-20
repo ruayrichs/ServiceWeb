@@ -83,7 +83,7 @@
             }
 
             .status.inprogress {
-                background: #FFC107;
+                background: #17a2b8;
                 color: white;
             }
 
@@ -142,9 +142,11 @@
                         <thead>
                             <tr>
                                 <th class="col-date text-nowrap">Date</th>
+                                <th class="col-Time text-center text-nowrap">Time</th>
                                 <th class="col-ticket-type text-nowrap">Ticket Type</th>
                                 <th class="col-ticket-type text-nowrap">Ticket No.</th>
                                 <th class="col-subject">Subject</th>
+                                <th class="col-Work-Flow-Status text-nowrap">Work Flow Status</th>
                                 <th class="col-customer text-nowrap">Client</th>
                                 <th class="col-status text-center text-nowrap">Status</th>
                             </tr>
@@ -221,10 +223,12 @@
                     }
 
                     datasTicket.push([
-                        ticket.StartDateTime + "|" + ticket.EndDateTime,
+                        ticket.StartDateTime,
+                        ticket.StartDateTime.substring(8, 14),
                         ticket.DocumentTypeDesc,
-                        ticket.CallerID + "|" + ticket.TicketNoDisplay + "|" + ticket.Doctype + "|" + ticket.Fiscalyear + "|" + ticket.CustomerCode,
+                        ticket.CallerID + "|" + convertToTicketNoDisplay(ticket.CallerID) + "|" + ticket.Doctype + "|" + ticket.Fiscalyear + "|" + ticket.CustomerCode,
                         ticket.HeaderText,
+                        ticket.WorkFlowStatus,
                         flag + ticket.CustomerName,
                         ticket.StatusCode + "|" + ticket.StatusDesc
                     ]);
@@ -250,16 +254,12 @@
                            'targets': 0,
                            'createdCell': function (td, cellData, rowData, row, col) {
                                $(td).addClass("col-date text-nowrap");
-                               startDATEend = cellData.split('|');
-                               startdate = startDATEend[0];
-                               enddate = startDATEend[1];
                                $(td).html(
-                                   //convertToDateDisplay(cellData)
-                                   convertToDateDisplay(startdate)
+                                   convertToDateDisplay(cellData)
                                 );
                                $(td).closest("tr").addClass("c-pointer");
                                $(td).closest("tr").bind("click", function () {
-                                   var datas = rowData[2].split('|');
+                                   var datas = rowData[3].split('|');
                                    var doctype = datas[2];
                                    var docnumber = datas[0];
                                    var fiscalyear = datas[3];
@@ -272,17 +272,11 @@
                        {
                            'targets': 1,
                            'createdCell': function (td, cellData, rowData, row, col) {
-                               if (enddate != "null") {
-                                   if (enddate > today) {
-                                       $(td).addClass("text-primary col-ticket-type text-nowrap");
-                                   } else {
-                                       $(td).addClass("text-danger col-ticket-type text-nowrap");
-                                   }
-                               } else {
-                                   $(td).addClass("text-dark col-ticket-type text-nowrap");
-                               }
+                               $(td).addClass("col-date text-nowrap");
+                               var timeDB = cellData;
+                               var dataDisplay = timeDB.substring(0, 2) + ":" + timeDB.substring(2, 4) + ":" + timeDB.substring(4, 8);
                                $(td).html(
-                                   '#' + cellData
+                                   dataDisplay
                                );
                            }
                        },
@@ -299,25 +293,48 @@
                                    $(td).addClass("text-dark col-ticket-type text-nowrap");
                                }
                                $(td).html(
-                                   cellData.split('|')[1]
+                                   '#' + cellData
                                );
                            }
                        },
                        {
                            'targets': 3,
                            'createdCell': function (td, cellData, rowData, row, col) {
-                               $(td).addClass("col-subject text-truncate font-italic");
+                               if (enddate != "null") {
+                                   if (enddate > today) {
+                                       $(td).addClass("text-primary col-ticket-type text-nowrap");
+                                   } else {
+                                       $(td).addClass("text-danger col-ticket-type text-nowrap");
+                                   }
+                               } else {
+                                   $(td).addClass("text-dark col-ticket-type text-nowrap");
+                               }
+                               $(td).html(
+                                   cellData.split('|')[1]
+                               );
                            }
                        },
                        {
                            'targets': 4,
+                           'createdCell': function (td, cellData, rowData, row, col) {
+                               $(td).addClass("col-subject text-truncate font-italic");
+                           }
+                       },
+                       {
+                           'targets': 5,
+                           'createdCell': function (td, cellData, rowData, row, col) {
+                               $(td).addClass("text-truncate col-Work-Flow-Status text-nowrap");
+                           }
+                       },
+                       {
+                           'targets': 6,
                            'createdCell': function (td, cellData, rowData, row, col) {
                                $(td).addClass("text-truncate col-customer text-nowrap");
                                if (cellData == 'null') {$(td).html('');}
                            }
                        },
                        {
-                           'targets': 5,
+                           'targets': 7,
                            'createdCell': function (td, cellData, rowData, row, col) {
                                $(td).addClass("col-status text-nowrap");
                                $(td).html(
@@ -329,6 +346,17 @@
                        }
                     ]
                 });
+
+                function convertToTicketNoDisplay(data) {
+                    if (data != '') {
+                        var CallerIDDisplay = data;
+                        var rest = CallerIDDisplay.substring(0, CallerIDDisplay.lastIndexOf("-") + 1);
+                        var last = CallerIDDisplay.substring(CallerIDDisplay.lastIndexOf("-") + 1, CallerIDDisplay.length);
+                        last = parseInt(last).toString();
+                        data = rest + last;
+                    }
+                    return data;
+                }
 
                 function convertToDateDisplay(data) {
                     if (data.length >= 8) {

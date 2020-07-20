@@ -90,6 +90,10 @@ namespace ServiceWeb.Report
             ClientService.DoJavascript("afterSearch();");
             UpdateTable.Update();
 
+            if (check)
+            {
+                export = dt;
+            }
         }
         protected void btn_search(object sender, EventArgs e)
         {
@@ -147,5 +151,76 @@ namespace ServiceWeb.Report
             }
             return datatable;
         }
+
+        //======================== export data
+        private void ExampleRepeater(DataTable dt)
+        {
+            DataTable ticketReport = new DataTable();
+
+            ticketReport.Clear();
+            ticketReport.Columns.Add("Employee Name");
+            ticketReport.Columns.Add("PageName");
+            ticketReport.Columns.Add("OS");
+            ticketReport.Columns.Add("Browser");
+            ticketReport.Columns.Add("Mobile");
+            ticketReport.Columns.Add("LiveOn");
+            ticketReport.Columns.Add("Date Time In");
+            ticketReport.Columns.Add("Date Time Out");
+            ticketReport.Columns.Add("ReferenceID");
+            ticketReport.Columns.Add("Reference Page Mode");
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                if ("CHANGE" == dr["ReferencePageMode"].ToString() && dr["DateTimeOut"].ToString() == "")
+                {
+                    dr["DateTimeOut"] = "Update Date Time Out";
+                }
+
+                if (dr["LastName"].ToString() != "")
+                {
+                    dr["FirstName"] = dr["FirstName"].ToString() + " " + dr["LastName"].ToString();
+                }
+
+                DataRow _ravi = ticketReport.NewRow();
+                _ravi["Employee Name"] = dr["FirstName"].ToString();
+                _ravi["PageName"] = dr["PageName"].ToString();
+                _ravi["OS"] = dr["OS"].ToString();
+                _ravi["Browser"] = dr["Browser"].ToString();
+                _ravi["Mobile"] = dr["Mobile"].ToString();
+                _ravi["LiveOn"] = dr["LiveOn"].ToString();
+                _ravi["Date Time In"] = dr["DateTimeIn"].ToString();
+                _ravi["Date Time Out"] = dr["DateTimeOut"].ToString();
+                _ravi["ReferenceID"] = dr["ReferenceID"].ToString();
+                _ravi["Reference Page Mode"] = dr["ReferencePageMode"].ToString();
+                ticketReport.Rows.Add(_ravi);
+            }
+
+            Session["report.excel.Report_Excel_Export_Datatable"] = ticketReport;
+            Session["report.excel.Report_Excel_Export_Name"] = "Ticket Analysis";
+            ClientService.DoJavascript("exportExcelAPI();");
+        }
+
+        private bool check = false;
+        DataTable export = new DataTable();
+        protected void ui_export_button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                check = true;
+                bindData();
+                ExampleRepeater(export);
+                System.Diagnostics.Debug.WriteLine("export success");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("export fail: " + ex);
+                throw;
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+        }
+        //======================== \export data
     }
 }

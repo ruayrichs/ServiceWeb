@@ -812,7 +812,7 @@ namespace ServiceWeb.crm
             bool FilterOwner = false;
             bool.TryParse(WebConfigurationManager.AppSettings["ERPW_Config_Filter_Owner"], out FilterOwner);
 
-            if (FilterOwner && !Permission.AllPermission)
+            if (FilterOwner && !Permission.AllPermission && !Permission.ContactModify)
             {
 
                 ddlOwnerService.Items.Clear();
@@ -952,7 +952,8 @@ namespace ServiceWeb.crm
                     SID,
                     (Session["ServicecallEntity" + idGen] as tmpServiceCallDataSet).cs_servicecall_header.Rows[0]["Doctype"].ToString()
                 );
-                Response.Redirect(Page.ResolveUrl("~/crm/AfterSale/" + PageRedirect + "?id=" + idGen));
+                ClientService.DoJavascript("goToEdit('" + Page.ResolveUrl("~/crm/AfterSale/" + PageRedirect + "?id=" + idGen) + "');");
+                //Response.Redirect(Page.ResolveUrl("~/crm/AfterSale/" + PageRedirect + "?id=" + idGen));
                 //Response.-Redirect("/crm/AfterSale/ServiceCallTransaction.aspx?id=" + idGen, false);
             }
 

@@ -79,7 +79,11 @@
                 <ul class="navbar-nav mr-auto">
                 </ul>
                 <ul class="navbar-nav px-3">
-
+                    <li class="nav-item">
+                        <a class="nav-link" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-refresh fa-fw c-pointer" style="font-size: 33px;" title="Refresh" onClick="window.location.reload();"></i>
+                        </a>
+                    </li>
                     <% if (HttpContext.Current.Request.Url.AbsolutePath.Contains("/Default.aspx")) { %>
                     <li class="nav-item">
                         <a class="nav-link" aria-haspopup="true" aria-expanded="false">

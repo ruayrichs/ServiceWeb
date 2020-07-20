@@ -183,6 +183,12 @@
             </a>
         </li>--%>
 
+        <li class="nav-item d-none">
+            <a class="nav-link" href="#nav-menu-shl" onclick="RedirectNewPage('SHL')" id="nav-menu-shl">
+                <span class="fa fa-newspaper-o"></span>
+                SHL
+            </a>
+        </li>
         <% if (Permission.AllPermission)
             { %>
         <li class="nav-item">
@@ -314,6 +320,13 @@
                 CI Maintenance
             </a>
         </li>
+        <% } if (Permission.AllPermission || Permission.ReportView ) { %>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/ReportConfigurationItem.aspx") %>" id="nav-menu-Report-Configuration-Item">
+                <span data-feather="user"></span>
+                Report Configuration Item
+            </a>
+        </li>
         <% } if (Permission.AllPermission || Permission.ReportReportClient ) { %>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/Report/ReportCustomer.aspx") %>" id="nav-menu-report-customer">
@@ -389,10 +402,14 @@
 
     </script>
     <script>
-        var myWindow;
-        function RedirectNewPage() {            
-            document.getElementById("nav-menu-ticket-Relation").className = "nav-link active";
-            myWindow = window.open("<%= Page.ResolveUrl("~/ReportRedirect/repticket.htm") %>", "myWindow", "width=auto,height=auto");
+        function RedirectNewPage(menu) {
+            if (menu == "SHL") {
+                //document.getElementById("nav-menu-shl").className = "nav-link active";
+                var new_window = window.open("<%= Page.ResolveUrl("~/ReportRedirect/shl.html") %>", "myWindow", "width=" + screen.availWidth + ",height=" + screen.availHeight);
+            } else {
+                document.getElementById("nav-menu-ticket-Relation").className = "nav-link active";
+                var myWindow = window.open("<%= Page.ResolveUrl("~/ReportRedirect/repticket.htm") %>", "myWindow", "width=auto,height=auto");
+            }
         }
     </script>
     <script>
@@ -403,14 +420,14 @@
             bindDatasMyTicket("API/v1/GetTicketMyOverDueAPI.aspx");
             bindDatasMyTicket("API/v1/GetTicketMyTicketAPI.aspx");
         });
-        $(window).on("load", function () {
-            setInterval(function () {
-                bindDatasMyTicket("API/v1/GetTicketMyWorkAPI.aspx");
-                bindDatasMyTicket("API/v1/GetTicketMyGroupAPI.aspx");
-                bindDatasMyTicket("API/v1/GetTicketMyOverDueAPI.aspx");
-                bindDatasMyTicket("API/v1/GetTicketMyTicketAPI.aspx");
-            }, 20000);
-        });
+        //$(window).on("load", function () {
+        //    setInterval(function () {
+        //        bindDatasMyTicket("API/v1/GetTicketMyWorkAPI.aspx");
+        //        bindDatasMyTicket("API/v1/GetTicketMyGroupAPI.aspx");
+        //        bindDatasMyTicket("API/v1/GetTicketMyOverDueAPI.aspx");
+        //        bindDatasMyTicket("API/v1/GetTicketMyTicketAPI.aspx");
+        //    }, 20000);
+        //});
         function bindDatasMyTicket(api) {
             var postData = { dataStatus: "active" }
             $.ajax({
@@ -429,13 +446,33 @@
 
         function bindListMy(api, datas) {
             if (api === "API/v1/GetTicketMyWorkAPI.aspx") {
-                $("#myWorkCount").text(datas.length);
+                if (datas.length >= 1) {
+                    $("#myWorkCount").show();
+                    $("#myWorkCount").text(datas.length);
+                } else {
+                    $("#myWorkCount").hide();
+                }
             } else if (api === "API/v1/GetTicketMyGroupAPI.aspx") {
-                $("#myGroupCount").text(datas.length);
+                if (datas.length >= 1) {
+                    $("#myGroupCount").show();
+                    $("#myGroupCount").text(datas.length);
+                } else {
+                    $("#myGroupCount").hide();
+                }
             } else if (api === "API/v1/GetTicketMyOverDueAPI.aspx") {
-                $("#myOverDueCount").text(datas.length);
+                if (datas.length >= 1) {
+                    $("#myOverDueCount").show();
+                    $("#myOverDueCount").text(datas.length);
+                } else {
+                    $("#myOverDueCount").hide();
+                }
             } else if (api === "API/v1/GetTicketMyTicketAPI.aspx") {
-                $("#myTicketCount").text(datas.my_ticket.length);
+                if (datas.my_ticket.length >= 1) {
+                    $("#myTicketCount").show();
+                    $("#myTicketCount").text(datas.my_ticket.length);
+                } else {
+                    $("#myTicketCount").hide();
+                }
             } else {
                 console.log(api);
             }

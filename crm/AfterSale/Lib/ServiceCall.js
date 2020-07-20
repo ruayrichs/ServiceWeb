@@ -817,6 +817,7 @@ function controlInputDisable() {
 
 
     $("#panel-ticket-detail").find(".ticket-default-disabled").prop("disabled", true);
+    $("select[name*='tableChangeLogItems_length']").prop("disabled", false);
 }
 
 function controlInputEnable() {
@@ -843,6 +844,7 @@ function controlInputEnable() {
         ",textarea"
     ).prop("disabled", false);
     $("#panel-ticket-detail").find(".ticket-default-disabled").prop("disabled", true);
+    $("select[name*='tableChangeLogItems_length']").prop("disabled", false);
     //$("#icon-lock-ticket").remove();
     bindIconLockMode();
 }

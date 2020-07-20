@@ -193,6 +193,20 @@
     border: 1px solid;
     border-color: #e5e6e9 #dfe0e4 #d0d1d5;
 }
+         .dot_noconn {
+          height: 15px;
+          width: 15px;
+          background-color: #bbb;
+          border-radius: 50%;
+          display: inline-block;
+        }
+         .dot_conn {
+          height: 15px;
+          width: 15px;
+          background-color: forestgreen;
+          border-radius: 50%;
+          display: inline-block;
+        }
     </style>
 
     <div class="container mat-box" style="padding: 0;">
@@ -235,7 +249,7 @@
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
                                         <% if(ISMyProFile){ %>
-                                        <i onclick="showAddProfile();" class="btn btn-success btn-xs" style="cursor:pointer;font-size: 12px;margin-top:10px;"><i class="fa fa-cog"></i>&nbsp;Edit My Profile</i>
+                                        <i onclick="showAddProfile();" class="btn btn-success btn-xs" style="cursor:pointer;font-size: 12px;margin-top:10px;"><i class="fa fa-cog"></i>&nbsp;Edit My Profile</i>                                
                                         <% } %>
 
                                         <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional" style="display: none;">
@@ -354,6 +368,38 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="panel-add-profile-line" class="row p-1">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <h6>:: Linked Line Account ::</h6>
+                                </div>
+                                <% if (ISExistLineLink)
+                                { %>
+                                <div class="row d-flex align-items-center">                        
+                                    <span><b>Status : </b>Linked</span><i class="fa fa-link fa-fw" aria-hidden="true" style="font-size:15px;"></i>
+                                </div>
+                                <% if (ISMyProFile)
+                                { %>
+                                <div class="row d-flex mt-2 align-items-end">
+                                    <button onclick="removeLine();" type="button" class="btn btn-danger">unlink</button>
+                                </div>
+                                <asp:Button ID="btnUnlink" runat="server" OnClick="btnUnlink_Click" CssClass="d-none"/>
+                                <% } %>
+                                <% }
+                                else
+                                { %>
+                                <div class="row d-flex align-items-center">                           
+                                    <span><b>Status : </b>Not linked</span><i class="fa fa-chain-broken fa-fw" aria-hidden="true" style="font-size:15px;"></i>
+                                </div>
+                                <% if (ISMyProFile)
+                                { %>
+                                <div class="row d-flex mt-2 align-items-end">
+                                    <button onclick="loginLine();" type="button" class="btn btn-primary">Link Account</button>
+                                </div>
+                                <% } %>
+                                <%} %>                               
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -416,8 +462,9 @@
             drawCircle('#2F343B', options.lineWidth, options.percent / 100);
         }
 
-        function showAddProfile() {
+         function showAddProfile() {
             $("#panel-add-profile").hide();
+            $("#panel-add-profile-line").hide();
             $("#panel-add-profile-selected").show();
         }
 
@@ -425,8 +472,20 @@
 
             $("#panel-add-profile-selected").hide();
             $("#panel-add-profile").show();
+            $("#panel-add-profile-line").show();
 
-        }
+         }
+
+         function loginLine() {
+             var redirect = '<%= ConfigurationManager.AppSettings["LINE_LOGIN_API_RE_DIRECT"] %>'
+             var CLIENT_ID = '<%= ConfigurationManager.AppSettings["LINE_LOGIN_CHANNEL_ID"] %>'
+             var EmployeeCode = '<%= GetEmpCode() %>'
+             window.location.replace('https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=' + CLIENT_ID + '&redirect_uri=' + redirect + '&state=' + EmployeeCode + '&bot_prompt=aggressive&scope=profile%20openid')
+         }
+
+         function removeLine() {
+             $("#<%= btnUnlink.ClientID %>").click();
+         }
 
     </script>
     <script>

@@ -259,7 +259,10 @@ namespace ServiceWeb.UserControl.AGapeGallery.UploadGallery
             try
             {
                 SaveFilesResult Result = new SaveFilesResult();
-                var fileName = (renameInputFile) ? Guid.NewGuid().ToString("D") + Path.GetExtension(inputFiileName) : inputFiileName;
+                string timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+                var fileName = (renameInputFile) ? inputFiileName.Substring(0, (inputFiileName.Count()) - (inputFiileName.Split('.').Last().Count()) - 1) 
+                                + "_" 
+                                + timestamp + Path.GetExtension(inputFiileName) : inputFiileName;
 
                 if (fixedFileName)
                 {

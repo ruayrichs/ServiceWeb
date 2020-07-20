@@ -1,29 +1,20 @@
 ﻿using agape.lib.web.configuration.utils;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
 using System.Web.Services.Protocols;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using ERPW.Lib.Authentication;
 using ServiceWeb.Service;
 using ERPW.Lib.F1WebService;
 using ERPW.Lib.WebConfig;
-using ERPW.Lib.F1WebService.UserLoginService;
-using agape.lib.constant;
-using Agape.FocusOne.Utilities;
 using Agape.Lib.DBService;
 using System.Data;
 using ERPW.Lib.Master;
-using ERPW.Lib.Master.Entity;
 using ServiceWeb.crm.AfterSale;
 using ERPW.Lib.Service;
 using Agape.Lib.Web.Bean.CS;
 using System.Web.Configuration;
-using agape.entity.UserProfile;
-using System.Globalization;
+using System.Net;
 
 namespace ServiceWeb
 {
@@ -66,10 +57,16 @@ namespace ServiceWeb
                     LoginByActiveDirectory();
                     
                 }
-                
+                else if (checkmodelogin.SelectedValue == "3")
+                {
+                    LoginByOneId();
+
+                }
+
             }
             catch (Exception ex)
             {
+                //ClientService.AGError(Convert.ToString(ex.Message + " | " + ex.StackTrace));
                 ClientService.AGError(ObjectUtil.Err(ex.Message));
             }
             finally
@@ -136,12 +133,106 @@ namespace ServiceWeb
             }
             
         }
-       
-        private string GetUserName(string sid, string companyCode)
+        OneIDService oneIDService = new OneIDService();
+        private void LoginByOneId()
+        {
+            string sid = "";
+            string company = "";
+            bool isLogin = false;
+
+            try
+            {
+                if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
+                {
+                    throw new Exception("กรุณาระบุ Username");
+                }
+
+                if (string.IsNullOrEmpty(txtPassword.Text.Trim()))
+                {
+                    throw new Exception("กรุณาระบุ Password");
+                }
+
+                sid = ERPWebConfig.GetSID();
+                company = ERPWebConfig.GetCompany();
+                string password = txtPassword.Text.Trim();
+                string userName = txtEmail.Text.Trim();
+
+                string userNameInDB = oneIDService.oneIdLogin(userName, password, sid, company);
+                isLogin = true;
+                SaveLogLogin(sid, company, userNameInDB, "LOGIN", isLogin);
+                if (!string.IsNullOrEmpty(Request["q"]))
+                {
+                    switch (Request["q"])
+                    {
+                        case "ticket":
+                            {
+                                GetDataToedit(sid, company, Request["key"]);
+                                break;
+                            }
+                        default:
+                            {
+                                //ERPWAuthentication.Permission.DefaultPage                        
+                                Response.Redirect(Page.ResolveUrl("~/Default.aspx"), true);
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    //ERPWAuthentication.Permission.DefaultPage ;
+                    Response.Redirect(Page.ResolveUrl("~" + ERPWAuthentication.Permission.DefaultPage), true);
+                }
+
+
+            }
+            catch (WebException we)
+            {
+                if (we.Status == WebExceptionStatus.ProtocolError)
+                {
+                    var response = we.Response as HttpWebResponse;
+                    if (response != null)
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case HttpStatusCode.BadRequest:
+                                ClientService.AGError("ONE ID : พารามิเตอร์ไม่ครบหรือไม่ถูกต้อง");
+                                break;
+                            case HttpStatusCode.Unauthorized:
+                                ClientService.AGError("ONE ID : ยืนยันตัวตนไม่ผ่าน");
+                                break;
+                            default:
+                                ClientService.AGError("ONE ID : " + (string)we.Message);
+                                break;
+                        }  
+                    }
+                    else
+                    {
+                        ClientService.AGError("ONE ID : " + (string) we.Message);
+                    }
+                }
+                else
+                {
+                    ClientService.AGError("ONE ID : " + (string)we.Message);
+                }
+                  
+                //ClientService.AGError("ONE ID : " + errResMsg + " | " + we.StackTrace);
+                //System.Diagnostics.Trace.TraceError(we.StackTrace);
+            }
+            finally
+            {
+                if (!isLogin)
+                {
+                    SaveLogLogin(sid, company, "", "LOGIN", isLogin);
+                }
+            }
+
+        }
+
+        private string GetUserNameLoginLocal(string sid, string companyCode)
         {
             string user = txtEmail.Text.Trim();
 
-            string sql = "SELECT UserName FROM master_employee WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + "' AND UserName = '" + user + "'";
+            string sql = "SELECT UserName FROM master_employee WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + "' AND UserName = '" + user + "' AND CREATED_BY not in ('AD_USER', 'ONEID_USER')";
 
             DataTable dt = dbService.selectDataFocusone(sql);
 
@@ -178,6 +269,47 @@ namespace ServiceWeb
             }            
         }
 
+        private string GetUserNameOneId(string sid, string companyCode)
+        {
+            string user = txtEmail.Text.Trim();
+
+            string sql = "SELECT UserName FROM master_employee WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + "' AND UserName = '" + user + "' AND CREATED_BY = 'ONEID_USER'";
+
+            DataTable dt = dbService.selectDataFocusone(sql);
+
+            if (dt.Rows.Count > 0)
+            {
+                return user;
+            }
+            else
+            {
+                sql = @"SELECT a.UserName, b.Email
+                        FROM master_employee a
+                        LEFT OUTER JOIN master_employee_address b ON a.SID = b.SID
+	                        AND a.CompanyCode = b.CompanyCode
+	                        AND a.EmployeeCode = b.EmployeeCode
+                        WHERE a.SID = '" + sid + @"'
+    	                    AND a.CompanyCode = '" + companyCode + @"'
+	                        AND b.Email = '" + user + "'";
+
+                dt = dbService.selectDataFocusone(sql);
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(dt.Rows[0]["UserName"].ToString()))
+                    {
+                        throw new Exception("Username " + user + " not found in system.");
+                    }
+
+                    return dt.Rows[0]["UserName"].ToString().Trim();
+                }
+                else
+                {
+                    throw new Exception("Username " + user + " not found in system.");
+                }
+            }
+        }
+
         protected void _Login()
         {
             string sid = "";
@@ -199,7 +331,7 @@ namespace ServiceWeb
 
                 sid = ERPWebConfig.GetSID();
                 company = ERPWebConfig.GetCompany();
-                username = GetUserName(sid, company);
+                username = GetUserNameLoginLocal(sid, company);
                 password = txtPassword.Text.Trim();
 
                 //1. Validate User Login                

@@ -69,9 +69,10 @@ dfn {
 table, th, td {
   /*border-left: 0px solid black;
   border-right: 0px solid black;*/
-  border: 1.5px solid black;
+  /*border: 1.5px solid black;
   border-collapse: collapse;
-  font-weight:100;
+  font-weight:100;*/
+  /*border: 0;*/
 }
 .btnDrive {
     padding:50px;
@@ -80,7 +81,19 @@ table, th, td {
 .inputnone {border:0;outline:0;}
 .inputnone:focus {outline:none!important;}
 
-
+div {
+    /*border: 1px solid red*/
+}
+table, th, tr, td {
+    border: 0;
+    border:hidden;
+    font-weight:100;
+  /*border: 3px solid red;*/
+}
+tr.noBorder td {
+    border: 0;
+  border:hidden;
+}
 
 </style>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
@@ -119,7 +132,7 @@ table, th, td {
             window.print();
             window.close();
         }
-</script>
+    </script>
     <form id="form1" runat="server">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <div class="btnDrive" id="btnDrive" onclick="btnDrive">
@@ -130,524 +143,296 @@ table, th, td {
             </div>
         </div>
         
+
         <page size="A4">
             <div class="PageSetup">
                 <div style="width:100%; height:1081px;">
-
-                    <div style="width:20%; float: left;">
-                        <asp:Image id="ImageLogo" class="ims" runat="server" imageurl="http://www.itg.co.th/Images/Logo.png" />
-                    </div>
-                    <div style="width:80%; height:50px; float: left">
-                        <div style="height:25%; text-align: center; bottom:0;"></div>
-                        <div style="height:auto;">
-                            <p class="text-justify" style="font-size: 11px">
-                                <b style="font-size: 12px">INFORMATION TECTNOLOGY GROUP CO.,LTD.</b><br />
-                                200 Moo 4, 18th floor, Unit 1801A and 25thFloor,Jasmine International Tower Chaengwattana Road, Pakkret,
-                            </p>
-                        </div>
-                    </div>
-
                     <div style="width:100%; height:auto; float:left; font-size:12px;">
                         <div>
-                            <%--///JOB ORDER///--%>
+                            <br /><br /><br />
                             <div>
                                 <table style="width:100%; border:hidden;">
-                                    <thead style="border:hidden; background-color:lavender">
+                                    <thead style="border:hidden;">
                                         <tr>
-                                            <th rowspan="1" colspan="1" style="width:50%; font-size:18px; font-weight:900; text-align:center;">
-                                                JOB ORDER / WORK OPENING SHEET / ใบสั่งงาน
+                                            <th rowspan="1" colspan="1" style="font-size:8px; font-weight:500; text-align:right;">
+                                                Reference No: M-SOP-ENG-X-023
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div>
+                                <table style="width:100%; border:hidden;">
+                                    <thead style="border:hidden;">
+                                        <tr>
+                                            <th rowspan="1" colspan="3" style="width:50%; font-size:20px; font-weight:500; text-align:center;">
+                                                Thai Meiji Pharmaceutical Co.,Ltd.
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <th>
-                                                <br />
-                                                เลขที่ใบสั่งงาน<dfn>......<%= TicketNumber %>.......</dfn>
-                                                ผู้เปิดงาน<dfn>.......<%= CreatedBy %>......</dfn>
-                                                วันที่รับงาน<dfn>......<%= DateTimeCreated %>.......</dfn>
+                                                <div style="text-align:left">&nbsp;</div>
+                                                <div style="text-align:left">No.: .........../...........</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:center; font-size:14px;">REQUEST TO ENGINEERING SECTION</div>
+                                                <div style="text-align:right">&nbsp;</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:right">Date: ............</div>
+                                                <div style="text-align:right">Issuer Dept. / Sect: ............</div>
                                             </th>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div>
-                                <table style="width:100%">
-                                    <%--<thead style="background-color:lavender">
-                                        <tr>
-                                            <th rowspan="1" colspan="1" style="width:50%; font-size:16px; text-align:center;">
-                                                ปัญหาที่รับแจ้ง / คำสั่งงาน / แนะนำวิธีแก้ไข
-                                            </th>
-                                        </tr>
-                                    </thead>--%>
-                                    <tbody>
-                                        <tr>
-                                            <th>
-                                                ชื่อร้านค้า<dfn>.......<%= ClientName %>......</dfn>
-                                                ชื่อผู้ติดต่อ<dfn>.......<%= ContactName %>......</dfn>
-                                                เบอร์โทรศัพท์<dfn>.......<%= ContactPhone %>......</dfn>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                ที่อยู่<dfn>.......<%= CustomerProfile.Address.Trim()%>......</dfn>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                ประเภทงาน<dfn>.......<%= TicketType %>......</dfn>
-                                                Owner Service<dfn>.......<%= OwnerServiceCI %>......</dfn>
+<div style="border: 1px solid black">
 
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                ชื่อผู้แจ้ง<dfn>.......<%= ClientName %>......</dfn>
-                                                เบอร์โทรศัพท์<dfn>.......<%= Request.QueryString["ctp"] %>......</dfn>                                                
-                                                วันที่ดำเนินการ<dfn>.......<%= CallBackDateTime %>......</dfn>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                เครื่องรุ่น<dfn>.......<%= CIName %>......</dfn>
-                                                Serial No.<dfn>.......<%= SerialNo %>......</dfn>
-                                                <%--Print S/N<dfn>.............</dfn>--%>
-                                                Communication<dfn>.............</dfn>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                <div id="panelAttributes" class="tab-pane">
-                                                    <asp:Repeater runat="server" ID="rptAttributes">
-                                                        <ItemTemplate>
-                                                            App. Name / version<dfn>.......<%# Eval("xValue") %>......</dfn>&nbsp;
-                                                        </ItemTemplate>
-                                                    </asp:Repeater>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                        <%--<tr>
-                                            <th style="border-top:hidden">
-                                                App. Name / version<dfn>.............</dfn>
-                                            </th>
-                                        </tr>--%>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <%--///ปัญหาที่แจ้ง///--%>
                             <div>
-                                <table style="width:100%">
-                                    <thead style="border-top:hidden; background-color:lavender">
+                                <table style="width:100%; border:hidden;">
+                                    <tbody style="border:hidden;">
                                         <tr>
-                                            <th rowspan="1" colspan="1" style="width:50%; font-weight:700; font-size:16px; text-align:center;">
-                                                ปัญหาที่รับแจ้ง / คำสั่งงาน / แนะนำวิธีแก้ไข
+                                            <th>
+                                                <div style="text-align:left">1. Type of machines</div>
                                             </th>
-                                        </tr>
-                                    </thead>
-                                    <%--<b>Subject : </b>--%><%--<%= Subject %>--%>
-<%--<b>Description : </b><%= Description %>--%>
-                                    <tbody>
-                                        <tr>
-                                            <th style="height:auto; vertical-align:top;">
-                                                <pre style="height:250px"><textarea style="border: none; overflow:hidden; resize:none; width:99.4%; height:250px;"><%= Subject %></textarea>
-                                                </pre>                                                
-                                            </th>                                             
-                                        </tr>
-                                        <%--<tr>
-                                            <th style="border-top:hidden">
-                                                2
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th style="border-top:hidden">
-                                                2
+                                            <th>
+                                                <div style="text-align:left">2. Type of works</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th style="border-top:hidden">
-                                                2
+                                            <th>
+                                                <div style="text-align:left">&nbsp;</div>
+                                            </th>
+                                            <th rowspan="1" colspan="3">
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; Other (Piease identify) .........................................................................</div>
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden">
-                                                2
-                                            </th>
-                                        </tr>--%>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <%--///รายละเอียด///--%>
-                            <div>
-                                <table style="width:100%">
-                                    <thead style="border-top:hidden; text-align:center;">
-                                        <tr style="background-color:lavender; font-size:12px;">
                                             <th rowspan="1" colspan="4">
-                                                <b>รายละเอียดของเครื่อง</b>
+                                                <div style="text-align:left">&nbsp;&nbsp;&nbsp;Machone/Equipment Name: ..............................................................................  ENG. Code/ Assel Code: ........................................</div>
                                             </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;&nbsp;&nbsp;Location/Room name: .....................</div>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <table style="width:100%; border:hidden;">
+                                    <tbody style="border:hidden;">
+                                        <tr style="border:hidden;">
                                             <th rowspan="1" colspan="5">
-                                                <b>Partition</b>
+                                                <div style="text-align:left">3. Cause of request or User Requirement Specication</div>
                                             </th>
-                                            <th rowspan="1" colspan="6">
-                                                <b>Function</b>
+                                        </tr>
+                                        <tr style="border:hidden;">
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left; border: 2px solid black;  border-radius: 8px; margin-left:10px; margin-right:10px;">&nbsp;&nbsp;&nbsp;Description:<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;</div>
+                                            </th>
+                                        </tr>
+                                        <tr style="border:hidden;">
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;ENG.Receiver/sect. Manager: .............................................../................................................ (Block Letter)</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left">Date: ..........................</div>
+                                            </th>
+                                        </tr>
+                                        <tr style="border:hidden;">
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;ENG.Receiver/sect. Manager: .............................................../................................................</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left">Date: .........................</div>
+                                            </th>
+                                        </tr>
+                                        <tr style="border:hidden;">
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;ENG.Receiver/sect. Manager: .............................................../................................................</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left">Date: .........................</div>
+                                            </th>
+                                        </tr>
+
+
+                                        <tr style="border-top: 5px solid red;">
+                                            <th rowspan="1" colspan="5" style="border-top: 1px solid black;">
+                                                <div style="text-align:left; font-size:15px;"><u>Engineering Section:</u></div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">1. Opinnion of Engineering Section Manager / Engineering Section Chief:</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div style="text-align:left">&nbsp;Type of service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">&nbsp;&nbsp;&nbsp;Resson to repairing: ...............................................................................................................................</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">&nbsp;&nbsp;&nbsp;Invoice/PO Number: ..................................................................................................Service charge: ......................Baht</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">2 Operation details&nbsp;</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div style="text-align:left">&nbsp;Type of service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left"><img style="width:11px;height:11px;" src="https://image0.flaticon.com/icons/png/512/24/24396.png">&nbsp; 3rd Party Service</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div style="text-align:left">&nbsp;Spare Part Lisrs:</div>
+                                            </th>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">1. ...........................................................................Qty ..............................Price .......................Baht</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div style="text-align:left">&nbsp;</div>
+                                            </th>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">2. ...........................................................................Qty ..............................Price .......................Baht</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <div style="text-align:left">&nbsp;</div>
+                                            </th>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">3. ...........................................................................Qty ..............................Price .......................Baht</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="3">
+                                                <div style="text-align:left">&nbsp;</div>
                                             </th>
                                             <th rowspan="1" colspan="2">
-                                                <b>TYPE</b>
+                                                <div style="text-align:left">Totals Cost ................................... Baht</div>
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th style="width:4.545454545454545%;">No.</th>
-                                            <th>Owner Service</th>
-                                            <th style="text-align:center;">Terminal ID</th>
-                                            <th style="text-align:center;">Merchant ID</th>
-                                            <th style="width:4.545454545454545%;">V</th>
-                                            <th style="width:4.545454545454545%;">M</th>
-                                            <th style="width:4.545454545454545%;">T</th>
-                                            <th style="width:4.545454545454545%;">J</th>
-                                            <th style="width:4.545454545454545%;">C</th>
-                                            
-                                            <th style="width:4.545454545454545%;">Key</th>
-                                            <th style="width:4.545454545454545%;">Adj</th>
-                                            <th style="width:4.545454545454545%;">Auth</th>
-                                            <th style="width:4.545454545454545%;">Off</th>
-                                            <th style="width:4.545454545454545%;">Ref</th>
-                                            <th style="width:4.545454545454545%;">Tips</th>
-
-                                            <th style="width:4.545454545454545%;">ON US</th>
-                                            <th style="width:4.545454545454545%;">OFF US</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr style="text-align:center">
-                                            <th>1</th>
-                                            <th><%= OwnerServiceCI %></th>
-                                            <th><%= TIDMethod() %></th>
-                                            <th><%= MIDMethod() %></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr style="border-top:hidden; text-align:center">
-                                            <th>2</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr style="border-top:hidden; text-align:center">
-                                            <th>3</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr style="border-top:hidden; text-align:center">
-                                            <th>4</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr style="border-top:hidden; text-align:center">
-                                            <th>5</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <%--///check list///--%>
-                            <div>
-                                <table style="width:100%">
-                                    <thead style="font-size:12; border-top:hidden; text-align:center; background-color:lavender">
-                                        <tr>
-                                            <th rowspan="1" colspan="1" >
-                                                <b>ข้อมูลสำหรับช่าง : Check list</b>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">&nbsp;Start working date .......................................  Finish date ...........................................  Total service time ...................................... days</div>
                                             </th>
-                                            <th rowspan="1" colspan="1" style="width:4.545454545454545%">
-                                                <b>Y</b>
-                                            </th>
-                                            <th rowspan="1" colspan="1" style="width:4.545454545454545%">
-                                                <b>N</b>
-                                            </th>
-                                            <th rowspan="1" colspan="1" style="width:50%">
-                                                <b>สำหรับช่าง : รายละเอียดการตรวจสอบและการแก้ไข</b>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th><div style="margin-left:4%">
-                                                1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                แนะนำตัว/ตรวจสอบชื่อร้าน
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
                                         </tr>
                                         <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                ปฏิบัติงานตามใบงาน
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                เช็คข้อมูลใน Slip (TID, MID, ชื่อร้าน, Config)
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Training ลูกค้า
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                เขียนสรุปงาน
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                ให้ร้านค้าลงนาม, ชื่อร้านค้า, เบอร์โทรศัพท์
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                โทรปิดงานกับ CS Admin
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th style="border-top:hidden"><div style="margin-left:4%">
-                                                8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                อื่น ๆ
-                                                </div>
-                                            </th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <%--///ประเมินผล///--%>
-                            <div>
-                                <table style="width:100%">
-                                    <thead style="font-size:12; text-align:center; border-top:hidden; background-color:lavender">
-                                        <tr>
-                                            <th rowspan="1" colspan="1" style="width:50%">
-                                                <b>สำหรับร้านค้า : ประเมินผลการใช้บริการ</b>
-                                            </th>
-                                            <th rowspan="1" colspan="1">
-                                                <b>สำหรับช่าง : สรุปผลการดำเนินการ</b>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">&nbsp;Detail of operation / Solution</div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
                                         <tr>
-                                            <th rowspan="1" colspan="1">
-                                                <div style="border:0px solid red">
-                                                    <div style="border:0px solid blue; width:100%;">
-                                                        <div style="border:0px solid blue; width:50%; float:left;">
-                                                            <div style="border:1px solid black; width:20%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;A ดีมาก (90-100)
-                                                        </div>
-                                                        <div style="border:0px solid blue; width:50%; float:right;">
-                                                            <div style="border:1px solid black; width:20%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;B ดี (80-89)
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="border:0px solid red">
-                                                    <div style="border:0px solid blue; width:100%;">
-                                                        <div style="border:0px solid blue; width:50%; float:left;">
-                                                            <div style="border:1px solid black; width:20%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;C พอใช้ (60-79)
-                                                        </div>
-                                                        <div style="border:0px solid blue; width:50%; float:right;">
-                                                            <div style="border:1px solid black; width:20%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;D ปรับปรุง (50-59)
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="border:0px solid red">
-                                                    <div style="border:0px solid blue; width:100%;">
-                                                        <div style="border:0px solid blue; width:100%; float:left;">
-                                                            <div style="border:1px solid black; width:10%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;ควรปรับปรุง (น้อยกว่า 49)<dfn>..................................................</dfn><br />
-                                                            <dfn>...........................................................................................................</dfn><br />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left; border: 2px solid black;  border-radius: 8px; margin-left:10px; margin-right:10px;">&nbsp;&nbsp;&nbsp;Description:<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;Responsible person ...................................................................................................................(Block Letter)</div>
                                             </th>
                                             <th>
-                                               <div style="border:0px solid red">
-                                                    <div style="border:0px solid blue; width:100%;">
-                                                        <div style="border:0px solid blue; width:100%; float:left;">
-                                                            <div style="border:1px solid black; width:10%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;เสร็จสมบูรณ์
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="border:0px solid red">
-                                                    <div style="border:0px solid blue; width:100%;">
-                                                        <div style="border:0px solid blue; width:100%; float:left;">
-                                                            <div style="border:1px solid black; width:10%; margin-left:10px; height:10px; float:left;"></div>
-                                                            &nbsp;ไม่เสร็จเนื่องจาก<dfn>................................................................</dfn><br />
-                                                            <dfn>...........................................................................................................</dfn><br />
-                                                            <dfn>...........................................................................................................</dfn><br />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
+                                                <div style="text-align:left">Date: .........................</div>
                                             </th>
-                                            
                                         </tr>
                                         <tr>
-                                            <th>
-                                                ชื่อลูกค้า<dfn>...................................</dfn>เบอร์โทรศัพท์<dfn>...................................</dfn><br />
-                                                ชื่อร้านค้า<dfn>..................................</dfn>วันที่ดำเนินการ<dfn>..................................</dfn><br />
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;Inspection person (Issuer) .........................................................................................................(Block Letter)</div>
                                             </th>
                                             <th>
-                                                ชื่อผู้ปฏิบัติงาน<dfn>...................................................................................</dfn><br />
-                                                วันที่<dfn>........................</dfn>เวลาเข้า<dfn>........................</dfn>เวลาออก<dfn>.......................</dfn><br />
+                                                <div style="text-align:left">Date: .........................</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;Dept./Sect. Manerger of Issuer. .......................................................................................................................</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left">Date: .........................</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left">&nbsp;3. RecommendationPrevention (Engineering Section)</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="5">
+                                                <div style="text-align:left; border: 2px solid black;  border-radius: 8px; margin-left:10px; margin-right:10px;">&nbsp;&nbsp;&nbsp;Description:<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;</div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="1" colspan="4">
+                                                <div style="text-align:left">&nbsp;Enginering Section Manager .....................................................................................................................</div>
+                                            </th>
+                                            <th>
+                                                <div style="text-align:left">Date: .........................</div>
                                             </th>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <%--///หมายเหตุ///--%>
-                            <div>
-                                <p style="font-size: 10px">***หมายเหตุ***</p>
-                                <p style="font-size: 10px">
-                                    หากท่านมีความคิดเห็นเพิ่มเติม ซึ่งอาจมีแสดงในเอกสารฉบับนี้ได้ สามารถแจ้งความคิดเห็นของท่านส่ง E-mail มายังบริษัทฯจักเป็นพระคุณยิ่ง<br />
-                                    <b>E-mail </b>: ITG-ContactCenter@itg.co.th
-                                </p>
-                            </div>
+</div>
 
 
                             <%--test--%>
@@ -681,9 +466,7 @@ table, th, td {
 
                         </div>
                     </div>
-                    
                 </div>
-
             </div>            
         </page>
 

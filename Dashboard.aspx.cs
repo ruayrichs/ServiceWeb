@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using ServiceWeb.Service;
 
 namespace ServiceWeb
 {
@@ -77,12 +78,11 @@ namespace ServiceWeb
                 }
                 if (_DashboardFinalData == null)
                     _DashboardFinalData = dashboardLib.PreparFinanDataDashboard(
-                        SID, CompanyCode, "today", _IsFilterOwner, ERPWAuthentication.Permission.OwnerGroupCode
+                        SID, CompanyCode, "today", _IsFilterOwner, ERPWAuthentication.Permission.OwnerGroupCode, CustomerCode
                     );
                 return _DashboardFinalData;
             }
         }
-
 
         #region Pie
         protected int incident_count
@@ -120,6 +120,7 @@ namespace ServiceWeb
         #endregion
 
         #region BarChart
+
         protected int i_open_count
         {
             get
@@ -208,7 +209,7 @@ namespace ServiceWeb
             }
         }
         #endregion
-
+       
 
         #region line
         protected string datasProblemGroup
@@ -265,7 +266,143 @@ namespace ServiceWeb
                 return _ListTicketEn;
             }
         }
+       
+        #region Ticket per month
+        public string LabelofLineAll
+        {
+            get
+            {
+                DataTable dt = dashboardLib.getCountTicketIRPperMonth(SID, CompanyCode, CustomerCode);
+                List<string> list = dt.AsEnumerable()
+                             .Select(r => r.Field<string>("CreatedonDate"))
+                             .ToList();
+                return JsonConvert.SerializeObject(list);
+            }
+        }
+        public string DatasofLineOpen
+        {
+            get
+            {
+                DataTable dt = dashboardLib.getCountTicketIRPperMonth(SID, CompanyCode, CustomerCode);
+                List<string> list = dt.AsEnumerable()
+                             .Select(r => r.Field<string>("Open_Count"))
+                             .ToList();
+                return JsonConvert.SerializeObject(list);
+            }
+        }
+        public string DatasofLineCloseandResolve
+        {
+            get
+            {
+                DataTable dt = dashboardLib.getCountTicketIRPperMonth(SID, CompanyCode, CustomerCode);
+                List<string> list = dt.AsEnumerable()
+                             .Select(r => r.Field<string>("CloseResolve_Count"))
+                             .ToList();
+                return JsonConvert.SerializeObject(list);
+            }
+        }
+        #endregion
 
+        #region DoughnutChart I R P
+        public string dataChartInc
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketCountofDoctype.DataofInc);
+            }
+        }
+        public string dataChartReq 
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketCountofDoctype.DataofReq);
+            }
+        }
+        public string dataIncChartProb 
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketCountofDoctype.DataofPromb);
+            }
+        }
+        #endregion
+
+        #region Rating Chart
+        public string RatingData
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketRatingCount.RatingDatas);
+            }
+        }
+        #endregion
+
+        #region Ticket Status
+        public string TicketStatusData
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketOnTimeOverdueCount.Datas);
+            }
+        }
+        #endregion
+
+        #region BarUserChart
+        public string LabelsBarUserChart
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketOnHandCount.Labels);
+            }
+        }
+        public string Data1BarUserChart
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketOnHandCount.DatasetOpen);
+            }
+        }
+        public string Data2BarUserChart
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketOnHandCount.DatasetResolve);
+            }
+        }
+
+        public string Color1BarUserChart
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketOnHandCount.ColorsetOpen);
+            }
+        }
+
+        public string Color2BarUserChart
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataTicketOnHandCount.ColorsetResolve);
+            }
+        }
+        #endregion
+
+        #region BarEquipmentChart
+        public string EquipmentChartLabel
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataEquipmentCount.Labels);
+            }
+        }
+        public string EquipmentChartData
+        {
+            get
+            {
+                return JsonConvert.SerializeObject(DashboardFinalData.DataforNewChartReport.DataEquipmentCount.Datas);
+            }
+        }
+        #endregion
         private void pageinit()
         {
             lblCountOpen.Text = DashboardFinalData.OverviewDataReport.CountTicketOpen.ToString();
@@ -296,6 +433,14 @@ namespace ServiceWeb
             rptTS.DataSource = DashboardFinalData.StatusDataReport;
             rptTS.DataBind();
             udpTS.Update();
+
+            rptCICountFamily.DataSource = dashboardLib.getCountCIwithFamily(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ERPWAuthentication.EmployeeCode);
+            rptCICountFamily.DataBind();
+            udpnCICountFamily.Update();
+
+            rptCICountClass.DataSource = dashboardLib.getCountCIwithClass(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ERPWAuthentication.EmployeeCode);
+            rptCICountClass.DataBind();
+            udpnCICountClass.Update();
         }
         DataTable dtTempDoc
         {
@@ -388,7 +533,16 @@ namespace ServiceWeb
             if (!IsPostBack)
             {
                 pageinit();
+               
+
             }
+        }
+
+        protected void btnLinkTransactionSearchCI_Click(object sender, EventArgs e)
+        {
+            string ciSearchKey = hddSearchCIKey.Value;
+            string ciSearchValue = hddSearchCIValue.Value;
+            Response.Redirect(Page.ResolveUrl("~/crm/Master/Equipment/EquipmentCriteria.aspx?ci_search_key=" + ciSearchKey + "&ci_search_value=" + ciSearchValue));
         }
     }
 }

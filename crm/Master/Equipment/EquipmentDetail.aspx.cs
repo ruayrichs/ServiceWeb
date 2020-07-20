@@ -29,6 +29,8 @@ namespace ServiceWeb.crm.Master.Equipment
 {
     public partial class EquipmentDetail : AbstractsSANWebpage //System.Web.UI.Page
     {
+        string ThisPage = "EquipmentDetail";
+
         protected override string getProgramID()
         {
             return LogServiceLibrary.PROGRAM_ID_EQUIPMENT;
@@ -83,6 +85,14 @@ namespace ServiceWeb.crm.Master.Equipment
         }
                
         #endregion
+
+        public string qrcodeurl
+        {
+            get
+            {
+                return String.Concat(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority), "/crm/Master/Equipment/EquipmentDetail.aspx?id=", txtEquipmentCode.Text);
+            }
+        }
 
         #region DataTable
         private DataTable dtPropertiesSelect
@@ -144,8 +154,24 @@ namespace ServiceWeb.crm.Master.Equipment
             }
             set { Session["SC_MODE"] = value; }
         }
-        public string EquipmentCode { get { return Session["ServiceWeb.Page.Equipment.EquipmentCode"] as string; } }
-        public string Page_Mode { get { return Session["ServiceWeb.Page.Equipment.Page_Mode"] as string; } }
+        public string EquipmentCode { 
+            get {
+                if (!String.IsNullOrEmpty(Request["id"]))
+                {
+                    return Request["id"] as string;
+                }
+                return !String.IsNullOrEmpty(Session["ServiceWeb.Page.Equipment.EquipmentCode"] as string) ? Session["ServiceWeb.Page.Equipment.EquipmentCode"] as string : "none" ; 
+            } 
+        }
+        public string Page_Mode {
+            get {
+                if (Request["id"] != null)
+                {
+                    return null;
+                }
+                return Session["ServiceWeb.Page.Equipment.Page_Mode"] as string; 
+            } 
+        }
 
         
         protected void Page_Load(object sender, EventArgs e)
@@ -541,6 +567,15 @@ namespace ServiceWeb.crm.Master.Equipment
                 txtLastMaintenanceTime.Text = !string.IsNullOrEmpty(Convert.ToString(dr["LastMaintenanceTime"])) ? Validation.Convert2TimeDisplay(Convert.ToString(dr["LastMaintenanceTime"])).Substring(0, 5) : "";
                 txtWarrantyStartDate.Text = !string.IsNullOrEmpty(dr["BeginWarrantee"].ToString()) ? Validation.Convert2DateDisplay(dr["BeginWarrantee"].ToString()) : "";
                 txtWarrantyEndDate.Text = !string.IsNullOrEmpty(dr["EndWarrantee"].ToString()) ? Validation.Convert2DateDisplay(dr["EndWarrantee"].ToString()) : "";
+                txtDaySend.Text = dr["DaySend"].ToString();
+
+                DataTable dtTrigger = ServiceEquipment.getWarrantyTrigger(SID, CompanyCode, EquipmentCode);
+                foreach ( DataRow drr in dtTrigger.Rows)
+                {
+                    CheckBoxDaySend.Checked = true;
+                    txtShowDaySend.Text = drr["SendBack"].ToString();
+                }
+
                 try
                 {
                     ddlMaintenanceType.SelectedValue = dr["CategoryCode"].ToString();
@@ -969,6 +1004,8 @@ namespace ServiceWeb.crm.Master.Equipment
 
                 dsEquipment = new tmpEquipmentSetupDataSet();
                 bindDefaultToScreen();
+                ClientService.DoJavascript("upDateCheckBoxDaySend();");
+                ClientService.DoJavascript("setValueID();");
                 ClientService.AGSuccess("บันทึกสำเร็จ");
             }
             catch (Exception ex)
@@ -1015,6 +1052,22 @@ namespace ServiceWeb.crm.Master.Equipment
         //    }
         //}
 
+        private string logChang()
+        {
+            DataTable dtLog = ServiceLog.GetEquipmentLogTop(
+                    SID,
+                    CompanyCode,
+                    EquipmentCode
+                );
+
+            string log = "";
+            foreach (DataRow dtRows in dtLog.Rows)
+            {
+                log = dtRows["LOGOBJCODE"].ToString();
+            }
+            return log;
+        }
+
         private string saveDataEquipment()
         {
             string ResultCode = "";
@@ -1040,7 +1093,24 @@ namespace ServiceWeb.crm.Master.Equipment
             {
                 Object[] objParam = new Object[] { "0800040", POSDocumentHelper.getSessionId(SID, UserName) };
                 DataSet[] objDataSetChange = new DataSet[] { dsEquipment };
+                
+                string log = logChang();
+                
                 Object Result = icmUtil.ICMPrimitiveInvoke(objParam, objDataSetChange);
+
+                string logTo = logChang();
+
+                if (log != logTo)
+                {
+                    NotificationLibrary.GetInstance().TicketAlertEvent(
+                        NotificationLibrary.EVENT_TYPE.CI_Change_Log,
+                        SID,
+                        CompanyCode,
+                        EquipmentCode + "|" + log + "|" + logTo,
+                        "System Auto",
+                        ThisPage + "_CI_LOG"
+                    );
+                }
 
                 string[] arrResult = Result.ToString().Split('#');
                 if (arrResult.Length == 2)
@@ -1079,6 +1149,7 @@ namespace ServiceWeb.crm.Master.Equipment
             dtwarranty.Columns.Add("UPDATED_BY");
             dtwarranty.Columns.Add("CREATED_ON");
             dtwarranty.Columns.Add("UPDATED_ON");
+            dtwarranty.Columns.Add("DaySend");
             #endregion
             #region Warranty
             string dateTime = Validation.getCurrentServerStringDateTime();
@@ -1106,8 +1177,34 @@ namespace ServiceWeb.crm.Master.Equipment
             drNewWar["CREATED_ON"] = dateTime;
             drNewWar["UPDATED_BY"] = EmployeeCode;
             drNewWar["UPDATED_ON"] = dateTime;
+            drNewWar["DaySend"] = txtDaySend.Text;
             dtwarranty.Rows.Add(drNewWar);
             ServiceEquipment.saveWarrantyMaster(dtwarranty);
+
+            if (CheckBoxDaySend.Checked == true && txtDaySend.Text != "")
+            {
+                var TimeSec = "";
+                DataTable countwarranty = ServiceEquipment.countWarrantyData(SID, CompanyCode, EquipmentCode, txtDaySend.Text);
+                foreach (DataRow dtRows in countwarranty.Rows)
+                {
+                   TimeSec = dtRows["TargetTime"].ToString();
+                }
+                var Year = DateTime.Now.Year.ToString();
+                String TransactionID = Guid.NewGuid().ToString();
+                TriggerService.GetInstance().EscalateTicket(
+                    TransactionID, "CI", EquipmentCode, Year, TimeSec, UserName
+                );
+
+                TriggerService.GetInstance().CancelTriggerCI(
+                    TransactionID, "CI", EquipmentCode
+                );
+            }
+            else
+            {
+                TriggerService.GetInstance().CancelTriggerCI(
+                    "", "CI", EquipmentCode
+                );
+            }
             #endregion
         }
         private void prepareDataEquipmentDetail()
@@ -2928,13 +3025,22 @@ namespace ServiceWeb.crm.Master.Equipment
         //04/02/2562 show ticket of ci by born kk
         private void bindDataTicket() {
             ServiceTicketLibrary lib = new ServiceTicketLibrary();
+            //DataTable dt = lib.GetTicketList(
+            //        SID, CompanyCode, "", "", "", "",
+            //        "", "", "", "", "", "",
+            //        txtEquipmentCode.Text, "", "", "",
+            //        "", "", "", "",
+            //        "",false,false
+            //    );
+
+            // 10/06/2563 fixed query ticket by coffee kk
             DataTable dt = lib.GetTicketList(
-                    SID, CompanyCode, "", "", "", "",
-                    "", "", "", "", "", "",
-                    txtEquipmentCode.Text, "", "", "",
-                    "", "", "", "",
-                    "",false,false
-                );
+               SID, CompanyCode, "", "", "", "",
+               "", "", "", "", "", "",
+               EquipmentCode, "", "", "",
+               "", "", "", "",
+               "", false, false
+           );
 
             rptListTicketItems.DataSource = dt;
             rptListTicketItems.DataBind();
@@ -2969,23 +3075,26 @@ namespace ServiceWeb.crm.Master.Equipment
             try
             {
                 string CallerID = hddCallerID.Value;
-                DataRow[] drr = dtDataSearch.Select("CallerID='" + CallerID + "'");
-                dtTempDoc.Clear();
-                int i = 1;
-                foreach (DataRow dr in dtDataSearch.Rows)
+                //DataRow[] drr = dtDataSearch.Select("CallerID='" + CallerID + "'");
+                DataTable dt = AfterSaleService.getInstance().GetTicketDetailByTicketNumber(SID, CompanyCode, CallerID);
+                if (dt.Rows.Count > 0)
                 {
-                    DataRow drt = dtTempDoc.NewRow();
-                    drt["doctype"] = dr["Doctype"].ToString();
-                    drt["docnumber"] = dr["CallerID"].ToString();
-                    drt["docfiscalyear"] = dr["Fiscalyear"].ToString();
-                    drt["indexnumber"] = i++;
-                    dtTempDoc.Rows.Add(drt);
+                    dtTempDoc.Clear();
+                    int i = 1;
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        DataRow drt = dtTempDoc.NewRow();
+                        drt["doctype"] = dr["Doctype"].ToString();
+                        drt["docnumber"] = dr["CallerID"].ToString();
+                        drt["docfiscalyear"] = dr["Fiscalyear"].ToString();
+                        drt["indexnumber"] = i++;
+                        dtTempDoc.Rows.Add(drt);
+                    }
+                    
+                    getdataGoToTicketNewWindow(dt.Rows[0]["Doctype"].ToString(), dt.Rows[0]["CallerID"].ToString(), dt.Rows[0]["Fiscalyear"].ToString(), dt.Rows[0]["CustomerCode"].ToString());
+                   
                 }
-
-                if (drr.Length > 0)
-                {
-                    getdataGoToTicketNewWindow(drr[0]["Doctype"].ToString(), drr[0]["CallerID"].ToString(), drr[0]["Fiscalyear"].ToString(), drr[0]["CustomerCode"].ToString());
-                }
+                
             }
             catch (Exception ex)
             {
@@ -3080,5 +3189,6 @@ namespace ServiceWeb.crm.Master.Equipment
 
             public string ActiveStatus { get; set; }
         }
+
     }
 }

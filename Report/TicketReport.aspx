@@ -243,7 +243,6 @@
                                     <th class="text-nowrap">Priority</th>
                                     <th class="text-nowrap">Type</th>
                                     <th class="text-nowrap">Owner Service</th>
-                                    <th class="text-nowrap">Client Name</th>
                                     <th class="text-nowrap">CI Name</th>
                                     <th class="text-nowrap">Status</th>
                                     <th class="text-nowrap">Area</th>
@@ -262,7 +261,25 @@
                                     <th class="text-nowrap">Resolved Group</th>
                                     <th class="text-nowrap">MTTNTime</th>
                                     <th class="text-nowrap">MTRSTime</th>
+                                    <th class="text-nowrap">MTRSWTime</th>
                                     <th class="text-nowrap">MNSP</th>
+                                    <th class="text-nowrap">Operator</th>
+                                    <th class="text-nowrap">Stop Time</th>
+                                    <th class="text-nowrap">Overdue Time</th>
+                                    <th class="text-nowrap">CI Class</th>
+                                    <th class="text-nowrap">Model</th>
+                                    <th class="text-nowrap">S/N</th>
+                                    <th class="text-nowrap">Attribute01</th>
+                                    <th class="text-nowrap">Attribute02</th>
+                                    <th class="text-nowrap">Attribute03</th>
+                                    <th class="text-nowrap">CI Status</th>
+                                    <th class="text-nowrap">Client Name</th>
+                                    <th class="text-nowrap">Contact Name</th>
+                                    <th class="text-nowrap">Contact Mail</th>
+                                    <th class="text-nowrap">Contact Phone</th>
+                                    <th class="text-nowrap">Affect</th>
+                                    <th class="text-nowrap">Affect00</th>
+                                    <th class="text-nowrap">Affect01</th>
                                 </tr>
                             </thead>
                             <%--<tbody>
@@ -383,7 +400,6 @@
                     report.Priority,
                     report.Type,
                     report.OwnerGroupName,
-                    report.Customer_Name,
                     report.CIName.split(', \n').join("<br />"),
                     report.Status,
                     report.Area,
@@ -402,7 +418,25 @@
                     report.Resolved_Group,
                     report.MTTNTime,
                     report.MTRSTime,
+                    report.MTRSWTime,
                     report.ResponsibleOrganization,
+                    report.Operator,
+                    report.StopTime,
+                    report.OverdueTime,
+                    report.EquipmentClassName,
+                    report.ModelNumber,
+                    report.ManufacturerSerialNO,
+                    report.PropertiesCode001,
+                    report.PropertiesCode002,
+                    report.PropertiesCode003,
+                    report.CiStatus,
+                    report.Customer_Name,
+                    report.ContactName,
+                    report.ContactMail,
+                    report.ContactPhone,
+                    report.Affect,
+                    report.Affect00,
+                    report.Affect01
                 ]);
             }
             console.log(data);
@@ -413,7 +447,7 @@
                 deferRender: true,
                 columnDefs: [{
                     //"orderable": false,
-                    "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+                    "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40],
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).closest("tr").addClass("text-nowrap");
                     }

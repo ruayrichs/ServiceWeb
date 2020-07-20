@@ -18,6 +18,8 @@ using ERPW.Lib.Master.Config;
 using ERPW.Lib.Service.Entity;
 using System.Web.Configuration;
 using agape.lib.web.ICMV2;
+using ERPW.Lib.Service;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ServiceWeb.crm.Master.Equipment
 {
@@ -45,6 +47,8 @@ namespace ServiceWeb.crm.Master.Equipment
         private ICMUtils icmUtil = ERPW.Lib.F1WebService.F1WebService.getICMUtils();
         private MasterConfigLibrary masterConfig = MasterConfigLibrary.GetInstance();
         private OwnerService ownerService = new OwnerService();
+
+        private ERPW.Lib.Service.ConfigurationItemLib configurationItemLib;
 
         private DataTable dtEquipmentType_;
         private DataTable dtEquipmentType
@@ -97,8 +101,72 @@ namespace ServiceWeb.crm.Master.Equipment
                 bindEMClass();
                 bindOwnerService();
                 bindDdlAsset();
+
+                // check params from url for search
+                if (!String.IsNullOrEmpty(Request["ci_search_key"]) && !String.IsNullOrEmpty(Request["ci_search_value"]))
+                {
+                    string searchKey = Request["ci_search_key"];
+                    string searchValue = Request["ci_search_value"];
+                    setSearchCI(searchKey, searchValue);
+                }
             }
         }
+
+        private void setSearchCI(string searchKey, string searchValue)
+        {
+            try
+            {
+                switch (searchKey)
+                {
+                    case "family":
+                        searchByFamily(searchValue);
+                        break;
+                    case "class":
+                        searchByClass(searchValue);
+                        break;
+                    default:
+                        throw new Exception("searchKey: `" + searchKey + "` not config for search.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ObjectUtil.Err(ex.Message));
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+        }
+
+        #region Search with params
+        private void searchByFamily(string searchValue)
+        {
+            var item = ddlEquipmentType.Items.FindByText(searchValue);
+
+            if (item == null)
+            {
+                throw new Exception("searchValue: `" + searchValue + "` not found in EquipmentType.");
+            }
+
+            item.Selected = true;
+
+            btnSearchData_Click(btnSearchData, EventArgs.Empty);
+        }
+
+        private void searchByClass(string searchValue)
+        {
+            var item = ddlSearch_EMClass.Items.FindByText(searchValue);
+
+            if (item == null)
+            {
+                throw new Exception("searchValue: `" + searchValue + "` not found in EquipmentClass.");
+            }
+
+            item.Selected = true;
+
+            btnSearchData_Click(btnSearchData, EventArgs.Empty);
+        }
+        #endregion
 
         private void bindDataDDLEquipmentType()
         {
@@ -257,6 +325,7 @@ namespace ServiceWeb.crm.Master.Equipment
 
             CheckSingleQuote();
             
+            DataTable ciSelect = new DataTable();
             List<EquipmentService.EquipmentItemData> listEquipmentItem = ServiceEquipment.getListEquipment(
                 SID,
                 CompanyCode,
@@ -270,7 +339,9 @@ namespace ServiceWeb.crm.Master.Equipment
                 txtSerialNo.Text,
                 Session["Search.Send.Mail"].ToString(),
                 txtTimeSendMail.Text,
-                Session["User.Name"].ToString()
+                Session["User.Name"].ToString(),
+                txtxValue001.Text,
+                ciSelect
             );
 
             var dataSource = listEquipmentItem.Select(s => new
@@ -281,7 +352,19 @@ namespace ServiceWeb.crm.Master.Equipment
                 s.Status,
                 s.EquipmentClassName,
                 s.CategoryCode,
-                s.OwnerGroupName
+                s.OwnerGroupName,
+                s.xValue001,
+                s.xValue002,
+                s.xValue003,
+                s.xValue004,
+                s.xValue005,
+                s.ModelNumber,
+                s.ManufacturerSerialNO,
+                s.BeginGuarantee,
+                s.EndGuaranty,
+                s.BeginWarrantee,
+                s.EndWarrantee,
+                s.CiLocation
             });
 
             //this.eItemData = listEquipmentItem;
@@ -663,6 +746,7 @@ namespace ServiceWeb.crm.Master.Equipment
 
         private void ExampleRepeater()
         {
+            DataTable ciSelect = new DataTable();
             //List<EquipmentService.EquipmentItemData> listEquipmentItem = (List<EquipmentService.EquipmentItemData>)Session["Export_Excel_CI_Datatable"];
             List<EquipmentService.EquipmentItemData> listEquipmentItem = ServiceEquipment.getListEquipment(
                 SID,
@@ -677,12 +761,15 @@ namespace ServiceWeb.crm.Master.Equipment
                 txtSerialNo.Text,
                 "",
                 "",
-                ""
-            );
+                "",
+                "",
+                ciSelect
+            ); ;
             
             CIModel ciModel;
             List<CIModel> ciList = new List<CIModel>();
             ciList.Clear();
+            string url = @"""https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=""";
             for (int index = 0; index < listEquipmentItem.Count; index++)
             {
                 //
@@ -695,7 +782,21 @@ namespace ServiceWeb.crm.Master.Equipment
                 ciModel.Location = listEquipmentItem[index].Location;
                 ciModel.Floor = "";
                 ciModel.Room = listEquipmentItem[index].Room; ;
-                ciModel.Shelf = listEquipmentItem[index].Shelf; ;
+                ciModel.Shelf = listEquipmentItem[index].Shelf; 
+                ciModel.QRCode = "=image(" + url + " &A" + (index+2) + ")"; 
+
+                ciModel.xValue001 = listEquipmentItem[index].xValue001;
+                ciModel.xValue002 = listEquipmentItem[index].xValue002;
+                ciModel.xValue003 = listEquipmentItem[index].xValue003;
+                ciModel.xValue004 = listEquipmentItem[index].xValue004;
+                ciModel.xValue005 = listEquipmentItem[index].xValue005;
+                ciModel.ModelNumber = listEquipmentItem[index].ModelNumber;
+                ciModel.ManufacturerSerialNO = listEquipmentItem[index].ManufacturerSerialNO;
+                ciModel.BeginGuarantee = listEquipmentItem[index].BeginGuarantee;
+                ciModel.EndGuaranty = listEquipmentItem[index].EndGuaranty;
+                ciModel.BeginWarrantee = listEquipmentItem[index].BeginWarrantee;
+                ciModel.EndWarrantee = listEquipmentItem[index].EndWarrantee;
+                ciModel.CiLocation = listEquipmentItem[index].CiLocation;
                 //
                 ciList.Add(ciModel);
             }
@@ -847,6 +948,143 @@ namespace ServiceWeb.crm.Master.Equipment
             {
                 ClientService.AGLoading(false);
             }
+        }
+
+        protected void btnUpload_Click(object sender, EventArgs e)
+        {
+            string path = Server.MapPath(fuCI.FileName);
+            try
+            {
+                fuCI.SaveAs(path);
+
+                DataTable dt = ConvertToDataTable(path);
+                List<CIObjectModel> listCIObjectModel = new List<CIObjectModel>();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    CIObjectModel cIObjectModel = new CIObjectModel
+                    {
+                        configurationItemModel = new ConfigurationItemModel(),
+                        configurationItemGeneralModel = new ConfigurationItemGeneralModel()
+                    };
+
+                    string CategoryCode = !String.IsNullOrEmpty(dr["categorycode"].ToString()) ? dr["categorycode"].ToString() : throw new Exception("Please input categorycode.");
+                    string Description = !String.IsNullOrEmpty(dr["description"].ToString()) ? dr["description"].ToString() : throw new Exception("Please input description.");
+                    string Status = !String.IsNullOrEmpty(dr["status"].ToString()) ? dr["status"].ToString() : throw new Exception("Please input status.");
+                    string Valid_From = !String.IsNullOrEmpty(dr["valid_from"].ToString()) ? dr["valid_from"].ToString() : throw new Exception("Please input valid_from.");
+                    string Valid_To = !String.IsNullOrEmpty(dr["valid_to"].ToString()) ? dr["valid_to"].ToString() : throw new Exception("Please input valid_to.");
+                    string EquipmentType = !String.IsNullOrEmpty(dr["equipmenttype"].ToString()) ? dr["equipmenttype"].ToString() : throw new Exception("Please input equipmenttype.");
+                    string EquipmentClass = !String.IsNullOrEmpty(dr["equipmentclass"].ToString()) ? dr["equipmentclass"].ToString() : throw new Exception("Please input equipmentclass.");
+                    string EquipmentObjectType = !String.IsNullOrEmpty(dr["equipmentobjecttype"].ToString()) ? dr["equipmentobjecttype"].ToString() : throw new Exception("Please input equipmentobjecttype.");
+                    string Weight = !String.IsNullOrEmpty(dr["weight"].ToString()) ? dr["weight"].ToString() : throw new Exception("Please input weight.");
+
+                    cIObjectModel.configurationItemModel.sid = SID;
+                    cIObjectModel.configurationItemModel.companyCode = CompanyCode;
+                    cIObjectModel.configurationItemModel.categoryCode = CategoryCode;
+                    cIObjectModel.configurationItemModel.reference = "";
+                    cIObjectModel.configurationItemModel.material = "";
+                    cIObjectModel.configurationItemModel.created_by = EmployeeCode;
+                    cIObjectModel.configurationItemModel.description = Description;
+                    cIObjectModel.configurationItemModel.status = Status;
+                    cIObjectModel.configurationItemModel.valid_From = Valid_From;
+                    cIObjectModel.configurationItemModel.valid_To = Valid_To;
+                    cIObjectModel.configurationItemModel.equipmentType = EquipmentType;
+                    cIObjectModel.configurationItemModel.province = "";
+                    cIObjectModel.configurationItemModel.country = "";
+                    cIObjectModel.configurationItemModel.picturePart = "";
+                    cIObjectModel.configurationItemModel.objectID = "";
+                    cIObjectModel.configurationItemModel.activeBy = "";
+                    cIObjectModel.configurationItemModel.activeDate = "";
+                    cIObjectModel.configurationItemModel.activeTime = "";
+
+                    cIObjectModel.configurationItemGeneralModel.sid = SID;
+                    cIObjectModel.configurationItemGeneralModel.companyCode = CompanyCode;
+                    cIObjectModel.configurationItemGeneralModel.categoryCode = CategoryCode;
+                    cIObjectModel.configurationItemGeneralModel.equipmentClass = EquipmentClass;
+                    cIObjectModel.configurationItemGeneralModel.equipmentObjectType = EquipmentObjectType;
+                    cIObjectModel.configurationItemGeneralModel.authorizeGroup = "";
+                    cIObjectModel.configurationItemGeneralModel.weight = Weight;
+                    cIObjectModel.configurationItemGeneralModel.weightUnit = "";
+                    cIObjectModel.configurationItemGeneralModel.sizeDimension = "";
+                    cIObjectModel.configurationItemGeneralModel.inventoryNO = "";
+                    cIObjectModel.configurationItemGeneralModel.startupDate = "";
+                    cIObjectModel.configurationItemGeneralModel.acquisitionValue = "";
+                    cIObjectModel.configurationItemGeneralModel.acquisitionDate = "";
+                    cIObjectModel.configurationItemGeneralModel.manufacturerNO = "";
+                    cIObjectModel.configurationItemGeneralModel.modelNumber = "";
+                    cIObjectModel.configurationItemGeneralModel.manufacturerPartNO = "";
+                    cIObjectModel.configurationItemGeneralModel.manufacturerSerialNO = "";
+                    cIObjectModel.configurationItemGeneralModel.manufacturerCountry = "";
+                    cIObjectModel.configurationItemGeneralModel.constructYear = "";
+                    cIObjectModel.configurationItemGeneralModel.constructMonth = "";
+                    cIObjectModel.configurationItemGeneralModel.created_by = EmployeeCode;
+
+                    listCIObjectModel.Add(cIObjectModel);
+                }
+
+                ConfigurationItemLib.GetInstance().insertMultipleCI_v2(listCIObjectModel);
+                ClientService.AGSuccess("Insert Success");
+
+            } catch (Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            } finally
+            {
+                System.IO.File.Delete(path);
+            }
+        }
+
+        private DataTable ConvertToDataTable(string path)
+        {
+            DataTable dtResult = new DataTable();
+            Excel.Application excelApp = new Excel.Application();
+            if (excelApp != null)
+            {
+                
+                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(path, 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelWorkbook.Sheets[1];
+
+                Excel.Range excelRange = excelWorksheet.UsedRange;
+                int rowCount = excelRange.Rows.Count;
+                int colCount = excelRange.Columns.Count;
+
+                // set header
+                for (int j = 1; j <= colCount; j++)
+                {
+                    string headerValue = (excelWorksheet.Cells[1, j] as Excel.Range).Value.ToString();
+                    dtResult.Columns.Add(headerValue.ToLower(), typeof(String));
+                }
+
+                List<CIObjectModel> listCIObjectModel = new List<CIObjectModel>();
+
+                // set row
+                for (int i = 2; i <= rowCount && (excelWorksheet.Cells[i, 1] as Excel.Range).Value != null; i++)
+                {
+                    
+                    DataRow _rowData = dtResult.NewRow();
+                    for (int j = 1; j <= colCount; j++)
+                    {
+                        Excel.Range colrange = (excelWorksheet.Cells[1, j] as Excel.Range);
+                        string colValue = colrange.Value != null ? colrange.Value.ToString() : throw new Exception("Please input Column Name at Column: " + j.ToString() + " ."); 
+                        Excel.Range rowrange = (excelWorksheet.Cells[i, j] as Excel.Range);
+                        string rowValue = rowrange.Value != null ? rowrange.Value.ToString() : throw new Exception("Please input Data at [Row : " + i.ToString() + ",Column: " + j.ToString() + "] .");
+
+                        _rowData[colValue] = rowValue;
+                    }
+                    dtResult.Rows.Add(_rowData);
+
+                }
+
+                excelWorkbook.Close();
+                excelApp.Quit();
+            }
+            else
+            {
+                throw new Exception("excelApp is Error.");
+            }
+
+            return dtResult;
+
         }
     }
 }

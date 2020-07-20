@@ -81,7 +81,7 @@ namespace ServiceWeb.Report
                 bindOwnerService();
             }
         }
-
+        private OwnerService ownerService = new OwnerService();
         private void bindOwnerService()
         {
 
@@ -97,8 +97,32 @@ namespace ServiceWeb.Report
                         ERPWAuthentication.Permission.OwnerGroupCode
                     )
                 );
-                ddlOwnerGroup.Enabled = false;
-                ddlOwnerGroup.CssClass = "form-control form-control-sm";
+
+                // #Edit for Multi OwnerService Customer
+
+                DataTable dtDataUserOwnerService = ownerService.getMappingOwner(UserName);//get data ownerService
+
+                if (dtDataUserOwnerService.Rows.Count == 0) // check user is not have OwnerService
+                {
+                    //dtDataUserOwnerService.Rows.Add(new Object[] {"", "none", "NONE"});
+                    ui_search_button.Enabled = false;
+                }
+
+                ddlOwnerGroup.DataTextField = "OwnerGroupName";
+                ddlOwnerGroup.DataValueField = "OwnerService";
+                ddlOwnerGroup.DataSource = dtDataUserOwnerService;
+                ddlOwnerGroup.DataBind();
+                ddlOwnerGroup.SelectedIndex = 0;
+
+
+                if (dtDataUserOwnerService.Rows.Count == 1)
+                {
+                    ddlOwnerGroup.Enabled = false;
+                    ddlOwnerGroup.CssClass = "form-control form-control-sm";
+                }
+
+                //ddlOwnerGroup.Enabled = false;
+                //ddlOwnerGroup.CssClass = "form-control form-control-sm";
             }
             else
             {
@@ -179,6 +203,12 @@ namespace ServiceWeb.Report
                     txtContactEmail.Text,
                     txtDescription.Text
                 ).toDataTable();
+
+                ticketReport = report_unity.ticketreport_add_calculate_stop_and_overdue_time(
+                    ERPWAuthentication.SID,
+                    ERPWAuthentication.CompanyCode,
+                    ticketReport
+                    );
 
                 ticketReport = report_unity.incidentNoFormater(
                     ERPWAuthentication.SID,
@@ -659,6 +689,13 @@ namespace ServiceWeb.Report
                     txtContactEmail.Text,
                     txtDescription.Text
                ).toDataTable();
+
+
+            ticketReport = report_unity.ticketreport_add_calculate_stop_and_overdue_time(
+                ERPWAuthentication.SID,
+                ERPWAuthentication.CompanyCode,
+                ticketReport
+                );
 
             ticketReport = report_unity.incidentNoFormater(
                 ERPWAuthentication.SID,

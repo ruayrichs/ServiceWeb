@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceWeb.Report {
-    
-    
-    public partial class TicketRep {
-        
+namespace ServiceWeb.Report
+{
+
+
+    public partial class TicketRep
+    {
+
         /// <summary>
         /// UpdatePanel1 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-        
+
         /// <summary>
         /// AutoCompleteEmployee control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.UserControl.AutoComplete.AutoCompleteEmployee AutoCompleteEmployee;
-        
+
         /// <summary>
         /// ddlPageModetype control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPageModetype;
-        
+
         /// <summary>
         /// tbDateTimeIn control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbDateTimeIn;
-        
+
         /// <summary>
         /// tbDateTimeOut control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbDateTimeOut;
-        
+
         /// <summary>
         /// Button1 control.
         /// </summary>
@@ -65,7 +67,16 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Button1;
-        
+
+        /// <summary>
+        /// ui_export_button control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ui_export_button;
+
         /// <summary>
         /// UpdateTable control.
         /// </summary>
@@ -74,7 +85,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateTable;
-        
+
         /// <summary>
         /// divDataJson control.
         /// </summary>
@@ -83,7 +94,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDataJson;
-        
+
         /// <summary>
         /// hddKey control.
         /// </summary>
@@ -92,7 +103,7 @@ namespace ServiceWeb.Report {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddKey;
-        
+
         /// <summary>
         /// btnDateTimeOut control.
         /// </summary>

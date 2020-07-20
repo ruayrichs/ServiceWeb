@@ -226,7 +226,7 @@ namespace ServiceWeb
 
             if (!string.IsNullOrEmpty(ddlOwnerService.SelectedValue))
             {
-                ListCustomer = ListCustomer.Where(w => w.OwnerService == ddlOwnerService.SelectedValue).ToList();
+                ListCustomer = ListCustomer.Where(w => w.OwnerServiceCode == ddlOwnerService.SelectedValue).ToList();
             }
 
             ListCustomer.ForEach(r =>

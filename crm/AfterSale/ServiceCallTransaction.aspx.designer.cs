@@ -600,6 +600,24 @@ namespace ServiceWeb.crm.AfterSale
         protected global::System.Web.UI.WebControls.TextBox tbCreatedOn;
 
         /// <summary>
+        /// UpdatePanel7 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel7;
+
+        /// <summary>
+        /// tbRemark1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbRemark1;
+
+        /// <summary>
         /// labelCustomer control.
         /// </summary>
         /// <remarks>
@@ -688,6 +706,105 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtContactRemark;
+
+        /// <summary>
+        /// labelDocumentStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelDocumentStatus;
+
+        /// <summary>
+        /// _txt_docstatusTran control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText _txt_docstatusTran;
+
+        /// <summary>
+        /// lbWorkFlowStats control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbWorkFlowStats;
+
+        /// <summary>
+        /// tbWorkFlowStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbWorkFlowStatus;
+
+        /// <summary>
+        /// labelFiscalYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelFiscalYear;
+
+        /// <summary>
+        /// _txt_fiscalyear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText _txt_fiscalyear;
+
+        /// <summary>
+        /// lbApprovalStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbApprovalStatus;
+
+        /// <summary>
+        /// tbApprovalStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbApprovalStatus;
+
+        /// <summary>
+        /// panelAccountability control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelAccountability;
+
+        /// <summary>
+        /// lbAccountability control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbAccountability;
+
+        /// <summary>
+        /// ddlAccountability control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAccountability;
 
         /// <summary>
         /// udpnSeverity control.
@@ -832,105 +949,6 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddOldValue_EquipmentRemark;
-
-        /// <summary>
-        /// labelDocumentStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label labelDocumentStatus;
-
-        /// <summary>
-        /// _txt_docstatusTran control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText _txt_docstatusTran;
-
-        /// <summary>
-        /// lbApprovalStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbApprovalStatus;
-
-        /// <summary>
-        /// tbApprovalStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbApprovalStatus;
-
-        /// <summary>
-        /// lbWorkFlowStats control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbWorkFlowStats;
-
-        /// <summary>
-        /// tbWorkFlowStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbWorkFlowStatus;
-
-        /// <summary>
-        /// labelFiscalYear control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label labelFiscalYear;
-
-        /// <summary>
-        /// _txt_fiscalyear control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText _txt_fiscalyear;
-
-        /// <summary>
-        /// panelAccountability control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel panelAccountability;
-
-        /// <summary>
-        /// lbAccountability control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbAccountability;
-
-        /// <summary>
-        /// ddlAccountability control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlAccountability;
 
         /// <summary>
         /// labelContactPhoneNo control.
@@ -1320,6 +1338,24 @@ namespace ServiceWeb.crm.AfterSale
         protected global::System.Web.UI.WebControls.Repeater rptMaterial;
 
         /// <summary>
+        /// xhdfItemNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField xhdfItemNo;
+
+        /// <summary>
+        /// tbTotals control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbTotals;
+
+        /// <summary>
         /// udpIsLoad_CIRelation control.
         /// </summary>
         /// <remarks>
@@ -1408,6 +1444,33 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAffectSLA;
+
+        /// <summary>
+        /// ddlAffect control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAffect;
+
+        /// <summary>
+        /// ddlAffect00 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAffect00;
+
+        /// <summary>
+        /// ddlAffect01 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAffect01;
 
         /// <summary>
         /// tbSummaryProblem control.
@@ -1624,6 +1687,15 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLog_TotalTime_WithoutStop;
+
+        /// <summary>
+        /// txtLog_OverdueTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLog_OverdueTime;
 
         /// <summary>
         /// udpIsLoad_Knowledge control.
@@ -2110,6 +2182,24 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.UserControl.AutoComplete.AutoCompleteEmployee AutoCompleteEmployee_Escalate;
+
+        /// <summary>
+        /// UpdatePanel8 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel8;
+
+        /// <summary>
+        /// Roll_Escalate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList Roll_Escalate;
 
         /// <summary>
         /// udpEscalateSetParticipant control.

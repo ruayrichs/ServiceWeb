@@ -519,6 +519,15 @@ namespace ServiceWeb.crm.AfterSale
         protected global::System.Web.UI.HtmlControls.HtmlInputText _txt_TicketStatusTran;
 
         /// <summary>
+        /// ddlTicketStatus_Change control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTicketStatus_Change;
+
+        /// <summary>
         /// labelDocumentDate control.
         /// </summary>
         /// <remarks>
@@ -958,6 +967,24 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbEquipmentRemark;
+
+        /// <summary>
+        /// galleryLoad control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel galleryLoad;
+
+        /// <summary>
+        /// UploadGallery control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::ServiceWeb.UserControl.AGapeGallery.UploadGallery.UploadGallery UploadGallery;
 
         /// <summary>
         /// hddOldValue_EquipmentRemark control.
@@ -1660,6 +1687,15 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLog_TotalTime_WithoutStop;
+
+        /// <summary>
+        /// txtLog_OverdueTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLog_OverdueTime;
 
         /// <summary>
         /// udpIsLoad_Knowledge control.

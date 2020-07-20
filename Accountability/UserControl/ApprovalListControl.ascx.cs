@@ -352,6 +352,14 @@ namespace ServiceWeb.Accountability.UserControl
                     }
                 }
             }
+            
+            for (int i = ddt.Rows.Count - 1; i >= 0; i--)//ใช้ตัด WorkFlowStatus ที่ Approve ไม่สำเร็จออก ไม่ให้นำไปแสดง
+            {
+                DataRow dr = ddt.Rows[i];
+                if (dr["WorkFlowStatus"].ToString() != "Workflow Success")
+                    dr.Delete();
+            }
+            ddt.AcceptChanges();
 
             rptListMyApproved.DataSource = ddt;
             rptListMyApproved.DataBind();

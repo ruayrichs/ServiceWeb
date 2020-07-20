@@ -95,7 +95,6 @@ namespace ServiceWeb.MasterConfig
                 CBEV_EventToOwner.Checked = EmailEntityAdd.AlertEventToOwner;
                 CBEV_ChangeOrderApproval.Checked = EmailEntityAdd.AlertEventChangeOrderApproval;
                 CBTicketOpen2Customer.Checked = EmailEntityAdd.AlertEventTicketOpenToCustomer;
-
                 CBTicketComment2Customer.Checked = EmailEntityAdd.AlertEventTicketCommentToCustomer;
                 CBTicketUpdatestatus2Customer.Checked = EmailEntityAdd.AlertEventTicketUpdatestatusToCustomer;
                 CBTicketEscalate2Customer.Checked = EmailEntityAdd.AlertEventTicketEscalateToCustomer;
@@ -103,10 +102,10 @@ namespace ServiceWeb.MasterConfig
                 CBTicketOverDue2Customer.Checked = EmailEntityAdd.AlertEventTicketOverDueToCustomer;
                 CBTicketResolve2Customer.Checked = EmailEntityAdd.AlertEventTicketResolveToCustomer;
                 CBTicketApproval2Customer.Checked = EmailEntityAdd.AlertEventTicketApprovalToCustomer;
-
                 CBTicketClose2Customer.Checked = EmailEntityAdd.AlertEventTicketCloseToCustomer;
                 CBTicketCancel2Customer.Checked = EmailEntityAdd.AlertEventTicketCancelToCustomer;
                 CBTicketOverDue.Checked = EmailEntityAdd.AlertEventOverDue;
+                CBTCIChangeLog2Customer.Checked = EmailEntityAdd.AlertEventCIChangeLogToCustomer;
             }
         }
 
@@ -138,7 +137,6 @@ namespace ServiceWeb.MasterConfig
                 EmailEntity.AlertEventToOwner = CBEV_EventToOwner.Checked;
                 EmailEntity.AlertEventChangeOrderApproval = CBEV_ChangeOrderApproval.Checked;
                 EmailEntity.AlertEventTicketOpenToCustomer = CBTicketOpen2Customer.Checked;
-
                 EmailEntity.AlertEventTicketCommentToCustomer = CBTicketComment2Customer.Checked;
                 EmailEntity.AlertEventTicketUpdatestatusToCustomer = CBTicketUpdatestatus2Customer.Checked;
                 EmailEntity.AlertEventTicketEscalateToCustomer = CBTicketEscalate2Customer.Checked;
@@ -146,10 +144,10 @@ namespace ServiceWeb.MasterConfig
                 EmailEntity.AlertEventTicketOverDueToCustomer = CBTicketOverDue2Customer.Checked;
                 EmailEntity.AlertEventTicketResolveToCustomer = CBTicketResolve2Customer.Checked;
                 EmailEntity.AlertEventTicketApprovalToCustomer = CBTicketApproval2Customer.Checked;
-
                 EmailEntity.AlertEventTicketCloseToCustomer = CBTicketClose2Customer.Checked;
                 EmailEntity.AlertEventTicketCancelToCustomer = CBTicketCancel2Customer.Checked;
                 EmailEntity.AlertEventOverDue = CBTicketOverDue.Checked;
+                EmailEntity.AlertEventCIChangeLogToCustomer = CBTCIChangeLog2Customer.Checked;
 
                 Obj.addEmail_Host_Config(
                     ERPWAuthentication.SID,

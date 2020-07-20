@@ -332,11 +332,23 @@ namespace ServiceWeb.crm.AfterSale
 
 
                 _txt_year.Value = Validation.getCurrentServerDateTime().Year.ToString();
+                string FnameLname = CustomerSelectNew.Text = ServiceLibrary.LookUpTable(
+                    "FirstName+' '+LastName AS FnameLname",
+                    "master_employee",
+                    "where SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND EmployeeCode = '" + EmployeeCode + "'"
+                );
+                CustomerSelectNew.Text = ServiceLibrary.LookUpTable(
+                    "CustomerCode",
+                    "master_customer",
+                    "where SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' AND CustomerName = '" + FnameLname + "'"
+                );
 
                 Session["SCT_created_equipment"] = null;
                 _ddl_contact_person.initialDataAutoComplete(new DataTable(), "", "", false);
 
                 btnSearch_Click(null, null);
+                
+                ClientService.DoJavascript("UserLV("+ (Permission.LevelControl) +");");
             }
         }
 
@@ -443,6 +455,10 @@ namespace ServiceWeb.crm.AfterSale
 
         private void getcontact_person()
         {
+            //if (CustomerSelect.SelectedValue == "")
+            //{
+            //    CustomerSelect.SelectedValue = CustomerSelectNew.Text;
+            //}
 
             string custcode = CustomerSelect.SelectedValue.Trim();
 
@@ -539,31 +555,7 @@ namespace ServiceWeb.crm.AfterSale
             return idGen;
         }
 
-        private void CreateTicket()
-        {
-            string idGen = Guid.NewGuid().ToString().Substring(0, 8);
-
-            Session["SCT_created_doctype_code" + idGen] = _ddl_sctype.SelectedValue;
-            Session["SCT_created_doctype_desc" + idGen] = _ddl_sctype.SelectedItem.Text;
-            Session["SCT_created_cust_code" + idGen] = CustomerSelect.SelectedValue;//Customer
-            Session["SCT_created_cust_desc" + idGen] = CustomerSelect.SelectedText;
-            Session["SCT_created_contact_code" + idGen] = _ddl_contact_person.SelectValue;
-            Session["SCT_created_contact_desc" + idGen] = _ddl_contact_person.SelectText;
-            Session["SCT_created_fiscalyear" + idGen] = _txt_year.Value;
-            Session["SCT_created_remark" + idGen] = null;
-            Session["SCT_created_equipment" + idGen] = equipmentSelect.SelectedValue;
-            Session["SCT_created_impact" + idGen] = ddlImpact.SelectedValue;
-            Session["SCT_created_urgency" + idGen] = ddlUrgency.SelectedValue;
-            Session["SCT_created_priority" + idGen] = ddlPriority.SelectedValue;
-            Session["ServicecallEntity" + idGen] = new tmpServiceCallDataSet();
-            Session["SC_MODE" + idGen] = ApplicationSession.CREATE_MODE_STRING;
-
-
-            dtTempDoc.Clear();
-            ClientService.DoJavascript("goToEdit('" + Page.ResolveUrl("~/crm/AfterSale/ServiceCallTransaction.aspx?id=" + idGen) + "');");
-        }
-
-        protected void btnCreate_Click(object sender, EventArgs e)
+        private void CreateTicketNext()
         {
             try
             {
@@ -592,7 +584,8 @@ namespace ServiceWeb.crm.AfterSale
 
                 if (hasTicket)
                 {
-                    ClientService.DoJavascript("warningClick('" + _ddl_sctype.SelectedValue + "', '" + CustomerSelect.SelectedValue + "', '" + equipmentSelect.SelectedValue + "');");
+                    //ClientService.DoJavascript("warningClick('" + _ddl_sctype.SelectedValue + "', '" + CustomerSelect.SelectedValue + "', '" + equipmentSelect.SelectedValue + "');");
+                    CreateTicket();
                 }
                 else
                 {
@@ -607,6 +600,45 @@ namespace ServiceWeb.crm.AfterSale
             {
                 ClientService.AGLoading(false);
             }
+        }
+
+        private void CreateTicket()
+        {
+            if (CustomerSelect.SelectedValue == "")
+            {
+                CustomerSelect.SelectedValue = CustomerSelectNew.Text;
+            }
+            //if (equipmentSelect.SelectedValue != "")
+            //{
+            //    equipmentSelect.SelectedValue = "";
+            //}
+            string idGen = Guid.NewGuid().ToString().Substring(0, 8);
+
+            Session["SCT_created_doctype_code" + idGen] = _ddl_sctype.SelectedValue;
+            Session["SCT_created_doctype_desc" + idGen] = _ddl_sctype.SelectedItem.Text;
+            Session["SCT_created_cust_code" + idGen] = CustomerSelect.SelectedValue;//Customer
+            Session["SCT_created_cust_desc" + idGen] = CustomerSelect.SelectedText;
+            Session["SCT_created_contact_code" + idGen] = _ddl_contact_person.SelectValue;
+            Session["SCT_created_contact_desc" + idGen] = _ddl_contact_person.SelectText;
+            Session["SCT_created_fiscalyear" + idGen] = _txt_year.Value;
+            Session["SCT_created_remark" + idGen] = null;
+            Session["SCT_created_equipment" + idGen] = equipmentSelect.SelectedValue;
+            Session["SCT_created_impact" + idGen] = ddlImpact.SelectedValue;
+            Session["SCT_created_urgency" + idGen] = ddlUrgency.SelectedValue;
+            Session["SCT_created_priority" + idGen] = ddlPriority.SelectedValue;
+            Session["ServicecallEntity" + idGen] = new tmpServiceCallDataSet();
+            Session["SC_MODE" + idGen] = ApplicationSession.CREATE_MODE_STRING;
+            Session["SCT_created_subject" + idGen] = txt_problem_topic.Text;
+            Session["SCT_created_description" + idGen] = tbEquipmentRemark.Text;
+
+
+            dtTempDoc.Clear();
+            ClientService.DoJavascript("goToEdit('" + Page.ResolveUrl("~/crm/AfterSale/ServiceCallTransaction.aspx?id=" + idGen) + "');");
+        }
+
+        protected void btnCreate_Click(object sender, EventArgs e)
+        {
+            CreateTicketNext();
         }
 
         private void setAttachMent(
@@ -697,6 +729,11 @@ namespace ServiceWeb.crm.AfterSale
 
         private void GetEquipmentMappingOwner()
         {
+            //if (CustomerSelect.SelectedValue == "")
+            //{
+            //    CustomerSelect.SelectedValue = CustomerSelectNew.Text;
+            //}
+
             string equipmentCode = equipmentSelect.SelectedValue.Trim();
             string customerCode = CustomerSelect.SelectedValue.Trim();
 
@@ -707,6 +744,7 @@ namespace ServiceWeb.crm.AfterSale
             else
             {
                 DataTable dt = universalService.GetEquipmentCustomerAssignment(SID, CompanyCode, "", customerCode);
+                DataRow drr = dt.Rows[0];
 
                 List<ServiceWeb.API.AutoCompleteAPI.AutoCompleteSource> result = new List<ServiceWeb.API.AutoCompleteAPI.AutoCompleteSource>();
 
@@ -741,14 +779,30 @@ namespace ServiceWeb.crm.AfterSale
                         }
                     }
                 }
+                if (equipmentSelect.SelectedValue != "")
+                {
+                    foreach (var iResult in result)
+                    {
+                        if (equipmentSelect.SelectedValue == iResult.code)
+                        {
+                            defaultValue = equipmentSelect.SelectedDisplay;
+                        }
+                    }
+                }
 
                 string responseJson = JsonConvert.SerializeObject(result);
                 equipmentSelect.SelectedDisplay = defaultValue;
+                //if (equipmentSelect.SelectedValue == "") 
+                //{
+                //    equipmentSelect.SelectedValue = drr["EquipmentCode"].ToString(); 
+                //}
                 ClientService.DoJavascript("bindAutoCompleteEquipment" + equipmentSelect.ClientID + "(" + responseJson + ", '" + defaultValue + "',false);");
             }
         }
 
-        protected void btnBindContactCus_Click(object sender, EventArgs e)
+        private bool firstOpen;
+
+        private void btnBindContactCus_Next()
         {
             try
             {
@@ -762,6 +816,14 @@ namespace ServiceWeb.crm.AfterSale
                     txtContactremark.Text = "";
                     udpContactDetail.Update();
                 }
+                if (equipmentSelect.SelectedValue != "" && CustomerSelect.SelectedValue != "")
+                {
+                    if (firstOpen)
+                    {
+                        CreateTicketNext();
+                    }
+                    firstOpen = false;
+                }
             }
             catch (Exception ex)
             {
@@ -772,6 +834,18 @@ namespace ServiceWeb.crm.AfterSale
                 ClientService.AGLoading(false);
                 ClientService.DoJavascript("CloseloadAllPanel();");
             }
+        }
+
+        protected void btnBindContactCus_Click(object sender, EventArgs e)
+        {
+            firstOpen = false;
+            btnBindContactCus_Next();
+        }
+
+        protected void btnBindContactCusAuto_Click(object sender, EventArgs e)
+        {
+            firstOpen = true;
+            btnBindContactCus_Next();
         }
 
         protected void btnLoadCustomerEquipment_Click(object sender, EventArgs e)
@@ -806,18 +880,28 @@ namespace ServiceWeb.crm.AfterSale
 
                     string defaultValue = "";
 
-                    if (result.Count == 1)
+                    //if (result.Count == 1)
+                    //{
+                    //    defaultValue = result[0].display;
+                    //}
+                    //else
+                    //{
+                    //    if (customerCode != "")
+                    //    {
+                    //        var en = result.Find(x => x.code == customerCode);
+                    //        if (en != null)
+                    //        {
+                    //            defaultValue = en.display;
+                    //        }
+                    //    }
+                    //}
+                    if (CustomerSelect.SelectedValue != "")
                     {
-                        defaultValue = result[0].display;
-                    }
-                    else
-                    {
-                        if (customerCode != "")
+                        foreach (var iResult in result)
                         {
-                            var en = result.Find(x => x.code == customerCode);
-                            if (en != null)
+                            if (CustomerSelect.SelectedValue == iResult.code)
                             {
-                                defaultValue = en.display;
+                                defaultValue = CustomerSelect.SelectedDisplay;
                             }
                         }
                     }
@@ -907,6 +991,11 @@ namespace ServiceWeb.crm.AfterSale
         {
             string bobjectid = _ddl_contact_person.SelectValue;
             ERPW.Lib.Master.ContactEntity en = new ERPW.Lib.Master.ContactEntity();
+
+            //if (CustomerSelect.SelectedValue == "")
+            //{
+            //    CustomerSelect.SelectedValue = CustomerSelectNew.Text;
+            //}
 
             if (!string.IsNullOrEmpty(bobjectid))
             {
@@ -1261,6 +1350,7 @@ namespace ServiceWeb.crm.AfterSale
 
         private void bindDataEquipment()
         {
+            DataTable ciSelect = new DataTable();
             List<EquipmentService.EquipmentItemData> listEquipmentItem = ServiceEquipment.getListEquipment(
                 SID,
                 CompanyCode,
@@ -1270,7 +1360,8 @@ namespace ServiceWeb.crm.AfterSale
                 ddlEquipmentStatus.SelectedValue,
                 ddlSearch_EMClass.SelectedValue,
                 ddlSearch_Category.SelectedValue,
-                ddlOwnerService.SelectedValue
+                ddlOwnerService.SelectedValue,
+                ciSelect
             );
 
             var dataSource = listEquipmentItem.Select(s => new
@@ -1470,7 +1561,7 @@ namespace ServiceWeb.crm.AfterSale
 
             if (!string.IsNullOrEmpty(ddlOwnerService_SearchCustomer.SelectedValue))
             {
-                ListCustomer = ListCustomer.Where(w => w.OwnerService == ddlOwnerService_SearchCustomer.SelectedValue).ToList();
+                ListCustomer = ListCustomer.Where(w => w.OwnerServiceCode == ddlOwnerService_SearchCustomer.SelectedValue).ToList();
             }
 
             var dataSource = ListCustomer.Select(s => new
@@ -1480,8 +1571,14 @@ namespace ServiceWeb.crm.AfterSale
                 s.CustomerGroup,
                 s.CustomerGroupDesc,
                 s.Address,
+                s.TaxID,
                 s.TelNo1,
-                s.EMail
+                s.Mobile,
+                s.EMail,
+                s.Active,
+                s.CustomerCritical,
+                s.OwnerService,
+                s.ResponsibleOrganization
             });
 
             JArray data = JsonConvert.DeserializeObject<JArray>(JsonConvert.SerializeObject(dataSource));

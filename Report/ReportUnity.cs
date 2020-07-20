@@ -1,9 +1,12 @@
-﻿using Agape.Lib.DBService;
+﻿using Agape.FocusOne.Utilities;
+using Agape.Lib.DBService;
 using ERPW.Lib.Service;
+using ServiceWeb.Service;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ServiceWeb.Report
@@ -320,6 +323,8 @@ namespace ServiceWeb.Report
 
             // closed date
             string close_date;
+
+            
             try
             {
                 //add columns
@@ -349,6 +354,23 @@ namespace ServiceWeb.Report
 
                     //
                     close_date = (string)report.Rows[index]["Closed_Date"];
+
+                    // stoptime
+                    string StopDate;
+                    string RestartDate;
+                    string assignDateTime;
+                    string resolveDateTime;
+                    double sumStopSeconds = 0;
+
+                    StopDate = report.Rows[index]["StopDate"].ToString();
+                    RestartDate = report.Rows[index]["RestartDate"].ToString();
+
+                    assignDateTime = (string)report.Rows[index]["assignDateTime"];
+                    resolveDateTime = (string)report.Rows[index]["resolveDateTime"];
+
+                    string stopTime = "";
+                    string totalTime = "";
+                    string totalTimeWithoutStop = "";
                     //get mttn
                     //report = newConvertToTimeString(
                     //    report,
@@ -375,6 +397,32 @@ namespace ServiceWeb.Report
                     if (!string.IsNullOrEmpty(OpenDate) && !string.IsNullOrEmpty(Resolved))
                         report.Rows[index]["MTRSTime"] = ConvertToTimeString(OpenDate, Resolved);
 
+                    DateTime stop = ObjectUtil.ConvertDateTimeDBToDateTime(StopDate);
+                    DateTime restart = ObjectUtil.ConvertDateTimeDBToDateTime(RestartDate);
+
+                    TimeSpan ts = restart - stop;
+
+                    sumStopSeconds += ts.TotalSeconds;
+
+                    stopTime = ConvertToTime(sumStopSeconds.ToString(), true);
+
+
+                    #region Calculate total time
+                    if (assignDateTime != "" && resolveDateTime != "")
+                    {
+                        DateTime assign = ObjectUtil.ConvertDateTimeDBToDateTime(assignDateTime);
+                        DateTime resolve = ObjectUtil.ConvertDateTimeDBToDateTime(resolveDateTime);
+
+                        TimeSpan tss = resolve - assign;
+
+                        totalTime = ConvertToTime(tss.TotalSeconds.ToString(), true);
+                        totalTimeWithoutStop = ConvertToTime((tss.TotalSeconds - sumStopSeconds).ToString(), true);
+
+                        report.Rows[index]["MTRSWTime"] = totalTimeWithoutStop;
+                    }
+                    #endregion
+
+
                     if (!string.IsNullOrEmpty(OpenDate))
                         report.Rows[index]["Open_Date"] = Agape.FocusOne.Utilities.Validation.Convert2DateTimeDisplay(OpenDate);
                     if (!string.IsNullOrEmpty(responding_date))
@@ -390,6 +438,173 @@ namespace ServiceWeb.Report
                 System.Diagnostics.Debug.WriteLine(e1);
             }
             return report;
+        }
+
+        Agape.Lib.DBService.DBService DBService = new Agape.Lib.DBService.DBService();
+        public DataTable ticketreport_add_calculate_stop_and_overdue_time(string SID, string CompanyCode, DataTable report)
+        {
+            report.Columns.Add("StopTime", typeof(string));
+            report.Columns.Add("OverdueTime", typeof(string));
+     
+            string sqlStop = "SELECT * FROM cs_servicecall_stop_timer WHERE SID = '" + SID + "' AND CompanyCode = '" + CompanyCode + "' ORDER BY xLineNo ASC";
+            DataTable dtStop = DBService.selectDataFocusone(sqlStop);
+
+            string sql = @"
+                SELECT * FROM (select xa.ServiceDocNo,  xb.EndDateTime,  xb.MainDelegate, xb.TicketCode
+										from (
+										  select SNAID, DOCYEAR, ServiceDocNo, max(Tier) as Tier
+										  from CRM_SERVICECALL_MAPPING_ACTIVITY
+										  where SNAID = '" + CompanyCode + @"'
+										  group by SNAID, DOCYEAR, ServiceDocNo
+										) a
+										inner join CRM_SERVICECALL_MAPPING_ACTIVITY xa
+										  on  xa.SNAID = a.SNAID 
+										  AND xa.DOCYEAR = a.DOCYEAR 
+										  AND xa.ServiceDocNo = a.ServiceDocNo 
+										  AND xa.Tier = a.Tier
+  
+										left join ticket_service_header xb
+										  on xa.AOBJECTLINK = xb.TicketCode
+										  and xb.SID = '" + SID + @"' 
+										  AND xb.CompanyCode = '" + CompanyCode + @"'
+				                          AND xb.EndDateTime != '') z ";
+            
+            DataTable dtTicket = DBService.selectDataFocusone(sql);
+
+            foreach (DataRow dr in report.Rows)
+            {
+                string ticketEndDateTime = "";
+                string resolveDateTime = "";
+                string overduetime = "";
+                string stopTime = "";
+                string ticketNO = "";
+                double sumStopSeconds = 0;
+
+                resolveDateTime = dr["resolveDateTime"].ToString();
+                ticketNO = dr["IncidentNO"].ToString();
+
+                #region Get stop
+
+                DataTable dtStopquery = new DataTable();
+
+                var bfDtStopQuery = dtStop.AsEnumerable()
+                            .Where(r => r.Field<string>("CallerID") == ticketNO);
+
+                if (bfDtStopQuery.Any())
+                {
+                    dtStopquery = bfDtStopQuery.CopyToDataTable();
+
+                    if (dtStopquery.Rows.Count > 0)
+                    {
+                        DataRow[] drrStopNotStart = dtStop.Select("RestartDate = ''");
+
+                        if (drrStopNotStart.Length > 0)
+                        {
+                            string currentDateTime = Validation.getCurrentServerStringDateTime();
+
+                            drrStopNotStart[0]["RestartDate"] = currentDateTime.Substring(0, 8);
+                            drrStopNotStart[0]["RestartTime"] = currentDateTime.Substring(8, 6);
+                        }
+
+                        foreach (DataRow drStop in dtStopquery.Rows)
+                        {
+                            DateTime stop = ObjectUtil.ConvertDateTimeDBToDateTime(drStop["StopDate"].ToString() + drStop["StopTime"].ToString());
+                            DateTime restart = ObjectUtil.ConvertDateTimeDBToDateTime(drStop["RestartDate"].ToString() + drStop["RestartTime"].ToString());
+
+                            TimeSpan ts = restart - stop;
+
+                            sumStopSeconds += ts.TotalSeconds;
+                        }
+                    }
+
+                    stopTime = ConvertToTime(sumStopSeconds.ToString(), true);
+
+                }
+
+                #endregion
+
+                #region Calculate Overdue time
+                DataTable dtTicketQuery = new DataTable();
+
+                var bfdtTicketQuery = dtTicket.AsEnumerable()
+                            .Where(r => r.Field<string>("ServiceDocNo") == ticketNO);
+
+                if (bfdtTicketQuery.Any())
+                {
+                    dtTicketQuery = bfdtTicketQuery.CopyToDataTable();
+
+                    if (dtTicketQuery.Rows.Count > 0)
+                    {
+                        ticketEndDateTime = dtTicketQuery.Rows[0].Field<String>("EndDateTime").ToString();
+
+
+                        if (ticketEndDateTime != "" && resolveDateTime != "")
+                        {
+                            DateTime overdue = ObjectUtil.ConvertDateTimeDBToDateTime(ticketEndDateTime);
+                            DateTime resolve = ObjectUtil.ConvertDateTimeDBToDateTime(resolveDateTime);
+
+                            TimeSpan ts = resolve - overdue;
+                            if (ts.TotalSeconds <= 0)
+                            {
+                                overduetime = "0";
+                            }
+                            else
+                            {
+                                overduetime = ConvertToTime(ts.TotalSeconds.ToString(), true);
+                            }
+                        }
+
+                    }
+                }
+                #endregion
+
+                dr["OverdueTime"] = overduetime;
+                dr["StopTime"] = stopTime;
+
+            };
+
+            return report;
+        }
+
+        public string ConvertToTime(string time, bool returnEmpty)
+        {
+            if (!string.IsNullOrEmpty(time))
+            {
+                double xTime = 0;
+                double.TryParse(time, out xTime);
+
+                if (xTime > 0)
+                {
+                    TimeSpan t = TimeSpan.FromSeconds(xTime);
+
+                    string answer = "";
+                    if (t.Days > 0)
+                    {
+                        answer += t.Days + " วัน ";
+                    }
+                    if (t.Days > 0 || t.Hours > 0)
+                    {
+                        answer += t.Hours + " ชม ";
+                    }
+                    if (t.Days > 0 || t.Hours > 0 || t.Minutes > 0)
+                    {
+                        answer += t.Minutes + " นาที ";
+                    }
+                    if (t.Days > 0 || t.Hours > 0 || t.Minutes > 0 || t.Seconds > 0)
+                    {
+                        answer += t.Seconds + " วินาที ";
+                    }
+
+                    return answer;
+                }
+            }
+
+            if (returnEmpty)
+            {
+                return "";
+            }
+
+            return "ไม่กำหนด";
         }
 
         public DataTable incidentNoFormater(string SID, string CompanyCode, DataTable dt, string displayIncidentNo = "IncidentNo")

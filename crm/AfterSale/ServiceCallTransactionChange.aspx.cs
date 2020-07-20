@@ -31,6 +31,7 @@ using System.Globalization;
 using Agape.Lib.DBService;
 using ERPW.Lib.Authentication.Entity;
 using System.Diagnostics;
+using System.IO;
 
 namespace ServiceWeb.crm.AfterSale
 {
@@ -526,7 +527,7 @@ namespace ServiceWeb.crm.AfterSale
 
                 if (_dtTicketDocStatus == null)
                 {
-                    _dtTicketDocStatus = lib.GetTicketDocStatus(SID, CompanyCode, false);
+                    _dtTicketDocStatus = lib.GetTicketDocStatus(SID, CompanyCode, true);
                 }
                 return _dtTicketDocStatus;
             }
@@ -808,6 +809,7 @@ namespace ServiceWeb.crm.AfterSale
             if (mode_stage == ApplicationSession.CREATE_MODE_STRING)
             {
                 hddPageTicketMode.Value = "Create";
+                galleryLoad.CssClass = "";
             }
             else if (mode_stage == ApplicationSession.DISPLAY_MODE_STRING)
             {
@@ -857,7 +859,14 @@ namespace ServiceWeb.crm.AfterSale
                 docStatus == SERVICE_DOC_STATUS_CANCEL ||
                 !IsFirstView)
             {
-                ClientService.DoJavascript("controlInputDisable();");
+                if (mode_stage == ApplicationSession.CHANGE_MODE_STRING)
+                {
+                    ClientService.DoJavascript("controlInputEnable();");
+                }
+                else
+                {
+                    ClientService.DoJavascript("controlInputDisable();");
+                }
             }
             else
             {
@@ -866,6 +875,11 @@ namespace ServiceWeb.crm.AfterSale
 
             try
             {
+                if (mode_stage == ApplicationSession.CHANGE_MODE_STRING)
+                {
+                    ClientService.DoJavascript("ddlTicketStatus_Change();");
+                }
+
                 //ddlTicketStatus_Temp.Items[0].Attributes.Add("hidden", "hidden");
                 //ddlTicketStatus_Temp.Items.FindByValue(SERVICE_DOC_STATUS_RESOLVE).Attributes.Add("hidden", "hidden");
                 ddlTicketStatus_Temp.Items.FindByValue(SERVICE_DOC_STATUS_CLOSED).Attributes.Add("hidden", "hidden");
@@ -1359,6 +1373,27 @@ namespace ServiceWeb.crm.AfterSale
                             });
                         }
 
+                        if (hddTicketStatus_Old.Value != ddlTicketStatus_Change.Text)
+                        {
+                            var i = 0;
+                            foreach (ListItem li in ddlTicketStatus_Change.Items)
+                            {
+                                if (li.Value == hddTicketStatus_Old.Value)
+                                {
+                                    break;
+                                }
+                                i++;
+                            }
+                            enLog.Add(new logValue_OldNew
+                            {
+                                Value_Old = ddlTicketStatus_Change.Items[i].Text,
+                                Value_New = ddlTicketStatus_Change.Items[ddlTicketStatus_Change.SelectedIndex].Text,
+                                TableName = "cs_servicecall_header",
+                                FieldName = "Ticket Status",
+                                AccessCode = LogServiceLibrary.AccessCode_Updata_Status
+                            });
+                        }
+
                         if (hddOldValue_EquipmentRemark.Value != tbEquipmentRemark.Text)
                         {
                             enLog.Add(new logValue_OldNew
@@ -1611,6 +1646,20 @@ namespace ServiceWeb.crm.AfterSale
             TimeSpan ts = planDateTimeEnd - planDateTimeStart;
             resolutionTime = ts.TotalSeconds;
 
+            //UploadGallery
+            string Domain = Request.Url.Scheme + System.Uri.SchemeDelimiter + Request.Url.Host +
+                                (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
+            string UploadFileUrl = Domain + "/managefile/" + ERPWAuthentication.SID + "/kmfile/assets/";
+            string UploadFilePath = Server.MapPath("~/managefile/" + ERPWAuthentication.SID + "/kmfile/assets/");
+            if (!Directory.Exists(UploadFilePath))
+            {
+                Directory.CreateDirectory(UploadFilePath);
+            }
+
+            UploadGallery.SavePath = "/managefile/" + ERPWAuthentication.SID + "/kmfile/assets/";
+            DataTable dtFile = UploadGallery.SaveFiles();
+            //\UploadGallery
+
             ticketServiceCode = AfterSaleService.getInstance().StartTicketChange(
                 SID,
                 CompanyCode,
@@ -1621,7 +1670,8 @@ namespace ServiceWeb.crm.AfterSale
                 EmployeeCode,
                 FullNameEN,
                 resolutionTime,
-                Validation.Convert2DateTimeDB(tbStartDate.Text + " " + txtStartTime.Text + ":00")
+                Validation.Convert2DateTimeDB(tbStartDate.Text + " " + txtStartTime.Text + ":00"),
+                dtFile, UploadFileUrl, UploadFilePath
             );
 
             return ticketServiceCode;
@@ -1760,6 +1810,7 @@ namespace ServiceWeb.crm.AfterSale
                 dr["Urgency"] = ddlUrgency.SelectedValue;
                 dr["Priority"] = _ddl_priorityTran.SelectedValue;
                 dr["MajorIncident"] = chkMajorIncident.Checked.ToString();
+                dr["Docstatus"] = ddlTicketStatus_Change.SelectedValue;
                 //if (tbCallbackDate.Text != "")
                 //{
                 //    if (tbCallbackTime.Text == "")
@@ -1996,9 +2047,10 @@ namespace ServiceWeb.crm.AfterSale
                 _ddl_project_elementTran.SelectedValue = dr["ProjectElement"].ToString();
 
                 _txt_companyTran.Value = CompanyName;
-                _txt_docdateTran.Value = Validation.Convert2DateDisplay(dr["DOCDATE"].ToString());
+                _txt_docdateTran.Value = Validation.Convert2DateTimeDisplay(dr["CREATED_ON"].ToString());//Validation.Convert2DateDisplay(dr["DOCDATE"].ToString());
                 _txt_docstatusTran.Value = GetDocStatusDesc(dr["CallStatus"].ToString());
                 _txt_TicketStatusTran.Value = dr["Docstatus"].ToString() + " : " + ServiceTicketLibrary.GetTicketDocStatusDesc(SID, CompanyCode, dr["Docstatus"].ToString());
+                ddlTicketStatus_Change.SelectedValue = dr["Docstatus"].ToString();
 
                 //dev
                 if (dr["CallStatus"].ToString() == ServiceTicketLibrary.SERVICE_CALL_STATUS_CANCEL || dr["CallStatus"].ToString() == ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE)
@@ -2200,6 +2252,7 @@ namespace ServiceWeb.crm.AfterSale
 
             _txt_docstatusTran.Value = GetDocStatusDesc(status);
             _txt_TicketStatusTran.Value = docStatus + " : " + ServiceTicketLibrary.GetTicketDocStatusDesc(SID, CompanyCode, docStatus);
+            ddlTicketStatus_Change.SelectedValue = docStatus;
 
             if (ServiceTicketLibrary.SERVICE_CALL_STATUS_CANCEL.Equals(status) || ServiceTicketLibrary.SERVICE_CALL_STATUS_CLOSE.Equals(status))
             {
@@ -2275,6 +2328,11 @@ namespace ServiceWeb.crm.AfterSale
             ddlTicketStatus_Temp.DataValueField = "DocumentStatus";
             ddlTicketStatus_Temp.DataSource = dtTicketDocStatus;
             ddlTicketStatus_Temp.DataBind();
+
+            ddlTicketStatus_Change.DataTextField = "DocumentStatusDesc";
+            ddlTicketStatus_Change.DataValueField = "DocumentStatus";
+            ddlTicketStatus_Change.DataSource = dtTicketDocStatus;
+            ddlTicketStatus_Change.DataBind();
         }
 
         private void GetImpact()
@@ -2865,6 +2923,7 @@ namespace ServiceWeb.crm.AfterSale
                     UserName, Validation.getCurrentServerStringDateTime());
 
                 _txt_docstatusTran.Value = GetDocStatusDesc(DocStatusCode);
+                ddlTicketStatus_Change.SelectedValue = DocStatusCode;
                 _txt_TicketStatusTran.Value = DocStatusCode + " : " +
                     ServiceTicketLibrary.GetTicketDocStatusDesc(
                     SID,
@@ -3085,6 +3144,18 @@ namespace ServiceWeb.crm.AfterSale
                         ServiceTicketLibrary.TICKET_STATUS_EVENT_RESOLVE_BUSINESS_CHANGE
                     );
                     saveUpdateTicketDocStatus(DocStatusStart);
+                }
+                else
+                {
+                    string DocStatusStart = ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(
+                        SID,
+                        CompanyCode,
+                        ServiceTicketLibrary.TICKET_STATUS_EVENT_IMPLEMENT_BUSINESS_CHANGE
+                    );
+                    if (DocStatusStart != "")
+                    {
+                        saveUpdateTicketDocStatus(DocStatusStart);
+                    }
                 }
 
             }
@@ -3341,12 +3412,15 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
+        
         protected void btnRemoveItemEquipment_Click(object sender, EventArgs e)
         {
             try
             {
+                ClientService.AGLoading(true);
                 string EquipmentCode = (sender as Button).CommandArgument;
                 removeEquipment(EquipmentCode);
+                SearchHelpCIControl.removeCIformSearchwithButton(EquipmentCode);
                 bindDataCI();
             }
             catch (Exception ex)
@@ -3363,7 +3437,8 @@ namespace ServiceWeb.crm.AfterSale
         {
             if (serviceCallEntity.cs_servicecall_item.Select("EquipmentNo = '" + EquipmentCode + "'").Count() > 0)
             {
-                throw new Exception("CI นี้ได้ถูกเลือกแล้ว");
+                return;
+                //throw new Exception("CI นี้ได้ถูกเลือกแล้ว");
             }
 
             DataTable EQInfo = AfterSaleService.getInstance().getSearchEQInfo("", EquipmentCode);
@@ -3395,7 +3470,7 @@ namespace ServiceWeb.crm.AfterSale
                 drNew["CustomerCode"] = CustomerCode;
                 drNew["DocType"] = DocType;
                 drNew["Fiscalyear"] = Fiscalyear;
-                drNew["CallerID"] = CallerID;
+                drNew["CallerID"] = "";//CallerID;
                 drNew["ObjectID"] = ObjectID;
                 drNew["xLineNo"] = xLineNo;
                 drNew["BObjectID"] = ObjectID + xLineNo;
@@ -3478,7 +3553,7 @@ namespace ServiceWeb.crm.AfterSale
                 DataRow dr = serviceCallEntity.cs_servicecall_item.Rows[i];
                 if (dr["EquipmentNo"].ToString() == EquipmentCode)
                 {
-                    serviceCallEntity.cs_servicecall_item.Rows[i].Delete();
+                    serviceCallEntity.cs_servicecall_item.Rows[i].Delete();      
                     return;
                 }
             }
@@ -4105,21 +4180,46 @@ namespace ServiceWeb.crm.AfterSale
             string stopTime = "";
             string totalTime = "";
             string totalTimeWithoutStop = "";
-
+            string ticketEndDateTime = "";
             double sumStopMinutes = 0;
+            string overduetime = "";
+            string ticketNo = serviceCallEntity.cs_servicecall_header.Rows[0]["CallerID"].ToString();
 
-            #region Get assign, resolve, close
+            #region Get assign, resolve, close, EndDatetime
             foreach (DataRow dr in serviceCallEntity.cs_servicecall_item.Rows)
             {
                 assignDateTime = dr["AssignDate"].ToString() + dr["AssignTime"].ToString();
                 resolveDateTime = dr["ResolutionOnDate"].ToString() + dr["ResolutionOnTime"].ToString();
                 closeDateTime = dr["ClosedOnDate"].ToString() + dr["ClosedOnTime"].ToString();
             }
+            DataTable dtTicket = AfterSaleService.getInstance().GetEndDateTimelByTicketNumber(SID, CompanyCode, ticketNo);
+            if (dtTicket.Rows.Count > 0)
+            {
+                ticketEndDateTime = dtTicket.Rows[0].Field<String>("EndDateTime").ToString();
+            }
+            #endregion
+
+            #region Calculate Overdue time
+            if (ticketEndDateTime != "" && resolveDateTime != "")
+            {
+                DateTime overdue = ObjectUtil.ConvertDateTimeDBToDateTime(ticketEndDateTime);
+                DateTime resolve = ObjectUtil.ConvertDateTimeDBToDateTime(resolveDateTime);
+
+                TimeSpan ts = resolve - overdue;
+                if (ts.TotalSeconds <= 0)
+                {
+                    overduetime = "0";
+                }
+                else
+                {
+                    overduetime = ConvertToTime(ts.TotalSeconds.ToString(), true);
+                }
+            }
             #endregion
 
             #region Get last modified
             string ticketType = serviceCallEntity.cs_servicecall_header.Rows[0]["DocType"].ToString();
-            string ticketNo = serviceCallEntity.cs_servicecall_header.Rows[0]["CallerID"].ToString();
+       
             string ticketYear = serviceCallEntity.cs_servicecall_header.Rows[0]["FiscalYear"].ToString();
 
             DataTable dt = libLog.GetTicketLog(SID, CompanyCode, ticketNo, ticketYear, ticketType);
@@ -4179,6 +4279,8 @@ namespace ServiceWeb.crm.AfterSale
                 totalTimeWithoutStop = ConvertToTime((ts.TotalMinutes - sumStopMinutes).ToString(), true);
             }
             #endregion
+            // Overdue 
+            txtLog_OverdueTime.Text = overduetime;
 
             // Assign & created
             txtlog_OpenDateTime.Text = assignDateTime == "" ? "" : Validation.Convert2DateTimeDisplay(assignDateTime).Substring(0, 16);
@@ -4979,9 +5081,16 @@ namespace ServiceWeb.crm.AfterSale
                 ClientService.AGLoading(false);
             }
         }
+        public bool checkCICodeInDB(string cicode)
+        {
+            List<string> listCICodeDB = (from DataRow dr in serviceCallEntity.cs_servicecall_item
+                             where dr.RowState == DataRowState.Unchanged
+                             select dr["EquipmentNo"].ToString()).ToList();
+
+            return listCICodeDB.Contains(cicode);
+        }
 
         //Add module 30 / 10 / 2018
-
 
         // 21/11/2561  function event add configuration item (by born kk)
         protected void btnSaveCI_Click(object sender, EventArgs e)
@@ -4990,12 +5099,39 @@ namespace ServiceWeb.crm.AfterSale
             try
             {
                 List<string> listCICode = SearchHelpCIControl.listCICode;
+                List<string> listCICodeOld = new List<string>();
+
+
+                if (mode_stage == ApplicationSession.CREATE_MODE_STRING)
+                {
+                    listCICodeOld = (from DataRow dr in serviceCallEntity.cs_servicecall_item
+                                                  select dr["EquipmentNo"].ToString()).ToList();
+                    
+                } else if (mode_stage == ApplicationSession.CHANGE_MODE_STRING)
+                {
+                    listCICodeOld = (from DataRow dr in serviceCallEntity.cs_servicecall_item
+                                     where dr.RowState != DataRowState.Unchanged
+                                     select dr["EquipmentNo"].ToString()).ToList();
+                }
+
+                // clear unselete ci
+                foreach (string cicodeold in listCICodeOld)
+                {
+                    if (listCICode.Contains(cicodeold))
+                    {
+                        continue;
+                    }
+                    removeEquipment(cicodeold);
+                }
+
                 foreach (var CICode in listCICode)
                 {
                     //System.Console.WriteLine(CICode);
                     addEquipment(CICode);
-                    bindDataCI();
+                    //bindDataCI();
                 }
+                bindDataCI();
+
 
             }
             catch (Exception ex)
@@ -5737,5 +5873,10 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
         #endregion
+
+        protected void btnOpenModalSelectConfigurationItem_Click(object sender, EventArgs e)
+        {
+            SearchHelpCIControl.openAddCI();
+        }
     }
 }

@@ -84,7 +84,6 @@ namespace ServiceWeb.crm.Master.UserManagement
                     if (!(String.IsNullOrEmpty(userid)))
                     {
                         initData(userid);
-                        setMultiselect(userid);
                        
                     }
                 }
@@ -158,6 +157,8 @@ namespace ServiceWeb.crm.Master.UserManagement
                 );
                 ddl_Owner_Ser.Enabled = false;
                 ddl_Owner_Ser.CssClass = "form-control form-control-sm";
+
+                lstOwnerService.Attributes.Add("disabled", "");
             }
             else
             {
@@ -271,14 +272,14 @@ namespace ServiceWeb.crm.Master.UserManagement
             //ddlRole.Items.Insert(0, new ListItem("เลือกบทบาท", ""));
             //udpnBtnRole.Update();
 
-            ////Owner Service bind Data listbox
-            //dt = masterservice.GetMasterConfigOwnerGroup(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode);
-            //lstOwnerService.DataTextField = "OwnerGroupName";
-            //lstOwnerService.DataValueField = "OwnerGroupCode";
-            //lstOwnerService.DataSource = dt;
-            //lstOwnerService.DataBind();
+            //Owner Service bind Data listbox
+            dt = masterservice.GetMasterConfigOwnerGroup(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode);
+            lstOwnerService.DataTextField = "OwnerGroupName";
+            lstOwnerService.DataValueField = "OwnerGroupCode";
+            lstOwnerService.DataSource = dt;
+            lstOwnerService.DataBind();
 
-           
+
         }
 
         private void initData(String usercode)
@@ -343,9 +344,10 @@ namespace ServiceWeb.crm.Master.UserManagement
             catch (Exception ex) { }
             //try { ddl_Owner_Ser.SelectedValue = en.OwnerService; }
             //catch (Exception ex) { }
+            
+            setMultiselect(en.EmployeeCode);
 
-
-            initOwnerServiceChip();
+            //initOwnerServiceChip();
             udpEmployeeData.Update();
             udpEmployeeGeneral.Update();
             udpEmployeeAddress.Update();
@@ -354,28 +356,30 @@ namespace ServiceWeb.crm.Master.UserManagement
         }
 
         //====================== owner service tab =================================================
-        protected void setMultiselect (string usercode)
+        protected void setMultiselect (string empCode)
         {
 
             OwnerService ownerService = new OwnerService();
-            DataTable owner_dt = ownerService.getMappingOwner(usercode);//get data ownerService
+            DataTable owner_dt = ownerService.getMappingOwner(empCode);//get data ownerService
             List<DataRow> owner_list = owner_dt.AsEnumerable().ToList();
             
 
 
             for (int i = 0; i < owner_list.Count; i++)
             {
-                
-                if (lstOwnerService.Items[i].Value == owner_list[i][1].ToString())
+                for (int j = 0; j < lstOwnerService.Items.Count; j++)
                 {
-                    lstOwnerService.Items[i].Selected = true;
-                   
+                    if (lstOwnerService.Items[j].Value == owner_list[i][1].ToString())
+                    {
+                        lstOwnerService.Items[j].Selected = true;
+                    }
                 }
+                
             }
             initOwnerServiceChip();
 
         }
-        protected void save_multiSelect(string userid)
+        protected void save_multiSelect(string empCode)
         {
 
             OwnerService ownerService = new OwnerService();
@@ -391,9 +395,9 @@ namespace ServiceWeb.crm.Master.UserManagement
             }
             if (owner.Count > 0)
             {
-                ownerService.clearDataForUpdate(userid);
-                ownerService.addMapingOwner(SID, CompanyCode, userid, owner);
-                setMultiselect(userid);
+                ownerService.clearDataForUpdate(empCode);
+                ownerService.addMapingOwner(SID, CompanyCode, empCode, owner);
+                setMultiselect(empCode);
             }
             else
             {
@@ -613,7 +617,7 @@ namespace ServiceWeb.crm.Master.UserManagement
                 userid = en.userid;
                 initData(userid);
                 
-                save_multiSelect(userid);
+                save_multiSelect(en.EmployeeCode);
                 ClientService.AGSuccess("บันทึกสำเร็จ");
             }
             catch (Exception ex)
@@ -837,7 +841,8 @@ namespace ServiceWeb.crm.Master.UserManagement
                 txtDistinct.Enabled = false;
                 txtProvice.Enabled = false;
                 ddlCountry.Enabled = false;
-                txtPostCode.Enabled = false;
+                txtPostCode.Enabled = false; 
+                lstOwnerService.Attributes.Add("disabled", "");
             }
         }
 

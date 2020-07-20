@@ -79,6 +79,10 @@ namespace ServiceWeb.API.v1
                 w.EndDateTime != null
                 &&
                 curDateTime > Int64.Parse(w.EndDateTime)
+                &&
+                w.EventType != "Closed"
+                &&
+                w.EventType != "Cancel"
             ).ToList();
 
             datas.SuccessTask = datasTicket.Where(

@@ -79,6 +79,12 @@
                 AD Configuration
             </a>
         </li>
+         <li class="nav-item">
+            <a class="nav-link " href="<%= Page.ResolveUrl("~/MasterConfig/WorkingTimeConfig.aspx") %>" id="nav-menu-working-time-config">
+                <span data-feather="settings"></span>
+                Working Time Config
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/Relation.aspx") %>" id="nav-menu-relation">
                 <span data-feather="settings"></span>
@@ -183,6 +189,12 @@
             <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/TicketStatus.aspx") %>" id="nav-menu-ticket-status">
                 <span data-feather="settings"></span>
                 Ticket Status
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%= Page.ResolveUrl("~/MasterConfig/TicketStatusAuto.aspx") %>" id="nav-menu-ticket-status-auto">
+                <span data-feather="settings"></span>
+                Ticket Status Auto
             </a>
         </li>
         <li class="nav-item">

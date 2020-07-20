@@ -1065,10 +1065,10 @@
 
                 data.push([
                     '<i class="fa fa-pencil-square fa-lg text-dark" title="Edit"></i>',
-                    report.DOCDATE + "|" + report.EndDateTime,
+                    report.DOCDATE + report.DOCTIME + "|" + report.EndDateTime,
                     report.DOCTIME,
                     report.DocumentTypeDesc,
-                    report.CallerIDDisplay + '[|]' + report.CallerID + '[|]' + report.CallStatus,
+                    convertToTicketNoDisplay(report.CallerID) + '[|]' + report.CallerID + '[|]' + report.CallStatus,
                     report.DocStatusDesc,
                     report.HeaderText,
                     CustomerCall,
@@ -1238,6 +1238,16 @@
 
             $("#btnWarningCreate").val(warnMsg);
             $("#btnWarningCreate").click();
+        }
+        function convertToTicketNoDisplay(data) {
+            if (data != '') {
+                var CallerIDDisplay = data;
+                var rest = CallerIDDisplay.substring(0, CallerIDDisplay.lastIndexOf("-") + 1);
+                var last = CallerIDDisplay.substring(CallerIDDisplay.lastIndexOf("-") + 1, CallerIDDisplay.length);
+                last = parseInt(last).toString();
+                data = rest + last;
+            }
+            return data;
         }
     </script>
 </asp:Content>

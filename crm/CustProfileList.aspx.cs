@@ -247,7 +247,7 @@ namespace POSWeb.crm
 
             if (!string.IsNullOrEmpty(ddlOwnerService.SelectedValue))
             {
-                ListCustomer = ListCustomer.Where(w => w.OwnerService == ddlOwnerService.SelectedValue).ToList();
+                ListCustomer = ListCustomer.Where(w => w.OwnerServiceCode == ddlOwnerService.SelectedValue).ToList();
             }
 
             ListCustomer.ForEach(r =>
@@ -266,7 +266,9 @@ namespace POSWeb.crm
                 s.Mobile,
                 s.EMail,
                 s.Active,
-                s.CustomerCritical
+                s.CustomerCritical,
+                s.OwnerService,
+                s.ResponsibleOrganization
             });
 
             divJsonCustomerList.InnerHtml = JsonConvert.SerializeObject(dataSource).Replace("<", "&lt;").Replace(">", "&gt;");

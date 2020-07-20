@@ -4,6 +4,7 @@
 <%@ Register Src="~/UserControl/AutoComplete/AutoCompleteEquipment.ascx" TagPrefix="ag" TagName="AutoCompleteEquipment" %>
 <%@ Register Src="~/UserControl/AutoComplete/AutoCompleteCustomer.ascx" TagPrefix="ag" TagName="AutoCompleteCustomer" %>
 <%@ Register Src="~/widget/usercontrol/AutoCompleteControl.ascx" TagPrefix="ag" TagName="AutoCompleteControl" %>
+<%@ Register Src="~/UserControl/AGapeGallery/UploadGallery/UploadGallery.ascx" TagPrefix="ag" TagName="UploadGallery" %>
 
 
 
@@ -35,7 +36,22 @@
             $("#ddlImpact").val("02");
             $("#ddlUrgency").val("02");
             $("#ddlPriority").val("03");
-        }) 
+
+            //loadEquipmentAndContactAuto();
+        });        
+        function UserLV(lv) {
+            if (lv == '1') {
+                $("#_ddl_sctype").prop("disabled", true);
+                $("#ddlImpact").prop("disabled", true);
+                $("#ddlUrgency").prop("disabled", true);
+                $("#ddlPriority").prop("disabled", true);
+                //hideTicketType();
+            }
+        };
+        function hideTicketType() {
+            $("#_ddl_sctype").parent().parent().parent().parent().parent().hide();
+            $("#panel-client").parent().parent().parent().parent().attr('class', 'col-lg-12');
+        };
     </script>
     <style>
         .card-body-sm {
@@ -79,7 +95,11 @@
                             <div class="card border-primary" style="margin-bottom: 10px;">
                                 <div class="card-body card-body-sm">
                                     <div class="form-row">
-                                        <div id="panel-client" class="form-group col-lg-6 col-sm-12">
+                                        <div class="form-group col-sm-12" >
+                                            <label>Ticket Type</label>
+                                            <asp:DropDownList ID="_ddl_sctype" runat="server"  class="form-control form-control-sm required disabled" ClientIDMode="Static"></asp:DropDownList>
+                                        </div>
+                                        <div id="panel-client" class="form-group col-lg-12 col-sm-12">
                                             <label>Client</label>
                                             <div class="input-group">
                                                 <ag:AutoCompleteCustomer ID="CustomerSelect" runat="server" CssClass="form-control form-control-sm required"
@@ -88,15 +108,16 @@
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" onclick="setModalSearch('CREATE');$('#<%= btnOpenModalSelectCustomerCriteria.ClientID%>').click();"><i class="fa fa-search"></i></span>
                                                 </div>
+                                                <asp:TextBox ID="CustomerSelectNew" Enabled="false" runat="server" CssClass="form-control form-control-sm d-none"></asp:TextBox>
                                             </div>
                                         </div>
-                                        <div id="panel-contact" class="form-group col-lg-6 col-sm-12">
+                                        <div id="panel-contact" class="form-group col-lg-6 col-sm-12 d-none">
                                             <label>Contact</label>
                                             <ag:AutoCompleteControl runat="server" id="_ddl_contact_person"
                                                 CustomViewCode="contact"
                                                 TODO_FunctionJS="loadcontactDetailBySelected();" CssClass="form-control form-control-sm" />
                                         </div>
-                                        <div class="col-lg-12">
+                                        <div class="col-lg-12 d-none">
                                             <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpContactDetail">
                                                 <ContentTemplate>
                                                     <div class="form-row">
@@ -137,8 +158,8 @@
                             <asp:UpdatePanel ID="updContactCus" runat="server" UpdateMode="Conditional" class="d-none">
                                 <ContentTemplate>
                                     <asp:Button ID="btnSelectContactBindDetail" CssClass="d-none" OnClick="btnSelectContactBindDetail_Click" runat="server" />
-                                    <asp:Button ID="btnBindContactCus" runat="server" CssClass="d-none" OnClick="btnBindContactCus_Click" 
-                                        OnClientClick="OpenLoadPanelConfigurationItem();OpenLoadPanelContact();" />
+                                    <asp:Button ID="btnBindContactCus" runat="server" CssClass="d-none" OnClick="btnBindContactCus_Click" OnClientClick="OpenLoadPanelConfigurationItem();OpenLoadPanelContact();" />
+                                    <asp:Button ID="btnBindContactCusAuto" runat="server" CssClass="d-none" OnClick="btnBindContactCusAuto_Click" OnClientClick="OpenLoadPanelConfigurationItem();OpenLoadPanelContact();" />
                                 </ContentTemplate>
                             </asp:UpdatePanel>
                         </div>
@@ -148,10 +169,10 @@
                             <div class="card border-primary" style="margin-bottom: 10px;">
                                 <div class="card-body card-body-sm">
                                     <div class="form-row">
-                                        <div class="form-group col-sm-12" >
+                                        <%--<div class="form-group col-sm-12" >
                                             <label>Ticket Type</label>
                                             <asp:DropDownList ID="_ddl_sctype" runat="server"  class="form-control form-control-sm required disabled" ClientIDMode="Static"></asp:DropDownList>
-                                        </div>
+                                        </div>--%>
                                         <div class="form-group col-sm-4 d-none">
                                             <label>Fiscal Year</label>
                                             <input id="_txt_year" type="text" class="form-control form-control-sm required" runat="server" clientidmode="Static"
@@ -183,6 +204,36 @@
                                             </div>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="card border-primary" style="margin-bottom: 10px;">
+                            <div class="card-body card-body-sm">
+                                <div class="form-group control-max-length">
+                                    <asp:Label runat="server" ID="labelProblem" Text="Subject"></asp:Label>
+                                    <small style="color: #aaa;">&nbsp;(<span class="Count-MaxLength-Remark"><%= txt_problem_topic.Text.Length%></span>/1000)</small>
+                                    <asp:TextBox ID="txt_problem_topic" runat="server" CssClass="form-control form-control-sm required ticket-allow-editor"
+                                        onkeypress="return countMaxLengthRemark(event)" onkeyup="validateMaxLengthRemark(event);"
+                                        Rows="1" Style="resize: none;" data-maxlength="1000"></asp:TextBox>
+                                    <asp:HiddenField runat="server" ID="hddOldValue_problem_topic" />
+                                </div>
+
+                                <div class="form-group control-max-length">
+                                    <asp:Label runat="server" ID="labelDescription" Text="Description"></asp:Label>
+                                    <small style="color: #aaa;">&nbsp;(<span class="Count-MaxLength-Remark"><%= tbEquipmentRemark.Text.Length%></span>/8000)</small>
+                                    <asp:TextBox ID="tbEquipmentRemark" runat="server" CssClass="form-control form-control-sm ticket-allow-editor txt-ticket-Descript"
+                                        onkeypress="return countMaxLengthRemark(event)" onkeyup="validateMaxLengthRemark(event);"
+                                        TextMode="MultiLine" Rows="3" Style="resize: none; height: 250px;" data-maxlength="8000"></asp:TextBox>
+                                    <asp:Panel ID="galleryLoad" runat="server" CssClass="d-none">
+                                        <br />
+                                        <ag:uploadgallery runat="server" id="UploadGallery" MultipleMode="true" />
+                                        <label>Upload your images or files here.</label>
+                                    </asp:Panel>                                                                        
+
+                                    <asp:HiddenField runat="server" ID="hddOldValue_EquipmentRemark" />
                                 </div>
                             </div>
                         </div>
@@ -895,8 +946,13 @@
                                                                 <th>Client Code / Name</th>
                                                                 <th>Client Group</th>
                                                                 <th>Address</th>
-                                                                <th>Tel.</th>
+                                                                <th>Tax ID</th>
+                                                                <th>Work Phone</th>
+                                                                <th>Moblie Phone</th>
                                                                 <th>E-mail</th>
+                                                                <th>Active</th>
+                                                                <th>Owner Service</th>
+                                                                <th>Responsible Organization</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -1071,8 +1127,13 @@
                        Customer.CustomerCode + " : " + Customer.FullName,
                        Customer.CustomerGroup + " : " + Customer.CustomerGroupDesc,
                        Customer.Address,
+                       Customer.TaxID,
                        Customer.TelNo1,
-                       Customer.EMail
+                       Customer.Mobile,
+                       Customer.EMail,
+                       Customer.Active,
+                       Customer.OwnerService,
+                       Customer.ResponsibleOrganization
                    ]);
                }
 
@@ -1188,6 +1249,15 @@
             console.log("loadEquipmentAndContact : " + _loadEquipmentAndContact);
 
             $("#<%= btnBindContactCus.ClientID%>").click();
+        }
+
+        function loadEquipmentAndContactAuto() {
+            inactiveRequireField();
+
+            _loadEquipmentAndContact++;
+            console.log("loadEquipmentAndContact : " + _loadEquipmentAndContact);
+
+            $("#<%= btnBindContactCusAuto.ClientID%>").click();
         }
 
         function loadcontactDetailBySelected() {

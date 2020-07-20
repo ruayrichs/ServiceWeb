@@ -154,9 +154,10 @@
                                                     </h5>
                                                 </div>
                                                 <div  class="radiobutton">
-                                                    <asp:RadioButtonList id="checkmodelogin" runat="server" RepeatDirection="Horizontal"  Width="100%">
+                                                    <asp:RadioButtonList id="checkmodelogin" runat="server" RepeatDirection="Vertical"  Width="100%">
                                                         <asp:ListItem value="1" Selected="True"> Login Local </asp:ListItem>
                                                         <asp:ListItem value="2"> Intregrate Active Directory</asp:ListItem>
+                                                        <asp:ListItem value="3"> Login with ONE ID</asp:ListItem>
                                                     </asp:RadioButtonList>
                                                 </div>
                                             </div>

@@ -45,6 +45,7 @@
                                             <tr>
                                                 <th rowspan="2"></th>
                                                 <th rowspan="2" style="width: 200px;">Role List</th>
+                                                <th rowspan="2">Level Control</th>
                                                 <th rowspan="2">Default Page</th>
                                                 <th rowspan="2" class="text-center">AllPermission</th>
                                                 <th rowspan="1" class="text-center">Home</th>
@@ -152,15 +153,32 @@
                                         <asp:Repeater ID="tableData" OnItemDataBound="tableData_ItemDataBound" runat="server">
                                             <ItemTemplate>
                                                 <tr>
-                                                    <td>
+                                                    <td class="text-nowrap">
                                                         <%--<asp:Button onClientClick="return AGConfirm(this,'ต้องการบันทึกหรือไม่ !!');AGLoading(true);" ID="btnRoleCode" CommandArgument='<%#Eval("RoleCode")%>' onClick="btnUpdate_Click" class="btn btn-success btn-sm" Text="Update" runat="server" />--%>
-                                                        <asp:Button OnClientClick="return AGConfirm(this,'ต้องการลบหรือไม่ !!');AGLoading(true);" ID="Button1" CommandArgument='<%#Eval("RoleCode")%>' OnClick="btnDelete_Click" class="btn btn-danger btn-sm d-none" Text="Delete" runat="server" />
+                                                        <asp:Button OnClientClick="return AGConfirm(this,'ต้องการลบหรือไม่ !!');AGLoading(true);" ID="btnDel" CommandArgument='<%#Eval("RoleCode")%>' OnClick="btnDelete_Click" class="btn btn-outline-danger btn-sm font-weight-bold" BorderStyle="None" Text="×" runat="server" />
 
                                                         <asp:HiddenField runat="server" ID="hddRoleCode" Value='<%# Eval("RoleCode")%>' />
+                                                        &nbsp;&nbsp;&nbsp;
                                                         <%# Eval("RoleCode")%>
                                                     </td>
                                                     <td style="width: 200px;" class="text-nowrap">
                                                         <%# Convert.ToString(Eval("RoleName")) %>
+                                                    </td>
+                                                    
+                                                    <td style="width: 200px;">                                                        
+                                                        <asp:DropDownList style="width: 100px;" runat="server" ID="ddLevelControl" class="form-control-sm">
+                                                            <asp:ListItem Text="- Select -" Value="0"/>
+                                                            <asp:ListItem Text="LV.1" Value="1" 
+                                                                alt="line 1&#013;line 2" 
+                                                                title="ServiceCallTransaction-show-menu&#013;- Overview&#013;- Configuration Item&#013;- Comment
+                                                                &#013;ServiceCallTransaction-delete&#013;- Button Close Ticket
+                                                                "/>
+                                                            <asp:ListItem Text="LV.2" Value="2" 
+                                                                alt="line 1&#013;line 2" 
+                                                                title="ServiceCallTransaction-Edit&#013;- Impact&#013;- Urgency
+                                                                "/>
+                                                            <%--<asp:ListItem Text="LV.99" Value="99"/>--%>
+                                                        </asp:DropDownList>
                                                     </td>
 
                                                     <td style="width: 200px;">                                                        
@@ -168,7 +186,6 @@
                                                             <asp:ListItem Text="Home" Value="/Default.aspx"/>
                                                             <asp:ListItem Text="My Ticket" Value="/MyTicket.aspx"/>
                                                         </asp:DropDownList>
-                                                        
                                                     </td>
 
                                                     <td>

@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     <style>
         .lines {
             margin-bottom: 10px;
@@ -288,16 +289,6 @@
             </div>
         </div>--%>
         <div class="form-group col">
-            <div class="card c-pointer panel-dashboard" data-id="panelListTicketDelay">
-                <div class="text-danger card-body dashboard-card">
-                    <asp:Label Text="0" runat="server" ID="lblCountDelay" ClientIDMode="Static"/>
-                </div>
-                <div class="card-header bg-danger text-center">
-                    <b>Delay</b>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col">
             <div class="card c-pointer panel-dashboard" data-id="panelListTicketSuccess">
                 <div class="text-success card-body dashboard-card">
                     <asp:Label Text="0" runat="server" ID="lblCountSuccess" ClientIDMode="Static"/>
@@ -314,6 +305,16 @@
                 </div>
                 <div class="card-header bg-info text-center">
                     <b>All</b>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="card c-pointer panel-dashboard" data-id="panelListTicketDelay">
+                <div class="text-danger card-body dashboard-card">
+                    <asp:Label Text="0" runat="server" ID="lblCountDelay" ClientIDMode="Static"/>
+                </div>
+                <div class="card-header bg-danger text-center">
+                    <b>Delay</b>
                 </div>
             </div>
         </div>
@@ -347,6 +348,7 @@
                                 <th class="text-nowrap fix-width-100">Ticket Type</th>
                                 <th class="text-nowrap">Subject</th>
                                 <th class="text-nowrap fix-width-100">Priority</th>
+                                <th class="text-nowrap fix-width-100">Status</th>
                                 <th class="text-nowrap fix-width-100"">Assignee</th>
                             </tr>
                         </thead>
@@ -408,80 +410,6 @@
         <!-- Unassigned -->
     </div>--%>
 
-    <div class="panel-list-ticket" id="dataPanelListTicketDelay" style="display: block;">
-        <!-- Delay -->
-        <div class="card mb-3">
-            <div class="card-header bg-danger text-white c-pointer" id="headTicketDelay">
-                <b>Delay</b>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="table-Delay" class="table table-bordered table-striped table-hover table-sm">
-                        <thead>
-                            <tr>
-                                <th class="text-nowrap fix-width-50"></th>
-                                <th class="text-nowrap fix-width-100">Ticket No.</th>
-                                <th class="text-nowrap fix-width-100">Date</th>
-                                <th class="text-nowrap fix-width-100">Ticket Type</th>
-                                <th class="text-nowrap">Subject</th>
-                                <th class="text-nowrap fix-width-100">Priority</th>
-                                <th class="text-nowrap fix-width-100"">Assignee</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <asp:Repeater ID="Repeater2" runat="server">
-                                <ItemTemplate>
-                                    <tr class="c-pointer" onclick="openTicket('<%# Eval("TicketNo") %>');"> 
-                                        <td class="text-nowrap text-center align-middle">
-                                            <i class="fa fa-pencil-square fa-lg text-dark c-pointer" title="Edit" onclick="$(this).next().click();"></i>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <%# Eval("TicketNo") %>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <%# Eval("Date") %>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <%# "#" + Eval("TicketType") %>
-                                        </td>
-                                        <td class="text-nowrap" style="width: 50%;">
-                                            <%# Eval("Subject") %>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <%# Eval("Priority")%>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            <%# Eval("Assignee")%>
-                                        </td>
-                                        <%--<td class="col-status">
-                                            <div class="status <%# Eval("StatusCode") %>">
-                                                <%# Eval("StatusDesc") %>
-                                            </div>
-                                        </td>--%>
-                                    </tr>
-                                </ItemTemplate>
-                                <FooterTemplate>
-                                    <% if (rptOpenTask.Items.Count == 0)
-                                        { %>
-                                    <tr>
-                                        <td class="text-nowrap text-center" <%--colspan="6"--%>>ไม่พบข้อมูล																</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <% } %>
-                                </FooterTemplate>
-                            </asp:Repeater>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="panel-list-ticket" id="dataPanelListTicketFinish" style="display: block;">
         <!-- Finish -->
         <div class="card mb-3">
@@ -499,6 +427,7 @@
                                 <th class="text-nowrap fix-width-100">Ticket Type</th>
                                 <th class="text-nowrap">Subject</th>
                                 <th class="text-nowrap fix-width-100">Priority</th>
+                                <th class="text-nowrap fix-width-100">Status</th>
                                 <th class="text-nowrap fix-width-100"">Assignee</th>
                             </tr>
                         </thead>
@@ -573,11 +502,87 @@
                                 <th class="text-nowrap fix-width-100">Ticket Type</th>
                                 <th class="text-nowrap">Subject</th>
                                 <th class="text-nowrap fix-width-100">Priority</th>
+                                <th class="text-nowrap fix-width-100">Status</th>
                                 <th class="text-nowrap fix-width-100"">Assignee</th>
                             </tr>
                         </thead>
                         <tbody>
                             <asp:Repeater ID="Repeater4" runat="server">
+                                <ItemTemplate>
+                                    <tr class="c-pointer" onclick="openTicket('<%# Eval("TicketNo") %>');"> 
+                                        <td class="text-nowrap text-center align-middle">
+                                            <i class="fa fa-pencil-square fa-lg text-dark c-pointer" title="Edit" onclick="$(this).next().click();"></i>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <%# Eval("TicketNo") %>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <%# Eval("Date") %>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <%# "#" + Eval("TicketType") %>
+                                        </td>
+                                        <td class="text-nowrap" style="width: 50%;">
+                                            <%# Eval("Subject") %>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <%# Eval("Priority")%>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <%# Eval("Assignee")%>
+                                        </td>
+                                        <%--<td class="col-status">
+                                            <div class="status <%# Eval("StatusCode") %>">
+                                                <%# Eval("StatusDesc") %>
+                                            </div>
+                                        </td>--%>
+                                    </tr>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <% if (rptOpenTask.Items.Count == 0)
+                                        { %>
+                                    <tr>
+                                        <td class="text-nowrap text-center" <%--colspan="6"--%>>ไม่พบข้อมูล																</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <% } %>
+                                </FooterTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-list-ticket" id="dataPanelListTicketDelay" style="display: block;">
+        <!-- Delay -->
+        <div class="card mb-3">
+            <div class="card-header bg-danger text-white c-pointer" id="headTicketDelay">
+                <b>Delay</b>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="table-Delay" class="table table-bordered table-striped table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap fix-width-50"></th>
+                                <th class="text-nowrap fix-width-100">Ticket No.</th>
+                                <th class="text-nowrap fix-width-100">Date</th>
+                                <th class="text-nowrap fix-width-100">Ticket Type</th>
+                                <th class="text-nowrap">Subject</th>
+                                <th class="text-nowrap fix-width-100">Priority</th>
+                                <th class="text-nowrap fix-width-100">Status</th>
+                                <th class="text-nowrap fix-width-100"">Assignee</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="Repeater2" runat="server">
                                 <ItemTemplate>
                                     <tr class="c-pointer" onclick="openTicket('<%# Eval("TicketNo") %>');"> 
                                         <td class="text-nowrap text-center align-middle">
@@ -647,6 +652,42 @@
                     </div>
                     <!-- end card 1 Open Incident Map -->
                 </div>
+                 <div class="col-xl-6">
+                    <!-- card Incidents Monthly -->
+                    <div class="card">
+                        <div class="card-header bg-success" style="text-align: center;">
+                            <b>Incident Monthly</b>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="incident-monthly" height="250"></canvas>
+                        </div>
+                    </div>
+                    <!-- end card Incidents Monthly -->
+                </div>
+                <div class="col-xl-6">
+                    <!-- card Request Monthly -->
+                    <div class="card">
+                        <div class="card-header bg-success" style="text-align: center;">
+                            <b>Request Monthly</b>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="request-monthly" height="250"></canvas>
+                        </div>
+                    </div>
+                    <!-- end card Request Monthly -->
+                </div>
+                <div class="col-xl-6">
+                    <!-- card Problem Monthly -->
+                    <div class="card">
+                        <div class="card-header bg-success" style="text-align: center;">
+                            <b>Problem Monthly</b>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="problem-monthly" height="250"></canvas>
+                        </div>
+                    </div>
+                    <!-- end card Problem Monthly -->
+                </div> 
                 <div class="col-xl-6">
                     <!-- card 6 Open Incidents By State -->
                     <div class="card">
@@ -660,6 +701,81 @@
                     </div>
                     <!-- end card 6 Open Incident By State -->
                 </div>
+                <div class="col-xl-6">
+                    <!-- card Ticket Status -->
+                    <div class="card">
+                        <div class="card-header bg-success" style="text-align: center;">
+                            <b>Ticket Status</b>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="ticket-status-chart" height="250"></canvas>
+                        </div>
+                    </div>
+                    <!-- end card Ticket Status -->
+                </div>
+                 <div class="col-xl-12">
+                    <!-- card Ticket Rating Monthly -->
+                    <div class="card">
+                        <div class="card-header bg-success" style="text-align: center;">
+                            <b>Ticket Rating</b>
+                        </div>
+                        <div class="card-body justify-content-center">
+                            <div class="form-row col-12">
+                                <div class="col d-flex flex-column justify-content-center align-items-center">
+                                    <img src="<%= Page.ResolveUrl("~") %>images/rating_icon/rating_1.png" class="img_ico" />
+                                    <span class="font-weight-bold text-info span_rating_title">Unacceptable</span>
+                                    <span id="rating_data_1" class="text-danger span_rating"></span>
+                                </div>
+                                <div class="col d-flex flex-column justify-content-center align-items-center">
+                                    <img src="<%= Page.ResolveUrl("~") %>images/rating_icon/rating_2.png" class="img_ico" />
+                                    <span class="font-weight-bold text-info span_rating_title">To be improved</span>
+                                    <span id="rating_data_2" class="text-warning span_rating"></span>
+                                </div>
+                                <div class="col d-flex flex-column justify-content-center align-items-center">
+                                    <img src="<%= Page.ResolveUrl("~") %>images/rating_icon/rating_3.png" class="img_ico" />
+                                    <span class="font-weight-bold text-info span_rating_title">Average</span>
+                                    <span id="rating_data_3" class="rating_3 span_rating"></span>
+                                </div>
+                                <div class="col d-flex flex-column justify-content-center align-items-center">
+                                    <img src="<%= Page.ResolveUrl("~") %>images/rating_icon/rating_4.png" class="img_ico" />
+                                    <span class="font-weight-bold text-info span_rating_title">Good</span>
+                                    <span id="rating_data_4" class="rating_4 span_rating"></span>
+                                </div>
+                                <div class="col d-flex flex-column justify-content-center align-items-center">
+                                    <img src="<%= Page.ResolveUrl("~") %>images/rating_icon/rating_5.png" class="img_ico" />
+                                    <span class="font-weight-bold text-info span_rating_title">Excellent</span>
+                                    <span id="rating_data_5" class="text-success span_rating"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card Ticket Rating Monthly -->
+                </div> 
+                <div class="col-xl-12">
+                    <!-- card 6 Top 10 Category -->
+                    <div class="card">
+                        <div class="card-header bg-info" style="text-align: center;">
+                            <b>Top 10 Category</b>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="equipment-ranks-chart" height="250"></canvas>
+                        </div>
+                    </div>
+                    <!-- end Top 10 Category -->
+                </div>
+                 <div class="col-xl-12">
+                    <!-- card 6 Ticket count -->
+                    <div class="card">
+                        <div class="card-header bg-info" style="text-align: center;">
+                            <b>Ticket</b>
+                        </div>
+                        <div class="card-body">
+
+                            <canvas id="number-ticket-line-chart" height="250"></canvas>
+                        </div>
+                    </div>
+                    <!-- end card  Ticket count  -->
+                </div>
             </div>
             <div class="form-row">
                 <div class="col-12">
@@ -672,6 +788,102 @@
                             <canvas id="open-incident-line-chart" height="250"></canvas>
                         </div>
                     </div>
+                </div>
+                <div class="col-12">
+                    
+                    <div class="card">
+                        <div class="card-header bg-primary" style="text-align: center;">
+                            <b>User ticket</b>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="open-userticket-bar-chart" height="250"></canvas>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary" style="text-align: center;">
+                            <b>Configuration Item of Family </b>
+                        </div>
+                        <div class="card-body">
+                            <asp:UpdatePanel ID="udpnCICountFamily" runat="server" UpdateMode="Conditional">
+                                <ContentTemplate>
+                                    <div class="table-responsive">
+                                        <table id="tbCICountFamily" class="table table-bordered table-striped table-hover table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-nowrap">Family</th>
+                                                    <th class="text-nowrap">Configuration Item Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <asp:Repeater ID="rptCICountFamily" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr class="c-pointer" onclick="openSearchCI('family','<%# Eval("Description") %>');">
+                                                            <td class="text-nowrap">
+                                                                <%# Eval("Description") %>
+                                                            </td>
+                                                            <td class="text-nowrap">
+                                                                <%# Eval("type_count") %>
+                                                            </td>
+                                                        </tr>
+                                                    </ItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary" style="text-align: center;">
+                            <b> Configuration Item of Class </b>
+                        </div>
+                        <div class="card-body">
+                            <asp:UpdatePanel ID="udpnCICountClass" runat="server" UpdateMode="Conditional">
+                                <ContentTemplate>
+                                    <div class="table-responsive">
+                                        <table id="tbCICountClass" class="table table-bordered table-striped table-hover table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-nowrap fix-width-100">Class</th>
+                                                    <th class="text-nowrap fix-width-100">Configuration Item Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <asp:Repeater ID="rptCICountClass" runat="server">
+                                                    <ItemTemplate>
+                                                        <tr class="c-pointer" onclick="openSearchCI('class','<%# Eval("ClassName") %>');"> 
+                                                            <td class="text-nowrap">
+                                                                <%# Eval("ClassName") %>
+                                                            </td>
+                                                            <td class="text-nowrap">
+                                                                <%# Eval("class_count") %>
+                                                            </td>
+            
+                                                        </tr>
+                                                    </ItemTemplate>
+                                                </asp:Repeater>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-none">
+                    <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:HiddenField ID="hddSearchCIKey" runat="server" ClientIDMode="Static"/>
+                            <asp:HiddenField ID="hddSearchCIValue" runat="server" ClientIDMode="Static"/>
+                            <asp:Button ID="btnLinkTransactionSearchCI" OnClick="btnLinkTransactionSearchCI_Click" runat="server" CssClass="d-none" OnClientClick="AGLoading(true);"/>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
             </div>
             <div class="form-row">
@@ -764,6 +976,23 @@
                 box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
                 font-size: 21px;
                 }
+
+        .rating_3 {
+            color: #ffeb3b
+        }
+        .rating_4 {
+            color: #cddc39
+        }
+        .span_rating{
+            font-size: 30px;
+        }
+         .span_rating_title{
+            font-size: 20px;
+        }
+        .img_ico{
+            width: 64px;
+            height: auto;
+        }
     </style>
     <div>
         <div class="rconfig" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-cogs"></i></div>
@@ -811,6 +1040,7 @@
     <!--
         set PieChart
         -->
+
     <script>
         
         function randomScalingFactor() {
@@ -922,7 +1152,181 @@
                 },
             });
         };
+
+        Chart.plugins.unregister(ChartDataLabels);
+
+        function setMonthlyPieChart(doughnut, datas) {
+            return new Chart(doughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Open and others', 'Resolve and Closed'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: datas,
+                        backgroundColor: [
+                            '#36A2EB',
+                            '#4CAF50'
+
+                        ]
+                    }]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            display: true
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, doughnut) => {
+                                let sum = 0;
+                                let dataArr = doughnut.chart.data.datasets[0].data;
+                                dataArr.map(data => {
+                                    sum += data;
+                                });
+                                let percentage = (value * 100 / sum).toFixed(2) + "%";
+                                if (percentage != "0.00%") {
+                                    return percentage;
+                                } else {
+                                    return ''
+                                }
+                            },
+                            color: '#fff',
+                        }
+                    }
+                },
+            });
+        };
+
+        function setTicketStatusPieChart(datas) {
+            pie = document.getElementById('ticket-status-chart');
+            mPieChartTicketStatus = new Chart(pie, {
+                type: 'pie',
+                data: {
+                    labels: ['Ontime', 'Overdue'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: datas,
+                        backgroundColor: [
+                            '#4CAF50',
+                            '#F44336'
+
+                        ]
+                    }]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            display: true
+                        },
+                        position:'bottom'
+                    },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, pie) => {
+                                let sum = 0;
+                                let dataArr = pie.chart.data.datasets[0].data;
+                                dataArr.map(data => {
+                                    sum += data;
+                                });
+                                let percentage = (value * 100 / sum).toFixed(2) + "%";
+                                if (percentage != "0.00%") {
+                                    return percentage;
+                                } else {
+                                    return ''
+                                }
+                            },
+                            color: '#fff',
+                        }
+                    }
+                },
+            });
+        };
+
+        var ticket_lineChart;
+        function setTicketLineChart() {
+          
+            lineChart_ticket = document.getElementById('number-ticket-line-chart');
+            ticket_lineChart = new Chart(lineChart_ticket, {
+                type: 'line',
+                data: {
+                    labels: <%= LabelofLineAll %>,
+                    datasets: [
+                    {
+                        label: 'Open',
+                        backgroundColor: "#29B0D0",
+                        borderColor: "#29B0D0",
+                        data: <%= DatasofLineOpen %>,
+                        fill: false,
+                        lineTension: 0,   
+                    }, {
+                        label: 'Close and Resolve',
+                        fill: false,
+                        backgroundColor: "#4CAF50",
+                        borderColor: "#4CAF50",
+                        data: <%= DatasofLineCloseandResolve %>,
+                        lineTension: 0,   
+                    }
+                    ]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    bezierCurve: false,
+                    responsive: true,
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                reverse: false,
+                                
+                            },
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'The number of Ticket'
+                            }
+                        }]
+                    },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value) => {
+                                return value
+                            },
+                            color: '#000',
+                            anchor: 'end',
+                            align: 'end'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 0,
+                            top: 50,
+                            bottom: 0
+                        }
+                    }
+                }
+            });
+        };
     </script>
+
     <!--
         set BarChart
         -->
@@ -992,10 +1396,184 @@
             });
         };        
     </script>
+    <script>
+        var ctx;
+        var myBarUserChart;
+        function setBarUserChart(Labels, Data, Dataset2, color, colorset2) {
+            // open incidents by state
+            ctx = document.getElementById('open-userticket-bar-chart').getContext('2d');
+            var maxvalue = 52;
+            var scale = 1; //default value
+            if (maxvalue >= 1 && maxvalue <= 10) {
+                scale = 1;
+            }
+            else if (maxvalue >= 11 && maxvalue <= 50) {
+                scale = 5;
+            }
+            else if (maxvalue >= 51) {
+                scale = 10;
+            } else {
+                scale = 1;
+            }
+            myBarUserChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: Labels,
+                    datasets: [
+                        {
+                            label: "User Ticket Open",
+                            data: Data,
+                            backgroundColor: color
+                        },
+                        {
+                            label: "User Ticket Resolve and Close",
+                            data: Dataset2,
+                            backgroundColor: colorset2
+                        }
+                    ]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, pie) => {
+                                if (value > 0) {
+                                    return value
+                                } else {
+                                    return ''
+                                }
+
+                            },
+                            color: '#fff',
+                        }
+                    },
+                    legend: {
+                        display: false,
+                        labels: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                beginAtZero: true,
+                                fontSize: 12,
+
+                            }
+                        }],
+                        xAxes: [{
+                            stacked: true,
+                            ticks: {
+                                beginAtZero: true,
+                                fontSize: 11,
+
+                            }
+                        }]
+                    }
+                 
+                }
+            });
+        };
+    </script>
+    <script>
+        var ctx;
+        var myBarEquipmentChart;
+        function setBarEquipmentChart(EquipmentRankLabels, EquipmentRankValues) {
+            // open incidents by state
+            ctx = document.getElementById('equipment-ranks-chart').getContext('2d');
+            myBarEquipmentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: EquipmentRankLabels,
+                    datasets: [{
+                        data: EquipmentRankValues,
+                        backgroundColor: [
+                            '#4caf50',
+                            '#009688',
+                            '#00bcd4',
+                            '#03a9f4',
+                            '#2196f3',
+                            '#3f51b5',
+                            '#673ab7',
+                            '#9c27b0',
+                            '#e91e63',
+                            '#f44336',
+                        ]
+                    }]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    legend: {
+                        display: false,
+                        labels: {
+                            display: false
+                        },
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                fontSize: 12
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                fontSize: 11,
+                                autoSkip: false
+                            }
+                        }]
+                    },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                return value
+                            },
+                            color: '#000',
+                            anchor: 'end',
+                            align: 'end'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 0,
+                            right: 0,
+                            top: 50,
+                            bottom: 0
+                        }
+                    }
+        
+                }
+            });
+        };
+    </script>
+     <script>
+         function setRatingData(DataforRating) {
+             var datalst = DataforRating;
+             var sum_data = datalst.reduce((total,item) => {
+                 return total+ item.Rating_Count;
+             }, 0);
+             datalst.forEach(
+                 (item) => {
+                     span_tag = document.getElementById('rating_data_' + item.Rating);
+                     if (sum_data > 0) {
+                         span_tag.innerHTML = (item.Rating_Count * 100 / sum_data).toFixed(2) + "%"
+                     } else {
+                         span_tag.innerHTML = "0.00%"
+                     }
+
+                 }
+             );
+         }
+     </script>
     <!--
         initChart()
         -->
     <script>
+        var mChartInc;
+        var mChartReq;
+        var mChartProb;
         //set chart first time
         function initChart() {
             try {
@@ -1023,6 +1601,41 @@
                 
                 setPieChart(incident_count, problem_count, request_count, change_count);
 
+                //new Chart
+
+                pie_incident = document.getElementById('incident-monthly');
+                pie_request = document.getElementById('request-monthly');
+                pie_problem = document.getElementById('problem-monthly');
+
+                mChartInc = setMonthlyPieChart(pie_incident, <%=dataChartInc%>);
+                mChartReq = setMonthlyPieChart(pie_request, <%=dataChartReq%>);
+                mChartProb = setMonthlyPieChart(pie_problem,<%=dataIncChartProb%>);
+
+                // User Bar
+                var label_user = <%=LabelsBarUserChart%>;
+                var data_open = <%=Data1BarUserChart%>;
+                var color_open = <%=Color1BarUserChart%>;
+                var data_re = <%=Data2BarUserChart%>;
+                var color_re = <%=Color2BarUserChart%>;
+                setBarUserChart(label_user, data_open, data_re, color_open, color_re);
+
+                // Equipment
+                var label_name = <%=EquipmentChartLabel%>;
+                var data_count = <%=EquipmentChartData%>;
+                setBarEquipmentChart(label_name, data_count);
+
+                // OnTime and Overdue
+                var ticketStatusData = <%=TicketStatusData%>;
+                setTicketStatusPieChart(ticketStatusData);
+
+                // Rating
+                var ratingData = <%=RatingData%>;
+                setRatingData(ratingData);
+
+                setTicketLineChart();
+                //end new Chart
+
+
                 var datas_problem_group = <%= datasProblemGroup %>;
                 var datas_incident_count = <%= dataCountTicketIncident %>;
                 var datas_problem_count = <%= dataCountTicketProblem %>;
@@ -1034,11 +1647,23 @@
                     i_close_count, p_close_count, r_close_count, c_close_count,
                     i_cancel_count, p_cancel_count, r_cancel_count, c_cancel_count);
 
+          
+       
+                
                 return "ok";
             } catch (err) {
                 return ("not ok: "+err);
             }
         };
+        //function addData(chart, label, data) {
+        //    chart.data.labels.push(label);
+        //    chart.data.datasets.forEach((dataset) => {
+        //        dataset.data.push(data);
+        //        dataset.backgroundColor.push('#ff9900');
+        //    });
+        //    chart.update();
+        //};
+        
     </script>
     <!--
         refreshData(optiondata)
@@ -1071,12 +1696,47 @@
                 data: data,
                 success: function (res) {
                     result = JSON.parse(res);
+                    console.log("result", result)
                     //set overview
                     document.getElementById("lblCountOpen").innerHTML = result.OverviewDataReport.CountTicketOpen;
                     //document.getElementById("lblCountUnassigned").innerHTML = result.OverviewDataReport.CountTicketUnassigned;
                     document.getElementById("lblCountDelay").innerHTML = result.OverviewDataReport.CountTicketDelay;
                     document.getElementById("lblCountSuccess").innerHTML = result.OverviewDataReport.CountTicketFinish;
-                    document.getElementById("lblCountAll").innerHTML = result.OverviewDataReport.CountTicketAll;
+                    document.getElementById("lblCountAll").innerHTML = result.OverviewDataReportNoAll.length;//result.OverviewDataReport.CountTicketAll;
+
+                    // set new chart
+                    //pie_incident = document.getElementById('incident-monthly');
+                    //pie_request = document.getElementById('request-monthly');
+                    //pie_problem = document.getElementById('problem-monthly');
+
+                    // User Bar
+                    myBarUserChart.data.labels = result.DataforNewChartReport.DataTicketOnHandCount.Labels;
+                    myBarUserChart.data.datasets[0].data = result.DataforNewChartReport.DataTicketOnHandCount.DatasetOpen;
+                    myBarUserChart.data.datasets[0].backgroundColor = result.DataforNewChartReport.DataTicketOnHandCount.ColorsetOpen;
+                    myBarUserChart.data.datasets[1].data = result.DataforNewChartReport.DataTicketOnHandCount.DatasetResolve;
+                    myBarUserChart.data.datasets[1].backgroundColor = result.DataforNewChartReport.DataTicketOnHandCount.ColorsetResolve;
+                    myBarUserChart.update();
+
+                    // Equipment
+                    myBarEquipmentChart.data.labels = result.DataforNewChartReport.DataEquipmentCount.Labels;
+                    myBarEquipmentChart.data.datasets[0].data = result.DataforNewChartReport.DataEquipmentCount.Datas;
+                   
+                    myBarEquipmentChart.update();
+
+                    //// OnTime and Overdue
+                    mPieChartTicketStatus.data.datasets[0].data = result.DataforNewChartReport.DataTicketOnTimeOverdueCount.Datas;
+                    mPieChartTicketStatus.update();
+
+                    //// Rating
+                    setRatingData(result.DataforNewChartReport.DataTicketRatingCount.RatingDatas);
+
+                    //// Ticket Type
+                    mChartInc.data.datasets[0].data = result.DataforNewChartReport.DataTicketCountofDoctype.DataofInc;
+                    mChartInc.update();
+                    mChartReq.data.datasets[0].data = result.DataforNewChartReport.DataTicketCountofDoctype.DataofReq;
+                    mChartReq.update();
+                    mChartProb.data.datasets[0].data = result.DataforNewChartReport.DataTicketCountofDoctype.DataofPromb;
+                    mChartProb.update();
 
                     //set pie chart
                     myPieChart.data.datasets[0].data = [
@@ -1087,7 +1747,6 @@
                     ];
                     myPieChart.update();
                         
-                    console.log(result.LineChartDataReport);
                     mylineChart.data.labels = result.LineChartDataReport.datasProblemGroup;
                     mylineChart.data.datasets[0].data = result.LineChartDataReport.dataCountTicketIncident;
                     mylineChart.data.datasets[1].data = result.LineChartDataReport.dataCountTicketProblem;
@@ -1131,7 +1790,7 @@
                         //console.log(result.PiorityDataReport[index].PiorityCode + "_Success : " + result.PiorityDataReport[index].CountTicket_Success);
                     }
                     //console.log("update PiorityDataReport success");
-                    console.log(res);
+                    //console.log(res);
 
                     AGLoading(false);
                     //---DEV for Open Ticket---
@@ -1270,6 +1929,20 @@
             //fetch defult data
             code = refreshData(this.optiondata);
             //console.log("api status: " + code);
+            $("#tbCICountFamily").dataTable({
+                columnDefs: [{
+                    "orderable": false,
+                    "targets": [0]
+                }],
+                "order": [[1, "desc"]]
+            });
+            $("#tbCICountClass").dataTable({
+                columnDefs: [{
+                    "orderable": false,
+                    "targets": [0]
+                }],
+                "order": [[1, "desc"]]
+            });
         };
 
         $(document).ready(function () {
@@ -1410,6 +2083,7 @@
                     "#" + ticket.TicketType,
                     ticket.Subject,
                     ticket.Priority,
+                    ticket.StatusDesc,
                     ticket.Assignee
                     //ticket.StatusCode + "|" + ticket.StatusDesc
                 ]);
@@ -1436,7 +2110,7 @@
                         }
                     },
                     {
-                        'targets': [1, 3, 5, 6],
+                        'targets': [1, 3, 5, 6, 7],
                         'createdCell': function (td, cellData, rowData, row, col) {
                             $(td).addClass("text-truncate text-nowrap");
                         }
@@ -1477,6 +2151,14 @@
         function openTicket(CallerID) {
             $("#hddCallerID_Criteria").val(CallerID);
             $("#btnLinkTransactionSearch").click();
+        }
+
+        function openSearchCI(key, val) {
+            console.log("ci key", key)
+            console.log("ci val", val)
+            $("#<%= hddSearchCIKey.ClientID %>").val(key);
+            $("#<%= hddSearchCIValue.ClientID %>").val(val);
+            $("#<%= btnLinkTransactionSearchCI.ClientID %>").click();
         }
         
         ///////////////////////////////////////////

@@ -34,7 +34,8 @@ namespace ServiceWeb.Service
         public const string TRIGGER_ACTION_TICKET_ESCALATE = "TICKET_ESCALATE";
         public const string TRIGGER_ACTION_TICKET_ESCALATE_MANUALLY = "TICKET_ESCALATE_MANUALLY";
         public const string TRIGGER_ACTION_TICKET_UPDATE_COMMENT = "UPDATE_COMMENT";
-        public const string TRIGGER_ACTION_TICKET_CUSTOMER_CALLBACK = "TICKET_CUSTOMER_CALLBACK";        
+        public const string TRIGGER_ACTION_TICKET_CUSTOMER_CALLBACK = "TICKET_CUSTOMER_CALLBACK";
+        public const string TRIGGER_ACTION_TICKET_STATUS_AUTO_UPDATE = "TICKET_STATUS_AUTO_UPDATE";
 
         private DBService dbService = new DBService();
 
@@ -299,7 +300,12 @@ namespace ServiceWeb.Service
         {
             StartTrigger(transactionId, ServiceLibrary.BUSINESS_SERVICE_CALL, ticketType, ticketNo, fiscalYear, targetTime, TRIGGER_ACTION_TICKET_ESCALATE, createdBy);
         }
-
+        // ======================================   create trigger for alert email ====================================================================================
+        public void AlertEmail(string transactionId, string ticketType, string ticketNo, string fiscalYear, string targetTime, string createdBy)
+        {
+            StartTrigger(transactionId, ServiceLibrary.BUSINESS_SERVICE_CALL, ticketType, ticketNo, fiscalYear, targetTime, TRIGGER_ACTION_TICKET_START, createdBy);
+        }
+        //==============================================================================================================================================================
         public void ManuallyEscalateTicket(string transactionId)
         {
             new Thread(() =>
@@ -416,6 +422,11 @@ namespace ServiceWeb.Service
 //                    }
 //                }).Start();
 //            }
+        }
+
+        public void UpdateTicketStatus(string transactionId, string ticketType, string ticketNo, string fiscalYear, string targetTime, string createdBy)
+        {
+            StartTrigger(transactionId, ServiceLibrary.BUSINESS_SERVICE_CALL, ticketType, ticketNo, fiscalYear, targetTime, TRIGGER_ACTION_TICKET_STATUS_AUTO_UPDATE, createdBy);
         }
     }
 

@@ -248,19 +248,20 @@ namespace ServiceWeb.Service
         public List<EquipmentItemData> getListEquipment(string SID, string CompanyCode, string EquipmentCode,
             string EquipmentName, string EquipmentType, string Status)
         {
-            return getListEquipment(SID, CompanyCode, EquipmentCode, EquipmentName, EquipmentType, Status, "", "", "", "", "", "", "");
+            DataTable ciSelect = new DataTable();
+            return getListEquipment(SID, CompanyCode, EquipmentCode, EquipmentName, EquipmentType, Status, "", "", "", "", "", "", "", "", ciSelect);
         }
 
         public List<EquipmentItemData> getListEquipment(string SID, string CompanyCode, string EquipmentCode,
             string EquipmentName, string EquipmentType, string Status, string EquipmentClass, string Category,
-            string OwnerGroupCode)
+            string OwnerGroupCode, DataTable ciSelect)
         {
-            return getListEquipment(SID, CompanyCode, EquipmentCode, EquipmentName, EquipmentType, Status, EquipmentClass, Category, OwnerGroupCode, "", "", "", "");
+            return getListEquipment(SID, CompanyCode, EquipmentCode, EquipmentName, EquipmentType, Status, EquipmentClass, Category, OwnerGroupCode, "", "", "", "", "", ciSelect);
         }
 
         public List<EquipmentItemData> getListEquipment(string SID, string CompanyCode, string EquipmentCode,
             string EquipmentName, string EquipmentType, string Status, string EquipmentClass, string Category,
-            string OwnerGroupCode, string SerialNo, string btn, string TimeSendMail, string UserName)
+            string OwnerGroupCode, string SerialNo, string btn, string TimeSendMail, string UserName, string txtxValue001, DataTable ciSelect)
         {
             StringBuilder Condition = new StringBuilder();
 
@@ -296,6 +297,17 @@ namespace ServiceWeb.Service
             {
                 SerialNo = SerialNo.Replace('[', '%').Replace(']', '%').Replace('_', '%');
                 Condition.AppendLine(" and ge.ManufacturerSerialNO like '%" + SerialNo + "%' ");
+            }
+
+            if (!string.IsNullOrEmpty(txtxValue001))
+            {
+                txtxValue001 = txtxValue001.Replace('[', '%').Replace(']', '%').Replace('_', '%');
+                Condition.AppendLine(" and xValue001.xValue like '%" + txtxValue001 + "%' ");
+            }
+            foreach (DataRow dtRow in ciSelect.Rows)
+            {
+                var EquipmentNo = dtRow["EquipmentCode"].ToString();
+                Condition.AppendLine(" AND Equipment.EquipmentCode != '" + EquipmentNo + "' ");
             }
 
             string sql;
@@ -357,11 +369,12 @@ namespace ServiceWeb.Service
             }
             else if (btn == "Update Send Mail")
             {
-                sql = @" select Equipment.*
-                            , DATEDIFF(DAY, CURRENT_TIMESTAMP, DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate)) * 86400 AS TargetTime
-                            , DATEDIFF(DAY, CURRENT_TIMESTAMP, (DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate))) AS NextDayToSendMail
-                            , CURRENT_TIMESTAMP AS TODAY
-                            , DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate) AS SendMailDate
+                sql = @" DECLARE @time TIME = CURRENT_TIMESTAMP
+                         select Equipment.*
+                            , (DATEDIFF(DAY, CURRENT_TIMESTAMP, DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate)) * 86400) - DATEDIFF(second,0,cast(@time as datetime)) AS TargetTime
+                            --, DATEDIFF(DAY, CURRENT_TIMESTAMP, (DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate))) AS NextDayToSendMail
+                            --, CURRENT_TIMESTAMP AS TODAY
+                            --, DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate) AS SendMailDate
                             , a.NextMaintenanceDate
                             , YEAR(CURRENT_TIMESTAMP) AS Year
 	                        from ERPW_master_equipment_warranty a
@@ -422,6 +435,14 @@ namespace ServiceWeb.Service
                     var EquipmentNo = dtRow["EquipmentCode"].ToString();
                     var Year = dtRow["Year"].ToString();
                     var TimeSec = dtRow["TargetTime"].ToString();
+
+                    string sqll = @" UPDATE [dbo].[ERPW_master_equipment_warranty]
+                                   SET [DaySend] = '" + TimeSendMail + @"'
+                                   WHERE SID = '" + SID + @"' AND CompanyCode = '" + CompanyCode + @"' AND EquipmentCode = '" + EquipmentNo + @"'";
+                    DataTable dtwarranty = dbService.selectDataFocusone(sqll);
+                    dbService.SaveTransactionForFocusone(dtwarranty);
+
+                    
                     String TransactionID = Guid.NewGuid().ToString();
                     TriggerService.GetInstance().EscalateTicket(
                     TransactionID, "CI", EquipmentNo, Year, TimeSec, UserName
@@ -446,6 +467,18 @@ namespace ServiceWeb.Service
                             ,ELocation.LocationCategory
                             ,ELocation.Room
                             ,ELocation.Shelf
+                            ,xValue001.xValue AS xValue001
+							,xValue002.xValue AS xValue002
+							,xValue003.xValue AS xValue003
+							,xValue004.xValue AS xValue004
+							,xValue005.xValue AS xValue005
+                            ,ge.ModelNumber
+							,ge.ManufacturerSerialNO
+							,CiWarranty.BeginGuarantee
+							,CiWarranty.EndGuaranty 
+							,CiWarranty.BeginWarrantee
+							,CiWarranty.EndWarrantee
+							,CiLocation.Location AS CiLocation
                             FROM master_equipment Equipment WITH (NOLOCK) 
                             INNER JOIN master_config_material_doctype DocType  WITH (NOLOCK) 
                                 ON Equipment.SID = DocType.SID
@@ -475,6 +508,41 @@ namespace ServiceWeb.Service
                             LEFT JOIN ERPW_Location_Equipment_Master AS ELocation WITH (NOLOCK) 
                               ON Equipment.SID =  ELocation.SID
                               AND MapLocation.LocationCode = ELocation.LocationCode
+
+                            LEFT JOIN master_equipment_properties AS xValue001 WITH (NOLOCK) 
+                              ON Equipment.SID =  xValue001.SID
+                              AND Equipment.ObjectID = xValue001.ObjectID
+							  AND xValue001.PropertiesCode = '001'
+
+							LEFT JOIN master_equipment_properties AS xValue002 WITH (NOLOCK) 
+                              ON Equipment.SID =  xValue002.SID
+                              AND Equipment.ObjectID = xValue002.ObjectID
+							  AND xValue002.PropertiesCode = '002'
+
+						    LEFT JOIN master_equipment_properties AS xValue003 WITH (NOLOCK) 
+                              ON Equipment.SID =  xValue003.SID
+                              AND Equipment.ObjectID = xValue003.ObjectID
+							  AND xValue003.PropertiesCode = '003'
+
+						    LEFT JOIN master_equipment_properties AS xValue004 WITH (NOLOCK) 
+                              ON Equipment.SID =  xValue004.SID
+                              AND Equipment.ObjectID = xValue004.ObjectID
+							  AND xValue004.PropertiesCode = '004'
+
+						    LEFT JOIN master_equipment_properties AS xValue005 WITH (NOLOCK) 
+                              ON Equipment.SID =  xValue005.SID
+                              AND Equipment.ObjectID = xValue005.ObjectID
+							  AND xValue005.PropertiesCode = '005'
+
+                            LEFT JOIN ERPW_master_equipment_warranty AS CiWarranty 
+							  ON Equipment.SID =  CiWarranty.SID
+							  AND Equipment.CompanyCode = CiWarranty.CompanyCode
+                              AND Equipment.EquipmentCode = CiWarranty.EquipmentCode
+
+						    LEFT JOIN master_equipment_location AS CiLocation 
+							  ON Equipment.SID =  CiLocation.SID
+							  AND Equipment.CompanyCode = CiLocation.CompanyCode
+                              AND Equipment.EquipmentCode = CiLocation.EquipmentCode
   
                             WHERE Equipment.SID = '" + SID + @"' 
                     AND Equipment.CompanyCode = '" + CompanyCode + @"' 
@@ -714,7 +782,35 @@ namespace ServiceWeb.Service
             }
             return dtWarranty;
         }
-        
+
+        public DataTable countWarrantyData(string SID, string CompanyCode, string EquipmentCode, string TimeSendMail)
+        {
+            string sql = @" DECLARE @time TIME = CURRENT_TIMESTAMP
+                            select (DATEDIFF(DAY, CURRENT_TIMESTAMP, DATEADD(DAY, -" + TimeSendMail + @", a.NextMaintenanceDate)) * 86400) - DATEDIFF(second,0,cast(@time as datetime)) AS TargetTime
+                            from ERPW_master_equipment_warranty a
+                            where SID = '" + SID + @"' AND CompanyCode = '" + CompanyCode + @"' AND EquipmentCode = '" + EquipmentCode + @"'
+                        ";
+            
+            DataTable dtWarranty = dbService.selectDataFocusone(sql);
+            
+            return dtWarranty;
+        }
+
+        public DataTable getWarrantyTrigger(string SID, string CompanyCode, string EquipmentCode)
+        {
+            string sql = @"select CONVERT(VARCHAR(10), (DATEADD(D, ((a.TargetTime + 86400) / 86400), convert(datetime, SUBSTRING(a.SendingDateTime, 1, 8)))), 103) AS SendBack, * 
+                                from ERPW_TRIGGER_STATUS a 
+                                where SID = '" + SID + @"' and CompanyCode = '" + CompanyCode + @"' 
+                                    and DocumentNo = '" + EquipmentCode +@"' 
+                                    and DocumentType = 'CI' 
+                                    and TriggerStatus = 'START' 
+                                order by Created_On desc";
+            
+            DataTable dtTrigger = dbService.selectDataFocusone(sql);
+            
+            return dtTrigger;
+        }
+
         //public DataTable getNextMaintenanceTime()
         //{
         //    string sql = "select * from ERPW_master_equipment_warranty WHERE NextMaintenanceDate != ''";
@@ -764,6 +860,7 @@ namespace ServiceWeb.Service
                 drupdate["LastMaintenanceTime"] = dr["LastMaintenanceTime"];
                 drupdate["UPDATED_BY"] = dr["UPDATED_BY"];
                 drupdate["UPDATED_ON"] = dr["UPDATED_ON"];
+                drupdate["DaySend"] = dr["DaySend"];
             }
             dtWarranty.TableName = "ERPW_master_equipment_warranty";
             dtWarranty.PrimaryKey = new DataColumn[] { dtWarranty.Columns["SID"], dtWarranty.Columns["CompanyCode"], dtWarranty.Columns["EquipmentCode"] };
@@ -962,6 +1059,20 @@ namespace ServiceWeb.Service
             public string LocationCategory { get; set; }
             public string Room { get; set; }
             public string Shelf { get; set; }
+
+            public string xValue001 { get; set; }
+            public string xValue002 { get; set; }
+            public string xValue003 { get; set; }
+            public string xValue004 { get; set; }
+            public string xValue005 { get; set; }
+
+            public string ModelNumber { get; set; }
+            public string ManufacturerSerialNO { get; set; }
+            public string BeginGuarantee { get; set; }
+            public string EndGuaranty { get; set; }
+            public string BeginWarrantee { get; set; }
+            public string EndWarrantee { get; set; }
+            public string CiLocation { get; set; }
         }
 
         [Serializable]
