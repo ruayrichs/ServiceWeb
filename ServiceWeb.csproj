@@ -147,6 +147,12 @@
       <HintPath>..\..\ERPSolution\outputdll\Littlefish.SQLiteSessionStateProvider.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\ERPSolution\outputdll\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.RedisSessionStateProvider, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ERPSolution\outputdll\Microsoft.Web.RedisSessionStateProvider.dll</HintPath>
@@ -200,6 +206,10 @@
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -330,6 +340,7 @@
     <Content Include="API\CustomerDetialAPI.aspx" />
     <Content Include="API\DashboardAPI.aspx" />
     <Content Include="API\FavoriteMenuAPI.aspx" />
+    <Content Include="API\LineLoginAPI.aspx" />
     <Content Include="API\ReplyEmailToPostCommentAPI.aspx" />
     <Content Include="API\ServiceTicketAPI\IncidentTicketTicketAPI.aspx" />
     <Content Include="API\ServiceTicketAPI\ReferFromTicketAPI.aspx" />
@@ -338,6 +349,7 @@
     <Content Include="API\TierZeroProblemInformAPI.aspx" />
     <Content Include="API\TierZeroStructureAPI.aspx" />
     <Content Include="API\v1\AuthenAPI.aspx" />
+    <Content Include="API\v1\ConfigurationItemAPI.aspx" />
     <Content Include="API\v1\CustomerDashboardAPI.aspx" />
     <Content Include="API\v1\CustomerDetailAPI.aspx" />
     <Content Include="API\v1\CustomerMappingCIAPI.aspx" />
@@ -356,6 +368,10 @@
     <Content Include="API\v1\TicketListByCustomerAPI.aspx" />
     <Content Include="API\v1\TicketReportAPI.aspx" />
     <Content Include="API\v1\TicketTracking.aspx" />
+    <Content Include="API\v2\CustomerDetailAPI.aspx" />
+    <Content Include="API\v2\TicketCommentAPI.aspx" />
+    <Content Include="API\v2\TicketDetailAPI.aspx" />
+    <Content Include="API\v2\TierZeroStructureAPI.aspx" />
     <Content Include="auth\AbstractsSANWebpage.aspx" />
     <Content Include="auth\NoAuthorizePage.aspx" />
     <Content Include="Catalog\CatalogAPI.aspx" />
@@ -363,6 +379,7 @@
     <Content Include="Content\fullcalendar.min.css" />
     <Content Include="Content\fullcalendar.print.css" />
     <Content Include="Content\fullcalendar.print.min.css" />
+    <Content Include="Content\jquery-weekdays.css" />
     <Content Include="crm\AfterSale\CustomerForm.aspx" />
     <Content Include="crm\AfterSale\FormPrint.aspx" />
     <Content Include="crm\AfterSale\Lib\ServiceCall.css" />
@@ -1270,10 +1287,12 @@
     <Content Include="MasterConfig\Severity.aspx" />
     <Content Include="MasterConfig\SLAMappingChanelTier0.aspx" />
     <Content Include="MasterConfig\TicketStatus.aspx" />
+    <Content Include="MasterConfig\TicketStatusAuto.aspx" />
     <Content Include="MasterConfig\UnitOfMeasurement.aspx" />
     <Content Include="MasterConfig\Urgency.aspx" />
     <Content Include="MasterConfig\Version.aspx" />
     <Content Include="MasterConfig\WarranteeType.aspx" />
+    <Content Include="MasterConfig\WorkingTimeConfig.aspx" />
     <Content Include="Master\ServiceContract.aspx" />
     <Content Include="Master\ServiceContractCriteria.aspx" />
     <Content Include="MyGroup.aspx" />
@@ -1284,12 +1303,14 @@
     <Content Include="PageSQLTransection.aspx" />
     <Content Include="PageTast.aspx" />
     <Content Include="PhoneSearch.aspx" />
+    <Content Include="ReportRedirect\shl.html" />
     <Content Include="Report\CIMaintenanceReport.aspx" />
     <Content Include="Report\ExportDataReport.aspx" />
     <Content Include="Report\MTTNReport.aspx" />
     <Content Include="Report\MTTRReport.aspx" />
     <Content Include="Report\PivotTableReport.aspx" />
     <Content Include="Report\PivotTableReportMaster.aspx" />
+    <Content Include="Report\ReportConfigurationItem.aspx" />
     <Content Include="Report\ReportCustomer.aspx" />
     <Content Include="Report\ReportMappingLocation.aspx" />
     <Content Include="Report\TicketRep.aspx" />
@@ -1308,6 +1329,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-weekdays.js" />
     <Content Include="Scripts\lib\cupertino\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
     <Content Include="Scripts\lib\cupertino\images\ui-bg_glass_100_e4f1fb_1x400.png" />
     <Content Include="Scripts\lib\cupertino\images\ui-bg_glass_50_3baae3_1x400.png" />
@@ -1873,6 +1895,9 @@
       <DependentUpon>AnalyticsUpdate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="API\AbstractWebAPI.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="API\AppClient\AppClientActivation.aspx.cs">
       <DependentUpon>AppClientActivation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1938,6 +1963,13 @@
     <Compile Include="API\FavoriteMenuAPI.aspx.designer.cs">
       <DependentUpon>FavoriteMenuAPI.aspx</DependentUpon>
     </Compile>
+    <Compile Include="API\LineLoginAPI.aspx.cs">
+      <DependentUpon>LineLoginAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\LineLoginAPI.aspx.designer.cs">
+      <DependentUpon>LineLoginAPI.aspx</DependentUpon>
+    </Compile>
     <Compile Include="API\Model\Common\CommonResponseModel.cs" />
     <Compile Include="API\Model\Respond\AuthenticationMobileModel.cs" />
     <Compile Include="API\Model\Respond\TicketCommentModel.cs" />
@@ -1999,6 +2031,13 @@
     </Compile>
     <Compile Include="API\v1\AuthenAPI.aspx.designer.cs">
       <DependentUpon>AuthenAPI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="API\v1\ConfigurationItemAPI.aspx.cs">
+      <DependentUpon>ConfigurationItemAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\v1\ConfigurationItemAPI.aspx.designer.cs">
+      <DependentUpon>ConfigurationItemAPI.aspx</DependentUpon>
     </Compile>
     <Compile Include="API\v1\CustomerDashboardAPI.aspx.cs">
       <DependentUpon>CustomerDashboardAPI.aspx</DependentUpon>
@@ -2125,6 +2164,34 @@
     </Compile>
     <Compile Include="API\v1\TicketTracking.aspx.designer.cs">
       <DependentUpon>TicketTracking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="API\v2\CustomerDetailAPI.aspx.cs">
+      <DependentUpon>CustomerDetailAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\v2\CustomerDetailAPI.aspx.designer.cs">
+      <DependentUpon>CustomerDetailAPI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="API\v2\TicketCommentAPI.aspx.cs">
+      <DependentUpon>TicketCommentAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\v2\TicketCommentAPI.aspx.designer.cs">
+      <DependentUpon>TicketCommentAPI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="API\v2\TicketDetailAPI.aspx.cs">
+      <DependentUpon>TicketDetailAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\v2\TicketDetailAPI.aspx.designer.cs">
+      <DependentUpon>TicketDetailAPI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="API\v2\TierZeroStructureAPI.aspx.cs">
+      <DependentUpon>TierZeroStructureAPI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\v2\TierZeroStructureAPI.aspx.designer.cs">
+      <DependentUpon>TierZeroStructureAPI.aspx</DependentUpon>
     </Compile>
     <Compile Include="auth\AbstractsSANWebpage.aspx.cs">
       <DependentUpon>AbstractsSANWebpage.aspx</DependentUpon>
@@ -2718,6 +2785,13 @@
     <Compile Include="MasterConfig\TicketStatus.aspx.designer.cs">
       <DependentUpon>TicketStatus.aspx</DependentUpon>
     </Compile>
+    <Compile Include="MasterConfig\TicketStatusAuto.aspx.cs">
+      <DependentUpon>TicketStatusAuto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterConfig\TicketStatusAuto.aspx.designer.cs">
+      <DependentUpon>TicketStatusAuto.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MasterConfig\UnitOfMeasurement.aspx.cs">
       <DependentUpon>UnitOfMeasurement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2745,6 +2819,13 @@
     </Compile>
     <Compile Include="MasterConfig\WarranteeType.aspx.designer.cs">
       <DependentUpon>WarranteeType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterConfig\WorkingTimeConfig.aspx.cs">
+      <DependentUpon>WorkingTimeConfig.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterConfig\WorkingTimeConfig.aspx.designer.cs">
+      <DependentUpon>WorkingTimeConfig.aspx</DependentUpon>
     </Compile>
     <Compile Include="MasterPage\CRMMasterPage.master.cs">
       <DependentUpon>CRMMasterPage.master</DependentUpon>
@@ -2894,6 +2975,13 @@
     <Compile Include="Report\PivotTableReportMaster.aspx.designer.cs">
       <DependentUpon>PivotTableReportMaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Report\ReportConfigurationItem.aspx.cs">
+      <DependentUpon>ReportConfigurationItem.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\ReportConfigurationItem.aspx.designer.cs">
+      <DependentUpon>ReportConfigurationItem.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Report\ReportCustomer.aspx.cs">
       <DependentUpon>ReportCustomer.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2975,6 +3063,7 @@
     <Compile Include="Service\materialService.cs" />
     <Compile Include="Service\MenuService.cs" />
     <Compile Include="Service\ObjectUtil.cs" />
+    <Compile Include="Service\OneIDService.cs" />
     <Compile Include="Service\OwnerService.cs" />
     <Compile Include="Service\ProjectService.cs" />
     <Compile Include="Service\PublicAuthentication.cs" />
