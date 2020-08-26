@@ -132,11 +132,13 @@
                                                         </td>
                                                         <td>ผู้อนุมัติ
                                                         </td>
+                                                        <td>เป้าหมายการเปลี่ยนสถานะ 
+                                                        </td>
                                                     </tr>
-                                                    <label><%# Eval("EventDesc") %></label>
+                                                    <label><b>Event Description :</b> <%# Eval("EventDesc") %></label>
                                                     <asp:Repeater runat="server" ID="rptEventObject" OnItemDataBound="rptEventObject_ItemDataBound">
                                                         <ItemTemplate>
-                                                            <tr>
+                                                            <tr> 
                                                                 <td>
                                                                     <div class="col-lg-8 col-md-7">
                                                                         <%# Eval("HierarchyDesc") %>
@@ -168,6 +170,9 @@
                                                                             </ItemTemplate>
                                                                         </asp:Repeater>
                                                                     </table>
+                                                                </td>
+                                                                <td>
+                                                                    <p><%# getDescTicketStatus(Eval("TicketStatusCode").ToString()) %></p>
                                                                 </td>
                                                             </tr>
                                                         </ItemTemplate>
@@ -301,6 +306,13 @@
                                                             }
                                                         </script>
                                                     </div>
+                                                </div>
+                                                <div style="margin-bottom: 10px;">
+                                                    <label>
+                                                        Ticket Status
+                                                    </label>
+                                                    <asp:DropDownList ID="ddlTicketStatus" runat="server" ClientIDMode="Static" CssClass="form-control">
+                                                    </asp:DropDownList>
                                                 </div>
                                                 <div class="text-right">
                                                     <asp:UpdatePanel runat="server" UpdateMode="Conditional">

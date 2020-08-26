@@ -33,6 +33,7 @@ using ERPW.Lib.Authentication.Entity;
 using System.IO;
 using System.Diagnostics;
 using AjaxControlToolkit;
+using System.Web.UI.HtmlControls;
 
 namespace ServiceWeb.crm.AfterSale
 {
@@ -856,7 +857,6 @@ namespace ServiceWeb.crm.AfterSale
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             Debug.WriteLine("start Page_Load");
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -1190,12 +1190,16 @@ namespace ServiceWeb.crm.AfterSale
             }
 
             bindDataAccountability();
-
             GetMaterialPurchase();
             BindingMaterialPurchase();
             setHeaderPropertyValue();
             GetPropertyValueItem();
             BindingPropertyValue();
+
+            if (CustomerProfile != null)
+            {
+                ddlAccountability.SelectedValue = libCI.getAccountabilityfromEquipmentOwnerAssignment(SID, CompanyCode, ddlEquipmentNo.SelectedValue, CustomerProfile.CustomerCode);
+            }
 
         }
 
@@ -2043,6 +2047,8 @@ namespace ServiceWeb.crm.AfterSale
                     , DocType, true
                     , "", true
                     , (string)Session["SCT_created_fiscalyear" + idGen], true);
+
+            
         }
 
         private void defaultData()
@@ -2421,6 +2427,28 @@ namespace ServiceWeb.crm.AfterSale
                 ddlTransfer_OwnerService.CssClass = ddlTransfer_OwnerService.CssClass + " ticket-allow-editor";
                 ddlEscalate_OwnerService.CssClass = ddlEscalate_OwnerService.CssClass + " ticket-allow-editor";
             }
+
+        }
+        private CustomerProfile _CustomerProfile = null;
+        public CustomerProfile CustomerProfile
+        {
+            get
+            {
+                if (_CustomerProfile == null)
+                {
+                    _CustomerProfile = ERPW.Lib.Master.CustomerService.getInstance().SearchCustomerDataByCustomerCode(
+                        SID,
+                        CompanyCode,
+                        CustomerCode
+                    );
+
+                    if (_CustomerProfile == null)
+                    {
+                        _CustomerProfile = new CustomerProfile();
+                    }
+                }
+                return _CustomerProfile;
+            }
         }
 
         protected void controlscreen()
@@ -2675,7 +2703,7 @@ namespace ServiceWeb.crm.AfterSale
             return desc;
         }
 
-        private string GetDocStatusDesc(string code)
+        protected string GetDocStatusDesc(string code)
         {
             DataRow[] drr = dtDocstatus.Select("Name='" + code + "'");
             string desc = "";
@@ -3479,6 +3507,8 @@ namespace ServiceWeb.crm.AfterSale
             //btnCloseWork.CommandArgument = "FALSE";
             btnTransfer.CommandArgument = "FALSE";
 
+            var tierActivity = AfterSaleService.getInstance().tierActivityServiceCall(CompanyCode, hddDocnumberTran.Value, EquipmentSelect, EquipmentItemNo);
+            countActivity = tierActivity;
             if (hddHeaderStatus.Value == "Open") { countActivity = countround; }
             if (countround == 1)
             {
@@ -3662,7 +3692,7 @@ namespace ServiceWeb.crm.AfterSale
             countround++;
         }
 
-        protected void saveTimetampResponseToCustomer(string ResponseDate, string ResponseTime, string ResponseBy)
+        public void saveTimetampResponseToCustomer(string ResponseDate, string ResponseTime, string ResponseBy)
         {
             try
             {
@@ -4053,6 +4083,13 @@ namespace ServiceWeb.crm.AfterSale
                     hddEscalate_TierCode.Value = hddTierCode.Value;
                     hddEscalate_TierNext.Value = (hddTier.Value).Remove(2) + ((Int16.Parse((hddTier.Value).Remove(0, 2))) - 1).ToString();
                 }
+                var txBtn = hddCache.Value.Split('|');
+                if (txBtn[0] == "btnThisForwardWork")
+                {
+                    hddEscalate_TierCode.Value = txBtn[1];
+                    hddEscalate_TierNext.Value = txBtn[2];
+                    hddCache.Value = "";
+                }
 
 
                 string ticketType = "";
@@ -4171,6 +4208,13 @@ namespace ServiceWeb.crm.AfterSale
                 HiddenField hddTier = hddEscalate_Tier;
                 HiddenField hhdAOBJECTLINK = hddEscalate_AOBJECTLINK;
 
+                string hddTierNextTo = hddTierNext.Value;
+                if (Roll_Escalate.SelectedValue != "")
+                {
+                    hddTierNextTo = Roll_Escalate.SelectedValue;
+                    hddTierNext.Value = Roll_Escalate.SelectedValue;
+                }
+
                 DataRow[] drsTier = dtTier.Select("Tier='" + hddTierNext.Value + "'");
 
                 string tierDesc = "";
@@ -4230,11 +4274,6 @@ namespace ServiceWeb.crm.AfterSale
                     double.TryParse(dtTierSelecDetail.Rows[0]["Resolution"].ToString(), out resolutionTime);
                 }
                 string aobjectLink = "";
-                string hddTierNextTo = hddTierNext.Value;
-                if (Roll_Escalate.SelectedValue != "")
-                {
-                    hddTierNextTo = Roll_Escalate.SelectedValue;
-                }
                 try
                 {
                     aobjectLink = AfterSaleService.getInstance().EscalateTicket(
@@ -4245,6 +4284,17 @@ namespace ServiceWeb.crm.AfterSale
                         EmployeeCode, FullNameEN, true,
                         MainDelegate, participantsArray, OwnerServiceCode, SLAGroup
                     );
+
+                    if (AfterSaleService.getInstance().IsTicketStatusStopTimer(SID, CompanyCode, ticketNo))
+                    {
+                        DataTable dtServiceCall = AfterSaleService.getInstance().getDataServiceTicketHeader(SID, CompanyCode, ticketNo);
+                        if (dtServiceCall.Rows.Count > 0)
+                        {
+                            string statusCode = dtServiceCall.Rows[0]["Docstatus"].ToString();
+                            AfterSaleService.getInstance().PauseTriggerEscalate(SID, CompanyCode, statusCode, ticketNo);
+                        }
+
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -4298,14 +4348,14 @@ namespace ServiceWeb.crm.AfterSale
                         "Escalate", "", "", "");
                 }
 
-                NotificationLibrary.GetInstance().TicketAlertEvent(
-                    NotificationLibrary.EVENT_TYPE.TICKET_ESCALATE,
-                    SID,
-                    CompanyCode,
-                    hddDocnumberTran.Value,
-                    EmployeeCode,
-                    ThisPage
-                );
+                //NotificationLibrary.GetInstance().TicketAlertEvent(
+                //    NotificationLibrary.EVENT_TYPE.TICKET_ESCALATE,
+                //    SID,
+                //    CompanyCode,
+                //    hddDocnumberTran.Value,
+                //    EmployeeCode,
+                //    ThisPage
+                //);
 
                 updRemarkService.Update();
 
@@ -4662,6 +4712,74 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
+        #region Check StatusCode Target
+        private string getStatusCodeTarget(string AobjLink, string workgroup,string stategateFrom, string stategateTo, string SUBPROJECT)
+        {
+            string targetStatusCode = ""; 
+            DataTable dt = libWorkFlow.getAccountabilityDoc(SID, workgroup, AobjLink, stategateFrom, stategateTo);
+
+            if (dt.Rows.Count > 0)
+            {
+                targetStatusCode = !String.IsNullOrEmpty(dt.Rows[0]["TicketStatusCode"].ToString()) ? dt.Rows[0]["TicketStatusCode"].ToString() : "";
+            }
+
+            return targetStatusCode;
+        }
+        
+        public HiddenField parenthddTicketStatus_Old
+        {
+            get
+            {
+               return hddTicketStatus_Old ;
+            }
+        }
+
+        public HiddenField parenthddTicketStatus_New { 
+            get
+            {
+                return hddTicketStatus_New;
+            }
+        }
+        public HiddenField parenthddTicketStatus
+        {
+            get
+            {
+                return hddTicketStatus;
+            }
+        }
+        public UpdatePanel parentudpHiddenCode
+        {
+            get
+            {
+                return udpHiddenCode;
+            }
+        }
+
+        public HtmlInputText parent_txt_TicketStatusTran
+        {
+            get
+            {
+                return _txt_TicketStatusTran;
+            }
+        }
+
+        public UpdatePanel parentudpTicketStatusTran
+        {
+            get
+            {
+                return udpTicketStatusTran;
+            }
+        }
+
+        public UpdatePanel parentupdPerson
+        {
+            get
+            {
+                return updPerson;
+            }
+        }
+
+        #endregion
         private void BindDataWorkflow()
         {
             #region Workflow
@@ -4695,6 +4813,20 @@ namespace ServiceWeb.crm.AfterSale
                     ApproveStateGateControl.StategateCode = StateGate[0];
                     ApproveStateGateControl.Trig();
                     ApproveStateGateControl.TicketCode = hddDocnumberTran.Value;
+
+                    if (!String.IsNullOrEmpty(StateGate[0]))
+                    {
+                        ApproveStateGateControl.TicketStatusCodeTarget = getStatusCodeTarget(AobjLink
+                            , ""
+                            , StateGate[0]
+                            , StateGate[1]
+                            , Convert.ToString(dtWF.Rows[0]["SUBPROJECT"]));
+                        ApproveStateGateControl.TicketDocumentNo = hddDocnumberTran.Value.Trim();
+                        ApproveStateGateControl.TicketDocumentType = hddTicketDocType.Value.Trim();
+                        ApproveStateGateControl.TicketFiscalYear = _txt_fiscalyear.Value;
+                        ApproveStateGateControl.TicketStatusCodeOld = hddTicketStatus_Old.Value.Trim();
+                    }
+
                 }
                 //if (StateGate.Length >= 3)
                 //{
@@ -4830,8 +4962,8 @@ namespace ServiceWeb.crm.AfterSale
             ddlAccountability.DataTextField = "DataText";
             ddlAccountability.DataValueField = "DataValue";
             ddlAccountability.DataBind();
-            ddlAccountability.Items.Insert(0, new ListItem("Please select", ""));
 
+            ddlAccountability.Items.Insert(0, new ListItem("Please select", ""));
             ddlAccountability.Enabled = mode_stage == ApplicationSession.CREATE_MODE_STRING;
             ddlAccountability.SelectedValue = "";
 
@@ -5448,6 +5580,7 @@ namespace ServiceWeb.crm.AfterSale
                     );
 
                     udpHiddenCode.Update();
+                    BindDataTierOperation();
                 }
                 if (chkIsLoad_TicketChangeLog.Checked)
                     bindDataChangeLog();
@@ -7796,6 +7929,28 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
         //======================================================================================================================================
+    
+        public string checkCurrentStopTimer(string aobjectlink)
+        {
+            string resultStr = "";
+            string callerId = hddDocnumberTran.Value;
+            if (AfterSaleService.getInstance().CheckCurrentStopTimer(aobjectlink))
+            {
+                resultStr = "Waiting...";
+            }
+            return resultStr;
+        }
+
+        public string setHiddenOldEndDateTime(string aobjectlink)
+        {
+            string resultStr = "";
+            //string callerId = hddDocnumberTran.Value;
+            if (AfterSaleService.getInstance().CheckCurrentStopTimer(aobjectlink))
+            {
+                resultStr = "d-none";
+            }
+            return resultStr;
+        }
     }
 }
 

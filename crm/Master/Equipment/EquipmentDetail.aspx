@@ -102,12 +102,15 @@
                     </button>
                     <asp:Button Text="Diagram" runat="server" ID="btnOpenDiagram" CssClass="btn btn-success d-none"
                         OnClientClick="return showDiagram();" />
+
+                    <%if (Permission.ConfigurationItemModify)
+                        { %>
                     <button type="button" runat="server" class="btn btn-primary btn-sm mb-1" onclick="$(this).next().click();">
                         <i class="fa fa-save"></i>&nbsp;&nbsp;Save
                     </button>
                     <asp:Button Text="Save" runat="server" CssClass="btn btn-primary AUTH_UPDATE d-none" ID="btnSaveEquipment"
                         OnClick="btnSaveEquipment_Click" OnClientClick="AGLoading(true);" />
-
+                    <%} %>
                     <asp:Button Text="" runat="server" CssClass="d-none" ID="btnReloadLog" ClientIDMode="Static"
                         OnClick="btnReloadLog_Click" OnClientClick="AGLoading(true);" />
                     
@@ -359,7 +362,7 @@
                                                                 <asp:HiddenField ID="hddobjectid" runat="server" Value='<%# Eval("ObjectID") %>' />
                                                                 <asp:HiddenField ID="hddpropertiescode" runat="server" Value='<%# Eval("PropertiesCode") %>' />
                                                                 <asp:HiddenField ID="hddselectedcode" runat="server" Value='<%# Eval("SelectedCode") %>' />
-                                                                <asp:TextBox runat="server" ID="txtdata" Text='<%# Eval("xValue") %>' Visible='<%# !isSelectedValue(Eval("SelectedCode")) %>'
+                                                                <asp:TextBox runat="server" ID="txtdata" Text='<%# AttributesFormatModify(2, Eval("xValue").ToString()) %>' Visible='<%# !isSelectedValue(Eval("SelectedCode")) %>'
                                                                     CssClass="form-control form-control-sm" placeholder="Text" />
                                                                 <asp:DropDownList ID="ddlproperties" runat="server" CssClass="form-control form-control-sm" Style="display: none;"></asp:DropDownList>
                                                             </div>
@@ -863,6 +866,7 @@
                                                         <th style="width: 100px;">Begin Date</th>
                                                         <th style="width: 100px;">End Date</th>
                                                         <th style="width: 100px;">SLA Group</th>
+                                                        <th style="width: 100px;">Accountability</th>
                                                         <th class="text-center" style="width: 60px;">Active</th>
                                                     </tr>
                                                 </thead>
@@ -1765,6 +1769,7 @@
                             OwnerAssign.BeginDate,
                             OwnerAssign.EndDate,
                             OwnerAssign.SLAGroupDesc,
+                            OwnerAssign.Accountability,
                             OwnerAssign.ActiveStatus,
                         ]);
                     }
@@ -1975,6 +1980,11 @@
                                     <label>SLA Group</label>
                                     <asp:DropDownList ID="ddlSLAGroup" runat="server" CssClass="form-control form-control-sm"
                                         DataValueField="Key" DataTextField="Value">
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label>Accountability</label>
+                                    <asp:DropDownList ID="ddlAccountability" CssClass="form-control form-control-sm" runat="server">
                                     </asp:DropDownList>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-6">

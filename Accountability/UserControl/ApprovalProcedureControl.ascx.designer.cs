@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceWeb.Accountability.UserControl {
-    
-    
-    public partial class ApprovalProcedureControl {
-        
+namespace ServiceWeb.Accountability.UserControl
+{
+
+
+    public partial class ApprovalProcedureControl
+    {
+
         /// <summary>
         /// udpCodeidentityInitiative control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpCodeidentityInitiative;
-        
+
         /// <summary>
         /// hddInitiativeCode control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddInitiativeCode;
-        
+
         /// <summary>
         /// hddWorkGroupCode control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddWorkGroupCode;
-        
+
         /// <summary>
         /// chkLoadData control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkLoadData;
-        
+
         /// <summary>
         /// chkKeepDataSession control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkKeepDataSession;
-        
+
         /// <summary>
         /// chkSaveDataSession control.
         /// </summary>
@@ -65,7 +67,16 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkSaveDataSession;
-        
+
+        /// <summary>
+        /// SmartSearchMainDelegate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::ServiceWeb.widget.usercontrol.SmartSearchMainDelegate SmartSearchMainDelegate;
+
         /// <summary>
         /// udpHiddenCode control.
         /// </summary>
@@ -74,7 +85,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpHiddenCode;
-        
+
         /// <summary>
         /// hdfCustomerCode control.
         /// </summary>
@@ -83,7 +94,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdfCustomerCode;
-        
+
         /// <summary>
         /// hdfAreaCode control.
         /// </summary>
@@ -92,7 +103,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdfAreaCode;
-        
+
         /// <summary>
         /// hddDocnumberTran control.
         /// </summary>
@@ -101,7 +112,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddDocnumberTran;
-        
+
         /// <summary>
         /// hddTicketDocType control.
         /// </summary>
@@ -110,7 +121,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddTicketDocType;
-        
+
         /// <summary>
         /// hddTicketStatus control.
         /// </summary>
@@ -119,7 +130,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddTicketStatus;
-        
+
         /// <summary>
         /// hddCheckSaveChangeTicketStatus control.
         /// </summary>
@@ -128,7 +139,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddCheckSaveChangeTicketStatus;
-        
+
         /// <summary>
         /// hddTicketStatus_Old control.
         /// </summary>
@@ -137,7 +148,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddTicketStatus_Old;
-        
+
         /// <summary>
         /// hddTicketStatus_New control.
         /// </summary>
@@ -146,7 +157,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddTicketStatus_New;
-        
+
         /// <summary>
         /// hddCustomerCode control.
         /// </summary>
@@ -155,7 +166,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddCustomerCode;
-        
+
         /// <summary>
         /// hddDoctype_OpenRelation control.
         /// </summary>
@@ -164,7 +175,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddDoctype_OpenRelation;
-        
+
         /// <summary>
         /// hddFiscalYear_OpenRelation control.
         /// </summary>
@@ -173,7 +184,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddFiscalYear_OpenRelation;
-        
+
         /// <summary>
         /// hddTicketNo_OpenRelation control.
         /// </summary>
@@ -182,7 +193,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddTicketNo_OpenRelation;
-        
+
         /// <summary>
         /// hddAuthenEdit control.
         /// </summary>
@@ -191,7 +202,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddAuthenEdit;
-        
+
         /// <summary>
         /// hddBusinessObject control.
         /// </summary>
@@ -200,7 +211,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddBusinessObject;
-        
+
         /// <summary>
         /// hddEmployeeFirstView control.
         /// </summary>
@@ -209,7 +220,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddEmployeeFirstView;
-        
+
         /// <summary>
         /// hddPageTicketMode control.
         /// </summary>
@@ -218,7 +229,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddPageTicketMode;
-        
+
         /// <summary>
         /// hddAnalytics_Row_Key control.
         /// </summary>
@@ -227,7 +238,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddAnalytics_Row_Key;
-        
+
         /// <summary>
         /// ddlTicketStatus_Temp control.
         /// </summary>
@@ -236,7 +247,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTicketStatus_Temp;
-        
+
         /// <summary>
         /// udpApprovalProcedureModelControl control.
         /// </summary>
@@ -245,7 +256,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpApprovalProcedureModelControl;
-        
+
         /// <summary>
         /// updateButton control.
         /// </summary>
@@ -254,7 +265,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updateButton;
-        
+
         /// <summary>
         /// btnSave control.
         /// </summary>
@@ -263,7 +274,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
-        
+
         /// <summary>
         /// udpStateGate control.
         /// </summary>
@@ -272,7 +283,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpStateGate;
-        
+
         /// <summary>
         /// rptApprovalProcedureStateGate control.
         /// </summary>
@@ -281,7 +292,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptApprovalProcedureStateGate;
-        
+
         /// <summary>
         /// rptApprovalProcedureEventObject control.
         /// </summary>
@@ -290,7 +301,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptApprovalProcedureEventObject;
-        
+
         /// <summary>
         /// ddlParticipantsDesc control.
         /// </summary>
@@ -299,7 +310,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlParticipantsDesc;
-        
+
         /// <summary>
         /// txtSubProjectDescription control.
         /// </summary>
@@ -308,7 +319,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtSubProjectDescription;
-        
+
         /// <summary>
         /// upnSubproject control.
         /// </summary>
@@ -317,7 +328,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upnSubproject;
-        
+
         /// <summary>
         /// txtChangeFolderSubProject control.
         /// </summary>
@@ -326,7 +337,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtChangeFolderSubProject;
-        
+
         /// <summary>
         /// btnChangeSubProject control.
         /// </summary>
@@ -335,7 +346,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnChangeSubProject;
-        
+
         /// <summary>
         /// ddlSubProject control.
         /// </summary>
@@ -344,7 +355,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSubProject;
-        
+
         /// <summary>
         /// hddID control.
         /// </summary>
@@ -353,7 +364,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddID;
-        
+
         /// <summary>
         /// hddName control.
         /// </summary>
@@ -362,7 +373,7 @@ namespace ServiceWeb.Accountability.UserControl {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddName;
-        
+
         /// <summary>
         /// btnAddActor control.
         /// </summary>

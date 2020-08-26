@@ -774,6 +774,7 @@ namespace ServiceWeb.Accountability.UserControl
             dt.Columns.Add("CREATED_ON", typeof(string));
             dt.Columns.Add("UPDATED_BY", typeof(string));
             dt.Columns.Add("UPDATED_ON", typeof(string));
+            dt.Columns.Add("TicketStatusCode", typeof(string));
 
             return dt;
         }
@@ -1226,5 +1227,38 @@ namespace ServiceWeb.Accountability.UserControl
             return msg;
         }
 
+        protected void btnAddApproval_Click(object sender, EventArgs e)
+        {
+            string objSender = (sender as Button).Text;
+            string[] txSender = objSender.Split('|');
+            var txEmpCode = SmartSearchMainDelegate.SelectedCode;
+
+            try
+            {
+                var db = new DataTable();
+
+                DataTable dtPreAdd = serWorkflow.getApprovalParticipantsForApprovalProcedureAdd(
+                ERPWAuthentication.SID,
+                ERPWAuthentication.CompanyCode,
+                WorkGroupCode,
+                InitiativeCode,
+                txSender[1],//STATEGATEFROM,
+                txSender[2],//STATEGATETO,
+                txEmpCode,
+                txSender[0],//STATEGATETO,
+                ERPWAuthentication.UserName
+                );
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ObjectUtil.Err(ex.Message));
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+
+            Response.Redirect(Request.RawUrl);
+        }
     }
 }

@@ -1447,5 +1447,24 @@ namespace ServiceWeb.Service
 
 
         #endregion
+
+        public string getAccountabilityfromEquipmentOwnerAssignment(string SID, string CompanyCode, string equipmentCode, string ownerCode)
+        {
+            string result = "";
+            string sql = @"select Accountability from master_equipment_owner_assignment
+                           WHERE SID = '" + SID + @"'
+                                AND CompanyCode = '" + CompanyCode + @"'
+                                AND EquipmentCode = '" + equipmentCode + @"'
+                                AND OwnerCode = '" + ownerCode + @"'";
+
+            DataTable dt = dbService.selectDataFocusone(sql);
+
+            if (dt.Rows.Count > 0)
+            {
+                result = !String.IsNullOrEmpty(dt.Rows[0]["Accountability"].ToString()) ? dt.Rows[0]["Accountability"].ToString() : "";
+            }
+
+            return result;
+        }
     }
 }

@@ -818,6 +818,7 @@ function controlInputDisable() {
 
     $("#panel-ticket-detail").find(".ticket-default-disabled").prop("disabled", true);
     $("select[name*='tableChangeLogItems_length']").prop("disabled", false);
+    ThisEscalateReady();
 }
 
 function controlInputEnable() {
@@ -847,6 +848,7 @@ function controlInputEnable() {
     $("select[name*='tableChangeLogItems_length']").prop("disabled", false);
     //$("#icon-lock-ticket").remove();
     bindIconLockMode();
+    ThisEscalateReady();
 }
 
 var panelTimeCountDown, momentOfTime, countDownDate, countdownfunction, isExpired;
@@ -1078,6 +1080,19 @@ function addControlTicketStatus(a, b) {
         Elt_ddl.prop("disabled", true);
     }
 
+    var IsDisableView = $("#hddDisableStatusEdit").val().toLowerCase() == "true";
+    if (IsDisableView) {
+        Elt_ddl.prop("disabled", true);
+        var selectTxt = Elt_ddl.find(":selected").text();
+        var selectVal = Elt_ddl.find(":selected").val();
+        Elt_ddl
+            .find('option')
+            .remove()
+            .end()
+            .append('<option value="' + selectVal + '">' + selectTxt +'</option>')
+            .val(selectVal)
+        ;
+    }
 }
 
 function postSuccessCallBack(a, b, c) {
@@ -1391,4 +1406,20 @@ function loadCurentTabView() {
     if (id == 'nav-sla-tab' || id == 'nav-participants-tab') {
         focusRemarkBox(true);
     }
+}
+
+function ThisEscalateReady() {
+    $(document).ready(function () {
+        $("#panelFeedActivityComment").parent().find('.btnThisForwardWork').remove();
+        $(".btnThisForwardWork").click(function (event) {
+            $("#HiddenFieldCache").find('input[type*="hidden"]').attr("value", event.target.id);
+            $(".Roll_Escalate").val(event.target.id.split('|')[2]);
+            $("#panelFeedActivityComment").parent().find('input[value*="Escalate"]').click();
+        });
+        $("#panelFeedActivityComment").parent().find('input[value*="Escalate"]').click(function (event) {
+            if ($("#HiddenFieldCache").find('input[type*="hidden"]').val() == "") {
+                $(".Roll_Escalate").val('');
+            }
+        });
+    });
 }

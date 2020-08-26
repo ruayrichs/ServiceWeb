@@ -310,7 +310,7 @@
         </div>
         <div class="form-group col">
             <div class="card c-pointer panel-dashboard" data-id="panelListTicketDelay">
-                <div class="text-danger card-body dashboard-card">
+                <div class="text-danger card-body  dashboard-card">
                     <asp:Label Text="0" runat="server" ID="lblCountDelay" ClientIDMode="Static"/>
                 </div>
                 <div class="card-header bg-danger text-center">
@@ -646,7 +646,7 @@
                         <div class="card-header bg-success" style="text-align: center;">
                             <b>All Service Open</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle">
                             <canvas id="open-incident-map" height="250"></canvas>
                         </div>
                     </div>
@@ -658,7 +658,7 @@
                         <div class="card-header bg-success" style="text-align: center;">
                             <b>Incident Monthly</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle">
                             <canvas id="incident-monthly" height="250"></canvas>
                         </div>
                     </div>
@@ -670,7 +670,7 @@
                         <div class="card-header bg-success" style="text-align: center;">
                             <b>Request Monthly</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle">
                             <canvas id="request-monthly" height="250"></canvas>
                         </div>
                     </div>
@@ -682,7 +682,7 @@
                         <div class="card-header bg-success" style="text-align: center;">
                             <b>Problem Monthly</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle">
                             <canvas id="problem-monthly" height="250"></canvas>
                         </div>
                     </div>
@@ -694,7 +694,7 @@
                         <div class="card-header bg-info" style="text-align: center;">
                             <b>All Service Open/Close/Cancel</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <!-- <h1>Graph</h1> -->
                             <canvas id="open-incident-by-state" height="250"></canvas>
                         </div>
@@ -707,7 +707,7 @@
                         <div class="card-header bg-success" style="text-align: center;">
                             <b>Ticket Status</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <canvas id="ticket-status-chart" height="250"></canvas>
                         </div>
                     </div>
@@ -719,7 +719,7 @@
                         <div class="card-header bg-success" style="text-align: center;">
                             <b>Ticket Rating</b>
                         </div>
-                        <div class="card-body justify-content-center">
+                        <div class="card-body this-toggle this-click justify-content-center">
                             <div class="form-row col-12">
                                 <div class="col d-flex flex-column justify-content-center align-items-center">
                                     <img src="<%= Page.ResolveUrl("~") %>images/rating_icon/rating_1.png" class="img_ico" />
@@ -757,7 +757,7 @@
                         <div class="card-header bg-info" style="text-align: center;">
                             <b>Top 10 Category</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <canvas id="equipment-ranks-chart" height="250"></canvas>
                         </div>
                     </div>
@@ -769,7 +769,7 @@
                         <div class="card-header bg-info" style="text-align: center;">
                             <b>Ticket</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
 
                             <canvas id="number-ticket-line-chart" height="250"></canvas>
                         </div>
@@ -784,7 +784,7 @@
                         <div class="card-header bg-primary" style="text-align: center;">
                             <b>Problem Group</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <canvas id="open-incident-line-chart" height="250"></canvas>
                         </div>
                     </div>
@@ -795,7 +795,7 @@
                         <div class="card-header bg-primary" style="text-align: center;">
                             <b>User ticket</b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <canvas id="open-userticket-bar-chart" height="250"></canvas>
                             
                         </div>
@@ -806,7 +806,7 @@
                         <div class="card-header bg-primary" style="text-align: center;">
                             <b>Configuration Item of Family </b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <asp:UpdatePanel ID="udpnCICountFamily" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
                                     <div class="table-responsive">
@@ -843,7 +843,7 @@
                         <div class="card-header bg-primary" style="text-align: center;">
                             <b> Configuration Item of Class </b>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body this-toggle this-click">
                             <asp:UpdatePanel ID="udpnCICountClass" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
                                     <div class="table-responsive">
@@ -929,7 +929,7 @@
                     <ContentTemplate>
                         <asp:Repeater ID="rtpPriority" runat="server">
                             <ItemTemplate>
-                                <div class="card-body">
+                                <div class="card-body this-toggle">
                                     <%--<div>--%>
                                     <p><%# Eval("PiorityDesc") %></p>
                                     <table class="table table-striped table-bordered">
@@ -2162,5 +2162,14 @@
         }
         
         ///////////////////////////////////////////
+
+        //--Click Control---//
+        $(document).ready(function () {
+            $(".card-header").click(function (event) {
+                $(this).parent().find(".this-toggle").toggle("slow", function () { });
+            });
+            $(".this-click").parent().find(".card-header").click();
+        });
+        //--Click Control---//
     </script>
 </asp:Content>

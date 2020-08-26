@@ -24,6 +24,7 @@ using ERPW.Lib.Master.Config;
 using SNA.Lib.POS.utils;
 using Agape.Lib.DBService;
 using Newtonsoft.Json;
+using ERPW.Lib.Service.Workflow;
 
 namespace ServiceWeb.crm
 {
@@ -296,6 +297,7 @@ namespace ServiceWeb.crm
                 bindDataPopupEditCustomerDetail();
                 bindDataCustomerChangeLog();
                 //bindDataCI();
+   
 
                 if (dtGeneralDataService.Rows.Count > 0)
                 {
@@ -408,6 +410,7 @@ namespace ServiceWeb.crm
                 _txt_CD_ForeignName.Text = CustomerProfile.ForeignName;
                 _ddl_CD_CustomerGroup.SelectedValue = CustomerProfile.CustomerGroup;
                 ddlOwnerService.SelectedValue = CustomerProfile.OwnerService;
+                //ddlAccountability.SelectedValue = CustomerProfile.Accountability;
 
                 AutoCompleteEmployee.SelectedValue = displayMember(CustomerProfile.SaleEmployeeCode);
 
@@ -1204,13 +1207,16 @@ namespace ServiceWeb.crm
                 string customeremail = _txt_CD_CustomerEmail.Value;
                 string updateon = Validation.getCurrentServerStringDateTime();
                 string Remark2 = "";
+
+                string accountability = ""; // ddlAccountability.SelectedValue;
+
                 if (chkCriticalCustomer.Checked)
                 {
                     Remark2 = chkCriticalCustomer.Value;
                 }
                 serviceCustomer.UpdatadataCustomer(SID, CompanyCode, CustomeroCode, customername, customergroup, CustomerSaleAdmins, customerAddress, customerAddress
                     , customertaxID, customerTID, customerphone, customerphoneMobile
-                    , customeremail, updateby, updateon, foreignname, isActive, OwnerService, Remark2
+                    , customeremail, updateby, updateon, foreignname, isActive, OwnerService, Remark2, accountability
                 );
                 EditAddress();
 

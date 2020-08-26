@@ -27,7 +27,9 @@ namespace ServiceWeb.Service
 
         public const string TRIGGER_STATUS_START = "START";
         public const string TRIGGER_STATUS_CANCEL = "CANCEL";
-        public const string TRIGGER_STATUS_FINISH = "FINISH";        
+        public const string TRIGGER_STATUS_FINISH = "FINISH";
+        public const string TRIGGER_STATUS_PAUSE = "PAUSE";
+        public const string TRIGGER_STATUS_CONTINUE = "CONTINUE";
 
         public const string TRIGGER_ACTION_TICKET_START = "TICKET_START";
         public const string TRIGGER_ACTION_TICKET_BEFORE_OVERDUE = "TICKET_BEFORE_OVERDUE";
@@ -428,6 +430,19 @@ namespace ServiceWeb.Service
         {
             StartTrigger(transactionId, ServiceLibrary.BUSINESS_SERVICE_CALL, ticketType, ticketNo, fiscalYear, targetTime, TRIGGER_ACTION_TICKET_STATUS_AUTO_UPDATE, createdBy);
         }
+
+        #region method for New EndDateTime [stop timer]
+        public void updateDataTriggerEscalateAndBeforeOverdue(string sid, string companyCode, string transactionID, string triggerStatus)
+        {
+            string sql = @"
+                update ERPW_TRIGGER_STATUS 
+                set TriggerStatus = '" + triggerStatus + @"'
+                where SID = '" + sid + @"' 
+                AND CompanyCode = '" + companyCode + @"'
+                AND (TransactionID = '" + transactionID + @"' or TransactionID = '" + transactionID + "befOverdue')";
+            dbService.executeSQLForFocusone(sql);
+        }
+        #endregion
     }
 
     [Serializable]

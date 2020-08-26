@@ -19,6 +19,7 @@ using System.Web.Configuration;
 using Agape.Lib.DBService;
 using System.Text.RegularExpressions;
 using ServiceWeb.Service;
+using ERPW.Lib.Service.Workflow;
 
 namespace POSWeb.crm
 {
@@ -50,6 +51,7 @@ namespace POSWeb.crm
                 bindDropdownSaleDistrict();
                 bindCriteriaCreateCustoemr();
                 //loadCustomerList();
+                bindDataAccountability();
             }
         }
 
@@ -419,6 +421,7 @@ namespace POSWeb.crm
         {
             try
             {
+
                 if (String.IsNullOrEmpty(_txt_CD_CustomerName.Text.Trim()))
                 {
                     throw new Exception("Please input customer name!");
@@ -451,6 +454,7 @@ namespace POSWeb.crm
                     enCustomer.EMail = _txt_CD_CustomerEmail.Value;
                     enCustomer.SalesEmployee = AutoCompleteEmployee.SelectedValue;
                     enCustomer.OwnerService = ddlOwnerService_Created.SelectedValue;
+                    enCustomer.Accountability = ddlAccountability.SelectedValue;
 
                     string AddressCode = "001";
                     AddressListDetail addressDetail = new JavaScriptSerializer().Deserialize<AddressListDetail>(hddJsonAddress.Value);
@@ -571,8 +575,18 @@ namespace POSWeb.crm
             return en == null ? "" : en.xValue;
         }
         #endregion
+        AccountabilityService accountabilityService = new AccountabilityService();
+        private void bindDataAccountability()
+        {
+            DataTable dt = accountabilityService.getAccountabilityStructureV2(SID, "");
 
-
+            ddlAccountability.DataSource = dt;
+            ddlAccountability.DataTextField = "DataText";
+            ddlAccountability.DataValueField = "DataValue";
+            ddlAccountability.DataBind();
+            ddlAccountability.Items.Insert(0, new ListItem("", ""));
+            ddlAccountability.SelectedValue = "";
+        }
 
         private void bindOwnerService()
         {

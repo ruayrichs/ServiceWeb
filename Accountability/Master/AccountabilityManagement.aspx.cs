@@ -13,6 +13,8 @@ using System.Web.UI.WebControls;
 using ERPW.Lib.Service.Workflow;
 using ERPW.Lib.Service.Workflow.Entity;
 using ServiceWeb.MasterConfig.MasterPage;
+using ERPW.Lib.Master.Constant;
+using ERPW.Lib.Master.Config;
 
 namespace ServiceWeb.Accountability.Master
 {
@@ -37,7 +39,62 @@ namespace ServiceWeb.Accountability.Master
                 return (Master as AccountabilityMaster).WorkGroupCode;
             }
         }
+        #region TicketStatus Config
+        private MasterConfigLibrary lib = new MasterConfigLibrary();
+        private string[] arrUnusedEventType = new string[] { 
+            ConfigurationConstant.TICKET_STATUS_EVENT_START,
+            ConfigurationConstant.TICKET_STATUS_EVENT_CANCEL,
+            ConfigurationConstant.TICKET_STATUS_EVENT_RESOLVE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_CLOSED,
+            ConfigurationConstant.TICKET_STATUS_EVENT_START_BUSINESS_CHANGE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_INPROGRESS_BUSINESS_CHANGE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_RESOLVE_BUSINESS_CHANGE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_IMPLEMENT_BUSINESS_CHANGE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_CLOSED_BUSINESS_CHANGE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_CANCEL_BUSINESS_CHANGE,
+            ConfigurationConstant.TICKET_STATUS_EVENT_ROLL_BACK_BUSINESS_CHANGE
+        };
+        private Dictionary<string, string> _mDicTicketStatus;
+        private Dictionary<string, string> mDicTicketStatus
+        {
+            get
+            {
+                if (_mDicTicketStatus == null)
+                {
+                    _mDicTicketStatus = new Dictionary<string, string>();
+                    DataTable dt = lib.GetMasterConfigTicketStatus(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, "", "");
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        if (!arrUnusedEventType.Contains(dr["EventType"].ToString()))
+                        {
+                            _mDicTicketStatus.Add(dr["TicketStatusCode"].ToString(), dr["TicketStatusDesc"].ToString());
+                        }
+                    }
+                }
+                return _mDicTicketStatus;
+            }
+        }
+        private void getDropdownTicketStatus()
+        {
+            ddlTicketStatus.DataTextField = "Value";
+            ddlTicketStatus.DataValueField = "Key";
+            ddlTicketStatus.DataSource = mDicTicketStatus;
+            ddlTicketStatus.DataBind();
+            ddlTicketStatus.Items.Insert(0, new ListItem("-เลือกข้อมูล-", ""));
+        }
 
+        public string getDescTicketStatus(string ticketStatusCode)
+        {
+
+            if (!String.IsNullOrEmpty(ticketStatusCode))
+            {
+                return !String.IsNullOrEmpty(mDicTicketStatus[ticketStatusCode]) ? mDicTicketStatus[ticketStatusCode] : "";
+            } else
+            {
+                return "";
+            }
+        }
+        #endregion
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -70,6 +127,7 @@ namespace ServiceWeb.Accountability.Master
                     //bindDataParticipant();
                     bindDataEventObject();
                     getDropdownParticipant();
+                    getDropdownTicketStatus();
 
                     lblTitle.Text = accountService.getStructure(
                         ERPWAuthentication.SID,
@@ -259,7 +317,9 @@ namespace ServiceWeb.Accountability.Master
                         LastHierarchyCode(txtChangeFolderSubProjectObject.Text),
                         CharacterService.getInstance().getCharacterCodeByhierarchyType(ERPWAuthentication.SID, WorkGroupCode, ddlParticipantsDescription.SelectedValue),
                         ERPWAuthentication.EmployeeCode,
-                        WorkGroupCode);
+                        WorkGroupCode,
+                        ddlTicketStatus.SelectedValue
+                        );
 
                     ClientService.AGSuccess("บันทึกสำเร็จ");
                     bindDataEventObject();

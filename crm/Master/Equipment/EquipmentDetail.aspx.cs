@@ -24,6 +24,7 @@ using ERPW.Lib.F1WebService.ICMUtils;
 using ERPW.Lib.Service;
 using ERPW.Lib.Master.Config;
 using Newtonsoft.Json;
+using ERPW.Lib.Service.Workflow;
 
 namespace ServiceWeb.crm.Master.Equipment
 {
@@ -194,7 +195,7 @@ namespace ServiceWeb.crm.Master.Equipment
                 }
                 else
                 {
-                    bindDefaultToScreen();              
+                    bindDefaultToScreen();
                 }
 
                 Complete_OwnerAssignmentBox_CustomerSelect.initialDataAutoComplete(new DataTable(), "", "");
@@ -248,6 +249,12 @@ namespace ServiceWeb.crm.Master.Equipment
                 ddlproperties.DataBind();
                 ddlproperties.SelectedValue = hddxvalue.Value;
                 ddlproperties.Style["display"] = "";
+            }
+
+            if (!Permission.ConfigurationItemModify)
+            {
+                TextBox txtdata = e.Item.FindControl("txtdata") as TextBox;
+                txtdata.Enabled = false;
             }
         }
 
@@ -418,14 +425,24 @@ namespace ServiceWeb.crm.Master.Equipment
 
         private void BindDataEquipment()
         {
-            Object[] objParam = new Object[] { "0800044", POSDocumentHelper.getSessionId(SID, UserName),SID
+            Object[] objParam = new Object[] { "0800044", POSDocumentHelper.getSessionId(SID, UserName),SID 
                 , UserName,CompanyCode,EquipmentCode };
             DataSet[] objDataSetChange = new DataSet[] { dsEquipment };
             DataSet objReturn = icmUtil.ICMDataSetInvoke(objParam, objDataSetChange);
 
+            if (objReturn.Tables["master_equipment_owner_assignment"].Columns["Accountability"] == null)
+            {
+                objReturn.Tables["master_equipment_owner_assignment"].Columns.Add("Accountability");
+                foreach (DataRow dr in objReturn.Tables["master_equipment_owner_assignment"].Rows)
+                {
+                    dr["Accountability"] = ServiceEquipment.getAccountabilityfromEquipmentOwnerAssignment(SID, CompanyCode, dr["EquipmentCode"].ToString(), dr["OwnerCode"].ToString());
+                }
+            }
+
             if (objReturn != null && objReturn.Tables.Count > 0)
             {
                 dsEquipment = new tmpEquipmentSetupDataSet();
+                
                 dsEquipment.Merge(objReturn);
                 dsEquipment.AcceptChanges();
             }
@@ -651,6 +668,8 @@ namespace ServiceWeb.crm.Master.Equipment
             BindDDLCoustCenter();
             BindDDl_OwnerService();
             BindDLLSLAGroup();
+
+            bindDataAccountability();
         }
 
         private void BindDDLEMClass()
@@ -1868,6 +1887,8 @@ namespace ServiceWeb.crm.Master.Equipment
                 {
                     r.EndDate = Validation.Convert2DateDisplay(r.EndDate);
                 }
+
+                r.Accountability = getAccountabilityDesc(r.Accountability);
             });
 
             var datasFinal = datas.Select(s => new { 
@@ -1877,6 +1898,7 @@ namespace ServiceWeb.crm.Master.Equipment
                 s.BeginDate, 
                 s.EndDate, 
                 s.SLAGroupDesc, 
+                s.Accountability,
                 s.ActiveStatus 
             });
 
@@ -2061,6 +2083,7 @@ namespace ServiceWeb.crm.Master.Equipment
                 string EndDate = "";
                 string SLAGroup = "";
                 string ActiveStatus = "";
+                string Accountability = "";
 
                 foreach (DataRow dr in dsEquipment.master_equipment_owner_assignment.Select("LineNumber = '" + ItemNo + "'"))
                 {
@@ -2070,6 +2093,7 @@ namespace ServiceWeb.crm.Master.Equipment
                     EndDate = (dr["EndDate"] as string);
                     SLAGroup = (dr["SLAGroupCode"] as string);
                     ActiveStatus = (dr["ActiveStatus"] as string);
+                    Accountability = (dr["Accountability"] as string);
                 }
                 
                 //Button btn = (sender as Button);
@@ -2085,6 +2109,8 @@ namespace ServiceWeb.crm.Master.Equipment
 
                 txtOwnerAssignmentBox_ItemNo.Text = ItemNo;
                 ddlOwnerAssignmentBox_OwnerType.SelectedValue = OwnerType;
+
+                ddlAccountability.SelectedValue = Accountability;
 
                 #region Set AutoComplete
                 if (ddlOwnerAssignmentBox_OwnerType.SelectedValue == "01")
@@ -2176,9 +2202,9 @@ namespace ServiceWeb.crm.Master.Equipment
             try
             {
                 string curDate = Validation.getCurrentServerStringDateTime();
+
                 if (txtOwnerAssignmentBox_ItemNo.Text == "#####" || txtOwnerAssignmentBox_ItemNo.Text == "")
                 {
-
                     DataRow dr = dsEquipment.master_equipment_owner_assignment.NewRow();
 
                     int GenItemNo = 0;
@@ -2197,6 +2223,7 @@ namespace ServiceWeb.crm.Master.Equipment
                         ) + 1;
                     }
 
+                    
                     dr["SID"] = SID;
                     dr["CompanyCode"] = CompanyCode;
                     dr["LineNumber"] = GenItemNo.ToString().PadLeft(5, '0');
@@ -2209,6 +2236,7 @@ namespace ServiceWeb.crm.Master.Equipment
                     dr["CREATED_ON"] = curDate;
                     dr["CREATED_BY"] = EmployeeCode;
                     dr["SLAGroupCode"] = ddlSLAGroup.SelectedValue;
+                    dr["Accountability"] = ddlAccountability.SelectedValue;
                     if (!string.IsNullOrEmpty(EquipmentCode))
                     {
                         dr["EquipmentCode"] = EquipmentCode;
@@ -2233,6 +2261,7 @@ namespace ServiceWeb.crm.Master.Equipment
                         dr["UPDATED_ON"] = curDate;
                         dr["UPDATED_BY"] = EmployeeCode;
                         dr["SLAGroupCode"] = ddlSLAGroup.SelectedValue;
+                        dr["Accountability"] = ddlAccountability.SelectedValue;
                     }
                 }
                 ClientService.DoJavascript("$('#modal-owner-assignment').modal('hide');");
@@ -3187,8 +3216,57 @@ namespace ServiceWeb.crm.Master.Equipment
             public string SLAGroupCode { get; set; }
             public string SLAGroupDesc { get; set; }
 
+            public string Accountability { get; set; }
+
             public string ActiveStatus { get; set; }
+
         }
 
+        public string AttributesFormatModify(int showDigitNum, string attributesValue)
+        {
+            if (
+                !Permission.ConfigurationItemAttributes && 
+                !Permission.ConfigurationItemModify &&
+                !String.IsNullOrEmpty(attributesValue)
+                )
+            {
+
+                int replaceDigitNum = attributesValue.Length - showDigitNum;
+                string replacePart = attributesValue.Substring(0, replaceDigitNum);
+                attributesValue = attributesValue.Replace(replacePart, new string('X', replaceDigitNum));
+            }
+            return attributesValue;
+        }
+
+        AccountabilityService accountabilityService = new AccountabilityService();
+        private void bindDataAccountability()
+        {
+            DataTable dtAcc = accountabilityService.getAccountabilityStructureV2(SID, "");
+
+            ddlAccountability.DataSource = dtAcc;
+            ddlAccountability.DataTextField = "DataText";
+            ddlAccountability.DataValueField = "DataValue";
+            ddlAccountability.DataBind();
+            ddlAccountability.Items.Insert(0, new ListItem("", ""));
+            ddlAccountability.SelectedValue = "";
+        }
+        private string getAccountabilityDesc(string accountabilityCode)
+        {
+            string result = "";
+            DataTable dtAcc = accountabilityService.getAccountabilityStructureV2(SID, "");
+
+            if (dtAcc.Rows.Count > 0)
+            {
+                DataRow[] drQuery = (from DataRow dr in dtAcc.Rows
+                                     where dr["DataValue"].ToString() == accountabilityCode
+                                     select dr).ToArray();
+
+                if (drQuery.Length > 0)
+                {
+                    result = drQuery[0]["DataText"].ToString();
+                }
+            }
+            return result;
+        }
     }
 }

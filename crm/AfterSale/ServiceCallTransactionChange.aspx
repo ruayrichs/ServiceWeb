@@ -485,13 +485,17 @@
                                                                     </ContentTemplate>
                                                                 </asp:UpdatePanel>
                                                             </div>
-                                                            <div class="form-group col-lg-12 col-md-4 col-sm-12 col-xs-12">
-                                                                <asp:Label ID="lbAccountability" runat="server" Text="Accountability" />
-                                                                <asp:Panel runat="server" ID="panelAccountability">
-                                                                    <asp:DropDownList runat="server" ID="ddlAccountability" CssClass="form-control form-control-sm required">
-                                                                    </asp:DropDownList>
-                                                                </asp:Panel>
-                                                            </div>
+                                                            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updDDLAcc">
+                                                                <ContentTemplate>
+                                                                    <div class="form-group col-lg-12 col-md-4 col-sm-12 col-xs-12">
+                                                                        <asp:Label ID="lbAccountability" runat="server" Text="Accountability" />
+                                                                        <asp:Panel runat="server" ID="panelAccountability">
+                                                                            <asp:DropDownList runat="server" ID="ddlAccountability" CssClass="form-control form-control-sm required">
+                                                                            </asp:DropDownList>
+                                                                        </asp:Panel>
+                                                                    </div>
+                                                                </ContentTemplate>
+                                                            </asp:UpdatePanel>
                                                         </div>
                                                     </div>
                                                 </div>

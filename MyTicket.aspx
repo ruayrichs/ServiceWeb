@@ -152,6 +152,7 @@
                             <tr>
                                 <th class="col-date text-nowrap">Date</th>
                                 <th class="col-Time text-center text-nowrap">Time</th>
+                                <th class="col-Time text-center text-nowrap">Life Time</th>
                                 <th class="col-ticket-type text-nowrap">Ticket Type</th>
                                 <th class="col-ticket-type text-nowrap">Ticket No.</th>
                                 <th class="col-subject">Subject</th>
@@ -261,6 +262,7 @@
                     datasTicket.push([
                         ticket.StartDateTime,
                         ticket.StartDateTime.substring(8, 14),
+                        liftTime(ticket.StartDateTime, ticket.StatusCode),
                         ticket.DocumentTypeDesc,
                         ticket.CallerID + "|" + convertToTicketNoDisplay(ticket.CallerID) + "|" + ticket.Doctype + "|" + ticket.Fiscalyear + "|" + ticket.CustomerCode,
                         ticket.HeaderText,
@@ -295,7 +297,7 @@
                                 );
                                $(td).closest("tr").addClass("c-pointer");
                                $(td).closest("tr").bind("click", function () {
-                                   var datas = rowData[3].split('|');
+                                   var datas = rowData[4].split('|');
                                    var doctype = datas[2];
                                    var docnumber = datas[0];
                                    var fiscalyear = datas[3];
@@ -319,6 +321,19 @@
                        {
                            'targets': 2,
                            'createdCell': function (td, cellData, rowData, row, col) {
+                               var datas = cellData.split(" Day ");
+                               if (cellData != "") {
+                                   cellData = parseInt(datas[0]).toString() + " Day " + datas[1];
+                               }
+                               $(td).addClass("col-date text-nowrap");
+                               $(td).html(
+                                   cellData
+                               );
+                           }
+                       },
+                       {
+                           'targets': 3,
+                           'createdCell': function (td, cellData, rowData, row, col) {
                                if (enddate != "null") {
                                    if (enddate > today) {
                                        $(td).addClass("text-primary col-ticket-type text-nowrap");
@@ -334,7 +349,7 @@
                            }
                        },
                        {
-                           'targets': 3,
+                           'targets': 4,
                            'createdCell': function (td, cellData, rowData, row, col) {
                                if (enddate != "null") {
                                    if (enddate > today) {
@@ -359,25 +374,26 @@
                            }
                        },
                        {
-                           'targets': 4,
-                           'createdCell': function (td, cellData, rowData, row, col) {
-                               $(td).addClass("col-subject text-truncate font-italic");
-                           }
-                       },
-                       {
                            'targets': 5,
                            'createdCell': function (td, cellData, rowData, row, col) {
-                               $(td).addClass("text-truncate col-Work-Flow-Status text-nowrap");
+                               $(td).attr('title', cellData);
+                               $(td).addClass("col-subject text-truncate font-italic");
                            }
                        },
                        {
                            'targets': 6,
                            'createdCell': function (td, cellData, rowData, row, col) {
-                               $(td).addClass("text-truncate col-customer text-nowrap");
+                               $(td).addClass("text-truncate col-Work-Flow-Status text-nowrap");
                            }
                        },
                        {
                            'targets': 7,
+                           'createdCell': function (td, cellData, rowData, row, col) {
+                               $(td).addClass("text-truncate col-customer text-nowrap");
+                           }
+                       },
+                       {
+                           'targets': 8,
                            'createdCell': function (td, cellData, rowData, row, col) {
                                $(td).addClass("col-status text-nowrap");
                                $(td).html(
@@ -409,6 +425,43 @@
                 }
 
                 return dataTableResult;
+            }
+            function liftTime(strDate, strStatusCode) {
+
+                if (strDate != "" && strStatusCode != "" && strStatusCode != "Cancel" && strStatusCode != "Closed" && strStatusCode != "Resolve") {
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+                    var hours = today.getHours()
+                    var minutes = today.getMinutes()
+                    var seconds = today.getSeconds();
+
+                    var _yyyy = parseInt(strDate.substring(0, 4));
+                    var _mm = parseInt(strDate.substring(4, 6));
+                    var _dd = parseInt(strDate.substring(6, 8));
+                    var _hh = parseInt(strDate.substring(8, 10));
+                    var _mi = parseInt(strDate.substring(10, 12));
+                    var _ss = parseInt(strDate.substring(12, 14));
+
+                    var t1 = new Date(yyyy, mm, dd, hours, minutes, seconds, 0);
+                    var t2 = new Date(_yyyy, _mm, _dd, _hh, _mi, _ss, 0);
+                    var dif = t1.getTime() - t2.getTime();
+
+                    var Seconds_from_T1_to_T2 = dif / 1000;
+                    var Seconds_Between_Dates = Math.abs(Seconds_from_T1_to_T2);
+                    var hhCal = Seconds_Between_Dates / 60 / 60;
+                    var ddDisplay = hhCal / 24;
+                    var hhDisplay = parseFloat("0." + ddDisplay.toString().split('.')[1]) * 24;
+                    var miDisplay = parseFloat("0." + hhDisplay.toString().split('.')[1]) * 60;
+                    var ssDisplay = parseFloat("0." + miDisplay.toString().split('.')[1]) * 60;
+
+                    strDate = parseInt(ddDisplay).toString().padStart(4, '0') + " Day " + parseInt(hhDisplay).toString().padStart(2, '0') + ":" + parseInt(miDisplay).toString().padStart(2, '0') + ":" + parseInt(ssDisplay).toString().padStart(2, '0');
+                    return strDate;
+
+                } else {
+                    return strDate = '';
+                }
             }
         </script>
     </div>

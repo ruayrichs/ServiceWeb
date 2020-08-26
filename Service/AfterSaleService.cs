@@ -21,6 +21,7 @@ using Link.Lib.Model.Model.Timeline;
 using ERPW.Lib.Service.Entity;
 using agape.proxy.data.dataset;
 using ERPW.Lib.F1WebService.ICMUtils;
+using System.Web.SessionState;
 
 namespace ServiceWeb.Service
 {
@@ -217,7 +218,7 @@ namespace ServiceWeb.Service
             bool.TryParse(WebConfigurationManager.AppSettings["ERPW_Config_Filter_Owner"], out FilterOwner);
             if (FilterOwner)
             {
-               OwnerGroupCode = ERPWAuthentication.Permission.OwnerGroupCode;
+                OwnerGroupCode = ERPWAuthentication.Permission.OwnerGroupCode;
             }
 
             if (IsExclude)
@@ -261,7 +262,7 @@ namespace ServiceWeb.Service
 
             if (listTicketType.Count > 0)
             {
-                where += " and a.DocumentTypeCode in ('" + string.Join("', '", listTicketType) + "')"; 
+                where += " and a.DocumentTypeCode in ('" + string.Join("', '", listTicketType) + "')";
             }
 
             if (!string.IsNullOrEmpty(comcode))
@@ -272,7 +273,7 @@ namespace ServiceWeb.Service
 
             DataTable dt = lookupICMService.GetSearchData(
                 SID,
-                "SHService", 
+                "SHService",
                 "#where a.SID='" + SID + "' " + where
             );
 
@@ -316,7 +317,7 @@ namespace ServiceWeb.Service
             {
                 dr["CustomerName"] = GenerateCodeAndDesc(dr["CustomerCode"].ToString(), dr["CustomerName"].ToString());
             }
-            
+
             return dt;//CustomerCode,CustomerName
         }
 
@@ -639,7 +640,7 @@ namespace ServiceWeb.Service
         }
         #region Incident Area
         #region Incident Area Structure Master
-        public DataTable GetDTProblemGroup(string sid,string businessObject)
+        public DataTable GetDTProblemGroup(string sid, string businessObject)
         {
             List<string> sql_arr = new List<string>();
             sql_arr.Add("select * from ERPW_TICKET_AREA_PROBLEM_GROUP_MASTER WITH (NOLOCK)  where SID = '" + sid + "' and BUSINESSOBJECT='" + businessObject + "' ");
@@ -656,7 +657,7 @@ namespace ServiceWeb.Service
             return dt;//GROUPCODE,GROUPNAME
         }
 
-        public DataTable GetDTProblemType(string SID,string BusinessObject,string ProblemGroup)
+        public DataTable GetDTProblemType(string SID, string BusinessObject, string ProblemGroup)
         {
             List<string> sql_arr = new List<string>();
             sql_arr.Add("select * from ERPW_TICKET_AREA_PROBLEM_TYPE_MASTER WITH (NOLOCK)  where SID = '" + SID + "' and BUSINESSOBJECT='" + BusinessObject + "' ");
@@ -713,7 +714,7 @@ namespace ServiceWeb.Service
             DataTable dt = dbService.selectDataFocusone(string.Join(" ", sql_arr.ToArray()));
 
             dt.TableName = "ERPW_TICKET_AREA_CONTACT_SOURCE_MASTER";
-            dt.PrimaryKey = new DataColumn[] { 
+            dt.PrimaryKey = new DataColumn[] {
                 dt.Columns["SID"],
                 dt.Columns["BUSINESSOBJECT"],
                 dt.Columns["GROUPCODE"],
@@ -730,7 +731,7 @@ namespace ServiceWeb.Service
             return dt;//AREACODE,AREANAME
         }
 
-#endregion
+        #endregion
 
         #endregion
 
@@ -814,7 +815,7 @@ namespace ServiceWeb.Service
 
         public DataTable getSearchEQInfo(string ownerCode, string equipmentCode)
         {
-            return getSearchEQInfo(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ownerCode, equipmentCode);          
+            return getSearchEQInfo(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ownerCode, equipmentCode);
         }
 
         public DataTable getSearchEQInfo(string sid, string companycode, string ownerCode, string equipmentCode)
@@ -953,7 +954,7 @@ namespace ServiceWeb.Service
 
                           where item.SID='" + SID + @"'
                           and item.TierCode='" + TierCode + @"'
-                          order by item.sequence, map.created_on asc";
+                          order by ABS(item.sequence), map.created_on asc";
 
             return dbService.selectDataFocusone(sql);
         }
@@ -1232,6 +1233,26 @@ namespace ServiceWeb.Service
             return dt.Rows.Count;
         }
 
+        public int tierActivityServiceCall(string SNAID, string ServiceDocNo, string EquipmentNo, string ItemNo)
+        {
+            string sql = @"select top 1 STUFF(Tier, 1, 2, '') AS Activity from CRM_SERVICECALL_MAPPING_ACTIVITY  WITH (NOLOCK) 
+                            where SNAID='" + SNAID + @"' 
+                            and ServiceDocNo='" + ServiceDocNo + @"' 
+                            --and EquipmentNo='" + EquipmentNo + @"'
+                            and ItemNo='" + ItemNo + @"'
+                            order by Activity desc";
+
+            DataTable dt = dbService.selectDataFocusone(sql);
+            var Activity = 0;
+            foreach (DataRow dr in dt.Rows)
+            {
+                var num = dt.Rows[0]["Activity"].ToString();
+                Activity = Int16.Parse(num);
+            }
+
+            return Activity;
+        }
+
         public string getLastActivityServiceCall(string SNAID, string ServiceDocNo, string EquipmentNo, string ItemNo)
         {
             string sql = @"select top 1 * from CRM_SERVICECALL_MAPPING_ACTIVITY 
@@ -1356,7 +1377,7 @@ namespace ServiceWeb.Service
             return dt;
         }
 
-     
+
 
         public string getTierName(string SID, string WorkGroupCode, string TierCode)
         {
@@ -1372,7 +1393,7 @@ namespace ServiceWeb.Service
 
             return TierName;
         }
-        
+
         public string CreatedTierServiceTicket(string sid, string companyCode, string subject, string remark,
             string mainDelegate, string[] participants, string createdBy, string startDateTime,
             double resolutionTimes, bool escalate)
@@ -1503,9 +1524,94 @@ namespace ServiceWeb.Service
             DataTable dt = dbService.selectDataFocusone(sql);
             return dt;
         }
-        //=========================== validation end work time ====================================
-        public double validationWorkTime(double resolutionTime)
+        #region Validation end work time
+        //public double validationWorkTime(double resolutionTime)
+        //{
+        //    MasterWorkingTimeConfigLib workingtimeConfigLib = new MasterWorkingTimeConfigLib();
+        //    List<WorkingTimeConfig> lst_wtEn = workingtimeConfigLib.GetWorkingTime_Config(
+        //           ERPWAuthentication.SID,
+        //           ERPWAuthentication.CompanyCode
+        //    );
+
+        //    if (lst_wtEn.Count > 0)
+        //    {
+        //        WorkingTimeConfig wtEn = lst_wtEn[0];
+
+        //        DateTime timeNow = Validation.Convert2RadTimeDisplay(Validation.getCurrentServerTime());//เวลาสร้าง ticket
+        //        DateTime dateTimeNow = Validation.getCurrentServerDateTime(); //วันและเวลาสร้าง ticket
+        //        DateTime startTime = Validation.Convert2RadTimeDisplay(wtEn.StartTime);//เวลาเริ่มงาน
+        //        DateTime endTime = Validation.Convert2RadTimeDisplay(wtEn.EndTime);//เวลาเลิกงาน
+        //        DateTime overdueTime = timeNow.AddSeconds(resolutionTime);
+        //        TimeSpan workTime = endTime - startTime;
+        //        double oneDay = 24 * 60 * 60; //แปลงเวลา 1 วันเป็น วินาที
+        //        double gapTime = oneDay - workTime.TotalSeconds; //หาระยะเวลาที่ไม่ได้ทำงาน
+
+        //        if (checkHoliday(resolutionTime, dateTimeNow, wtEn.Workday) || timeNow >= endTime)//เปิด ticket หลังเลิกงาน และวันหยุด
+        //        {
+        //            TimeSpan gap = startTime.AddDays(1) - timeNow;
+        //            resolutionTime += Convert.ToDouble((int)gap.TotalSeconds);
+        //        }
+
+        //        if (timeNow >= startTime && timeNow < endTime) { //ถ้าเปิด ticket ในเวลางาน ให้เข้ามาทำใน if
+        //            if (overdueTime >= endTime)
+        //            {
+        //                resolutionTime += gapTime;
+        //            }
+        //        }
+        //        else if (timeNow < startTime)
+        //        {
+        //            TimeSpan gapTimeBeforWorkTime = startTime - timeNow;
+        //            resolutionTime += Convert.ToDouble((int)gapTimeBeforWorkTime.TotalSeconds);
+        //        }
+        //        resolutionTime = validationHoliday(resolutionTime, dateTimeNow, wtEn.Workday);//เช็ควันหยุดในอีกวันถัดไป
+        //    }
+        //    return resolutionTime;
+        //}
+        //public double validationHoliday(double resolutionTime, DateTime nowDate, string workDay)
+        //{
+
+        //    double gapTimeHoliday = 24 * 60 * 60; //แปลง 1 วัน เป็นวินาที
+        //    while (checkHoliday(resolutionTime, nowDate, workDay))
+        //    {
+        //        resolutionTime += gapTimeHoliday;
+        //    }
+        //    return resolutionTime;
+        //}
+        //public bool checkHoliday(double resolutionTime, DateTime nowDate, string workDay)
+        //{
+        //    CultureInfo _cultureEnInfo = new CultureInfo("en-US");
+        //    bool isHoliday = false;
+        //    int indexDay = (int)nowDate.AddSeconds(resolutionTime).DayOfWeek;
+        //    MasterWorkingTimeConfigLib lib = new MasterWorkingTimeConfigLib();
+        //    List<string> list_holidays = lib.GetHolidaysByDate(
+        //                                ERPWAuthentication.SID,
+        //                                ERPWAuthentication.CompanyCode,
+        //                                MasterWorkingTimeConfigLib.Holidays_TYPE,
+        //                                Convert.ToDateTime(nowDate.AddSeconds(resolutionTime), _cultureEnInfo).ToString("yyyyMMdd", _cultureEnInfo));
+
+        //    if (list_holidays.Count > 0 || workDay[indexDay] == '0')
+        //    {
+        //        isHoliday = true;
+        //    }
+        //    return isHoliday;
+        //}
+        //public string ConvertdbDateToDisplayDate(string dbDate)
+        //{
+        //    DateTime datetime_date = DateTime.ParseExact(dbDate,
+        //                            "yyyyMMdd",
+        //                             CultureInfo.CurrentCulture);
+        //    string dispDate = String.Format("{0:yyyy/MM/dd}", datetime_date);
+        //    return dispDate;
+        //}
+
+        public double CalculateNewResolutionTime(double resolutionTime)
         {
+            TimeSpan tsResolutionTimeTemp = new TimeSpan(0, 0, Convert.ToInt32(resolutionTime));
+            
+            CultureInfo cul = new CultureInfo("en-US");
+            DateTime dtCurrent = Validation.getCurrentServerDateTime();
+            DateTime dueDateTime = dtCurrent;
+
             MasterWorkingTimeConfigLib workingtimeConfigLib = new MasterWorkingTimeConfigLib();
             List<WorkingTimeConfig> lst_wtEn = workingtimeConfigLib.GetWorkingTime_Config(
                    ERPWAuthentication.SID,
@@ -1514,86 +1620,198 @@ namespace ServiceWeb.Service
 
             if (lst_wtEn.Count > 0)
             {
-                WorkingTimeConfig wtEn = lst_wtEn[0];
+                int hhStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(0, 2));
+                int mmStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(2, 2));
+                int ssStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(4, 2));
+                int hhEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(0, 2));
+                int mmEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(2, 2));
+                int ssEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(4, 2));
+                TimeSpan workdayStart = new TimeSpan(hhStart, mmStart, ssStart);
+                TimeSpan workdayEnd = new TimeSpan(hhEnd, mmEnd, ssEnd);
 
-                DateTime timeNow = Validation.Convert2RadTimeDisplay(Validation.getCurrentServerTime());//เวลาสร้าง ticket
-                DateTime dateTimeNow = Validation.getCurrentServerDateTime(); //วันและเวลาสร้าง ticket
-                DateTime startTime = Validation.Convert2RadTimeDisplay(wtEn.StartTime);//เวลาเริ่มงาน
-                DateTime endTime = Validation.Convert2RadTimeDisplay(wtEn.EndTime);//เวลาเลิกงาน
-                DateTime overdueTime= timeNow.AddSeconds(resolutionTime);
-                TimeSpan workTime =  endTime - startTime;
-                double oneDay = 24 * 60 * 60; //แปลงเวลา 1 วันเป็น วินาที
-                double gapTime = oneDay - workTime.TotalSeconds; //หาระยะเวลาที่ไม่ได้ทำงาน
-
-                if(checkHoliday(resolutionTime, dateTimeNow, wtEn.Workday) || timeNow >= endTime)//เปิด ticket หลังเลิกงาน และวันหยุด
+                do
                 {
-                    TimeSpan gap = startTime.AddDays(1) - timeNow;
-                    resolutionTime += Convert.ToDouble((int)gap.TotalSeconds);
-                }
-               
-                if (timeNow >= startTime && timeNow < endTime) { //ถ้าเปิด ticket ในเวลางาน ให้เข้ามาทำใน if
-                        if (overdueTime >= endTime)
+                    List<string> list_holidays = workingtimeConfigLib.GetHolidaysByDate(
+                                            ERPWAuthentication.SID,
+                                            ERPWAuthentication.CompanyCode,
+                                            MasterWorkingTimeConfigLib.Holidays_TYPE,
+                                            Validation.Convert2DateTimeDB(dueDateTime.ToString("dd/MM/yyyy HH:mm:ss", cul)).Substring(0, 8));
+
+                    if (lst_wtEn[0].Workday[(int)dueDateTime.DayOfWeek] == '0' || list_holidays.Contains(dueDateTime.ToString("yyyyMMdd", cul)))
+                    {
+                        DateTime dueDateTimeTemp = dueDateTime;
+
+                        //jump to start of next day
+                        dueDateTimeTemp = dueDateTimeTemp.AddDays(1);
+                        dueDateTimeTemp = new DateTime(dueDateTimeTemp.Year, dueDateTimeTemp.Month, dueDateTimeTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                        dueDateTime = dueDateTimeTemp;
+                    }
+                    else
+                    {
+                        DateTime startWorkDayTemp = new DateTime(dueDateTime.Year, dueDateTime.Month, dueDateTime.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+                        DateTime endWorkDayTemp = new DateTime(dueDateTime.Year, dueDateTime.Month, dueDateTime.Day, workdayEnd.Hours, workdayEnd.Minutes, workdayEnd.Seconds);
+
+                        if (dueDateTime > endWorkDayTemp) // เวลาเกินเลิกงาน
                         {
-                            resolutionTime += gapTime;
+                            DateTime dueDateTimeTemp = dueDateTime;
+
+                            //jump to start of next day
+                            dueDateTimeTemp = dueDateTimeTemp.AddDays(1);
+                            dueDateTimeTemp = new DateTime(dueDateTimeTemp.Year, dueDateTimeTemp.Month, dueDateTimeTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                            dueDateTime = dueDateTimeTemp;
                         }
-                }
-                else if (timeNow < startTime)
+                        else
+                        {
+                            if (dueDateTime <= startWorkDayTemp)
+                            {
+                                dueDateTime = startWorkDayTemp;
+                            }
+
+                            TimeSpan tsDiff = endWorkDayTemp - dueDateTime;
+
+                            if (tsResolutionTimeTemp > tsDiff)
+                            {
+                                tsResolutionTimeTemp = tsResolutionTimeTemp.Subtract(tsDiff); // ลบเวลาที่ทำไปแล้ว
+
+                                DateTime dueDateTimeTemp = dueDateTime;
+                                //jump to start of next day
+                                dueDateTimeTemp = dueDateTimeTemp.AddDays(1);
+                                dueDateTimeTemp = new DateTime(dueDateTimeTemp.Year, dueDateTimeTemp.Month, dueDateTimeTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                                dueDateTime = dueDateTimeTemp;
+                            }
+                            else
+                            {
+                                dueDateTime = startWorkDayTemp.AddSeconds(tsResolutionTimeTemp.TotalSeconds);
+                                tsResolutionTimeTemp = TimeSpan.Zero;
+                            }
+                        }
+
+                    }
+                } while (tsResolutionTimeTemp.Ticks > 0);
+            } 
+            else
+            {
+                dueDateTime = dueDateTime.AddSeconds(tsResolutionTimeTemp.TotalSeconds);
+            }
+
+            TimeSpan tsNewResolutionTime = dueDateTime - dtCurrent;
+
+            return tsNewResolutionTime.TotalSeconds;
+
+        }
+        public double CalculateNewResolutionTime(double resolutionTime, DateTime startDatetime)
+        {
+            TimeSpan tsResolutionTimeTemp = new TimeSpan(0, 0, Convert.ToInt32(resolutionTime));
+
+            CultureInfo cul = new CultureInfo("en-US");
+            DateTime dtCurrent = startDatetime;
+            DateTime dueDateTime = dtCurrent;
+
+            MasterWorkingTimeConfigLib workingtimeConfigLib = new MasterWorkingTimeConfigLib();
+            List<WorkingTimeConfig> lst_wtEn = workingtimeConfigLib.GetWorkingTime_Config(
+                   ERPWAuthentication.SID,
+                   ERPWAuthentication.CompanyCode
+            );
+
+            if (lst_wtEn.Count > 0)
+            {
+                int hhStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(0, 2));
+                int mmStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(2, 2));
+                int ssStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(4, 2));
+                int hhEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(0, 2));
+                int mmEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(2, 2));
+                int ssEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(4, 2));
+                TimeSpan workdayStart = new TimeSpan(hhStart, mmStart, ssStart);
+                TimeSpan workdayEnd = new TimeSpan(hhEnd, mmEnd, ssEnd);
+
+                do
                 {
-                    TimeSpan gapTimeBeforWorkTime = startTime - timeNow;
-                    resolutionTime +=Convert.ToDouble( (int)gapTimeBeforWorkTime.TotalSeconds);
-                }
-                resolutionTime = validationHoliday(resolutionTime, dateTimeNow, wtEn.Workday);//เช็ควันหยุดในอีกวันถัดไป
-            }
-            return resolutionTime;
-        }
-        public double validationHoliday(double resolutionTime, DateTime nowDate, string workDay)
-        {
-            
-            double gapTimeHoliday = 24*60*60; //แปลง 1 วัน เป็นวินาที
-            while (checkHoliday(resolutionTime, nowDate, workDay))
-            {
-                resolutionTime += gapTimeHoliday;
-            }
-            return resolutionTime;
-        }
-        public bool checkHoliday(double resolutionTime, DateTime nowDate, string workDay)
-        {
-            CultureInfo _cultureEnInfo = new CultureInfo("en-US");
-            bool isHoliday = false;
-            int indexDay = (int)nowDate.AddSeconds(resolutionTime).DayOfWeek;
-            MasterWorkingTimeConfigLib lib = new MasterWorkingTimeConfigLib();
-            List<string> list_holidays = lib.GetHolidaysByDate(
-                                        ERPWAuthentication.SID, 
-                                        ERPWAuthentication.CompanyCode,
-                                        MasterWorkingTimeConfigLib.Holidays_TYPE,
-                                        Convert.ToDateTime(nowDate.AddSeconds(resolutionTime), _cultureEnInfo).ToString("yyyyMMdd", _cultureEnInfo));
+                    List<string> list_holidays = workingtimeConfigLib.GetHolidaysByDate(
+                                            ERPWAuthentication.SID,
+                                            ERPWAuthentication.CompanyCode,
+                                            MasterWorkingTimeConfigLib.Holidays_TYPE,
+                                            Validation.Convert2DateTimeDB(dueDateTime.ToString("dd/MM/yyyy HH:mm:ss", cul)).Substring(0, 8));
 
-            if (list_holidays.Count > 0 || workDay[indexDay] == '0')
-            {
-                isHoliday = true;
-            }
-            return isHoliday;
-        }
-          public string ConvertdbDateToDisplayDate(string dbDate)
-        {
-            DateTime datetime_date = DateTime.ParseExact(dbDate,
-                                    "yyyyMMdd",
-                                     CultureInfo.CurrentCulture);
-            string dispDate = String.Format("{0:yyyy/MM/dd}", datetime_date);
-            return dispDate;
-        }
+                    if (lst_wtEn[0].Workday[(int)dueDateTime.DayOfWeek] == '0' || list_holidays.Contains(dueDateTime.ToString("yyyyMMdd", cul)))
+                    {
+                        DateTime dueDateTimeTemp = dueDateTime;
 
+                        //jump to start of next day
+                        dueDateTimeTemp = dueDateTimeTemp.AddDays(1);
+                        dueDateTimeTemp = new DateTime(dueDateTimeTemp.Year, dueDateTimeTemp.Month, dueDateTimeTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                        dueDateTime = dueDateTimeTemp;
+                    }
+                    else
+                    {
+                        DateTime startWorkDayTemp = new DateTime(dueDateTime.Year, dueDateTime.Month, dueDateTime.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+                        DateTime endWorkDayTemp = new DateTime(dueDateTime.Year, dueDateTime.Month, dueDateTime.Day, workdayEnd.Hours, workdayEnd.Minutes, workdayEnd.Seconds);
+
+                        if (dueDateTime > endWorkDayTemp) // เวลาเกินเลิกงาน
+                        {
+                            DateTime dueDateTimeTemp = dueDateTime;
+
+                            //jump to start of next day
+                            dueDateTimeTemp = dueDateTimeTemp.AddDays(1);
+                            dueDateTimeTemp = new DateTime(dueDateTimeTemp.Year, dueDateTimeTemp.Month, dueDateTimeTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                            dueDateTime = dueDateTimeTemp;
+                        }
+                        else
+                        {
+                            if (dueDateTime <= startWorkDayTemp)
+                            {
+                                dueDateTime = startWorkDayTemp;
+                            }
+
+                            TimeSpan tsDiff = endWorkDayTemp - dueDateTime;
+
+                            if (tsResolutionTimeTemp > tsDiff)
+                            {
+                                tsResolutionTimeTemp = tsResolutionTimeTemp.Subtract(tsDiff); // ลบเวลาที่ทำไปแล้ว
+
+                                DateTime dueDateTimeTemp = dueDateTime;
+                                //jump to start of next day
+                                dueDateTimeTemp = dueDateTimeTemp.AddDays(1);
+                                dueDateTimeTemp = new DateTime(dueDateTimeTemp.Year, dueDateTimeTemp.Month, dueDateTimeTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                                dueDateTime = dueDateTimeTemp;
+                            }
+                            else
+                            {
+                                dueDateTime = startWorkDayTemp.AddSeconds(tsResolutionTimeTemp.TotalSeconds);
+                                tsResolutionTimeTemp = TimeSpan.Zero;
+                            }
+                        }
+
+                    }
+                } while (tsResolutionTimeTemp.Ticks > 0);
+            }
+            else
+            {
+                dueDateTime = dueDateTime.AddSeconds(tsResolutionTimeTemp.TotalSeconds);
+            }
+
+            TimeSpan tsNewResolutionTime = dueDateTime - dtCurrent;
+
+            return tsNewResolutionTime.TotalSeconds;
+
+        }
+        #endregion
         // Edit 16-12-2019
         public string StartTicket(string sid, string companyCode, string ticketType, string ticketNo, string ticketYear,
-            string tierCode, string tierStart, string tierStartDescription, double resolutionTime, double requesterTime, string OwnerSevice,/*string incidentArea,*/ 
+            string tierCode, string tierStart, string tierStartDescription, double resolutionTime, double requesterTime, string OwnerSevice,/*string incidentArea,*/
             string equipmentNo, string remark, string createdUserName, string createdEmployeeCode, string createdFullName,
             Boolean AutoTriggerEscalate, string SLAGroupCode,
             DataTable dtFile = null, string UploadFileUrl = "", string UploadFilePath = "")
         {
 
 
-            resolutionTime = validationWorkTime(resolutionTime);// test validationWorkTime 
-
+            //resolutionTime = validationWorkTime(resolutionTime);// test validationWorkTime 
+            resolutionTime = CalculateNewResolutionTime(resolutionTime);
             ServiceTicketLibrary lib = new ServiceTicketLibrary();
             remark = remark.Replace("'", "''");
 
@@ -1649,12 +1867,12 @@ namespace ServiceWeb.Service
 
             string ticketCode = CreatedTierServiceTicket(
                 sid, companyCode,
-                subject, remark, MainDelegate, 
+                subject, remark, MainDelegate,
                 participantsArray, createdUserName,
                 startDateTime, resolutionTime, false,
                 "", SLAGroupCode
             );
-              
+
             SaveServicecallMappingActivity(companyCode, ticketCode, ticketYear, ticketNo
                 , equipmentNo, tierCode, tierStart, "001", createdUserName, startDateTime);
 
@@ -1688,7 +1906,7 @@ namespace ServiceWeb.Service
 
             string ticketTypeDesc = lib.GetDocumentTypeDesc(sid, companyCode, ticketType);
 
-            string Description = ServiceTicketLibrary.LookUpTable("b.Remark", 
+            string Description = ServiceTicketLibrary.LookUpTable("b.Remark",
                 "cs_servicecall_header a inner join cs_servicecall_item b on a.SID = b.SID and a.CompanyCode = b.CompanyCode and a.ObjectID = b.ObjectID",
                 "WHERE a.SID='" + sid + "' AND a.CompanyCode='" + companyCode + "' AND a.CallerID='" + ticketNo + "'");
             string DescriptionDisplay = "";
@@ -1699,7 +1917,7 @@ namespace ServiceWeb.Service
             string AttachFileKey = "";
             if (dtFile != null && dtFile.Rows.Count > 0)
             {
-                 AttachFileKey = SaveFileForCreatedTicket(ticketCode, logMessage, UploadFilePath, UploadFileUrl, dtFile);
+                AttachFileKey = SaveFileForCreatedTicket(ticketCode, logMessage, UploadFilePath, UploadFileUrl, dtFile);
             }
             lib.SaveActivityDetail(sid, companyCode, companyCode, createdEmployeeCode, createdEmployeeCode, createdFullName, ticketCode, "", logMessage, "",
                 startDateTime, "Initial", "", "", AttachFileKey);
@@ -1722,13 +1940,13 @@ namespace ServiceWeb.Service
 
         public void SetTriggerUpdateStatus(string ticketCode, string ticketType, string ticketNo, string ticketYear, double delayTime, string createdUserName, string statusbegin, string statustarget)
         {
-         
+
             if (delayTime != 0)
             {
                 TriggerService.GetInstance().UpdateTicketStatus(ticketCode + "updatestatus|" + statusbegin + "|" + statustarget, ticketType, ticketNo, ticketYear, delayTime.ToString(), createdUserName);
             }
 
-        }      
+        }
 
         public string StartTicketChange(string sid, string companyCode, string ticketType, string ticketNo,
             string ticketYear, string StartDescription, string MainDelegate, string[] participantsArray,
@@ -1777,8 +1995,8 @@ namespace ServiceWeb.Service
                 AttachFileKey = SaveFileForCreatedTicket(ticketServiceCode, logMessage, UploadFilePath, UploadFileUrl, dtFile);
             }
             lib.SaveActivityDetail(
-                sid, companyCode, companyCode, createdEmployeeCode, 
-                createdEmployeeCode, createdFullName, 
+                sid, companyCode, companyCode, createdEmployeeCode,
+                createdEmployeeCode, createdFullName,
                 ticketServiceCode, "", logMessage, "",
                 startDateTime, "Initial", "", "", AttachFileKey
             );
@@ -1912,15 +2130,6 @@ namespace ServiceWeb.Service
 
             #region Send Mail
             //NotificationLibrary.GetInstance().OpenAndEscalateTicket(sid, companyCode, ticketCode, escalateEmployeeCode);
-
-            NotificationLibrary.GetInstance().TicketAlertEvent(
-                NotificationLibrary.EVENT_TYPE.TICKET_ESCALATE,
-                ERPWAuthentication.SID,
-                ERPWAuthentication.CompanyCode,
-                ticketCode,
-                ERPWAuthentication.EmployeeCode,
-                ThisPage
-            );
             #endregion
 
             string logMessage = "Escalate group from\"" + escalateUserName + "\" \"" + oldTierDesc.Trim() + "\" to \"" + MainDelegate + "\" \"" + tierDescription.Trim() + "\"";
@@ -1941,9 +2150,18 @@ namespace ServiceWeb.Service
 
 
             //Add comment
-            lib.SaveActivityDetail(sid, companyCode, companyCode, escalateEmployeeCode, 
+            lib.SaveActivityDetail(sid, companyCode, companyCode, escalateEmployeeCode,
                 escalateEmployeeCode, escalateFullName, ticketCode, "", logMessage, "",
                 endDateTime, "Escalate", "", "", "");
+
+            NotificationLibrary.GetInstance().TicketAlertEvent(
+                NotificationLibrary.EVENT_TYPE.TICKET_ESCALATE,
+                sid,
+                companyCode,
+                ticketNo,
+                escalateEmployeeCode,
+                ThisPage
+            );
 
             return ticketCode;
         }
@@ -2090,7 +2308,7 @@ namespace ServiceWeb.Service
             DataRow[] drr = dt.Select("StopDate <> '' AND RestartDate = ''");
 
             if (stopTimer)
-            {            
+            {
                 if (drr.Length == 0) //not have stop record
                 {
                     string itemNo = "001";
@@ -2101,10 +2319,15 @@ namespace ServiceWeb.Service
                     }
 
                     InsertStopTimer(sid, companyCode, ticketType, ticketYear, ticketNo, itemNo, updatedBy, updatedOn);
-                }               
+
+                    if (!IsOverTime(sid, companyCode, ticketNo))
+                    {
+                        PauseTriggerEscalate(sid, companyCode, statusCode, ticketNo);
+                    }
+                }
             }
             else
-            {               
+            {
                 if (drr.Length > 0) //has stop record
                 {
                     string sqlUpdate = @"UPDATE [dbo].[cs_servicecall_stop_timer] 
@@ -2113,6 +2336,9 @@ namespace ServiceWeb.Service
                                              + where + " AND [xLineNo] = '" + drr[0]["xLineNo"] + "'";
 
                     dbService.executeSQLForFocusone(sqlUpdate);
+
+                    CalculateNewEndDateTime(sid, companyCode, statusCode, ticketNo, drr[0]["xLineNo"].ToString(), updatedOn);
+
                 }
             }
         }
@@ -2248,7 +2474,7 @@ namespace ServiceWeb.Service
             dt.Columns["Qty"].DefaultValue = 0;
 
             return dt;
-        }      
+        }
 
         // 05/01/2561 ฟังก์ชันดึงข้อมูล CI ใกล้หมดอายุภายใน 30 วัน || get data ci at time nearly up in 30 day (By Born kk)
         public List<Time_NearlyUp> GetCITimesNearlyUp(string sid, string companyCode) {
@@ -2263,12 +2489,12 @@ namespace ServiceWeb.Service
                             from master_equipment_owner_assignment meoa WITH (NOLOCK) 
                             INNER JOIN master_equipment me WITH (NOLOCK)  ON meoa.EquipmentCode = me.EquipmentCode
                             INNER JOIN master_customer mc WITH (NOLOCK)  ON meoa.OwnerCode = mc.CustomerCode
-                            where meoa.SID = '" + sid+ @"'
-                              AND meoa.CompanyCode = '"+companyCode+ @"'
+                            where meoa.SID = '" + sid + @"'
+                              AND meoa.CompanyCode = '" + companyCode + @"'
                               AND meoa.ActiveStatus = 'True'
                               AND meoa.OwnerType = '01'
-                              AND meoa.EndDate >= '"+ dateNow + @"' 
-                              AND meoa.EndDate <= '"+ dateTo + @"')
+                              AND meoa.EndDate >= '" + dateNow + @"' 
+                              AND meoa.EndDate <= '" + dateTo + @"')
                              UNION
                                 (select meoa.*,me.Description,mv.VendorName as Name
                             from master_equipment_owner_assignment meoa WITH (NOLOCK) 
@@ -2280,8 +2506,8 @@ namespace ServiceWeb.Service
                               AND meoa.OwnerType = '02'
                               AND meoa.EndDate >= '" + dateNow + @"' 
                               AND meoa.EndDate <= '" + dateTo + @"') ORDER BY EndDate ASC";
-         
-            DataTable dtResult =  dbService.selectDataFocusone(sql);
+
+            DataTable dtResult = dbService.selectDataFocusone(sql);
             List<Time_NearlyUp> listdata = new List<Time_NearlyUp>();
             string strJson = JsonConvert.SerializeObject(dtResult);
             listdata = JsonConvert.DeserializeObject<List<Time_NearlyUp>>(strJson);
@@ -2294,7 +2520,7 @@ namespace ServiceWeb.Service
             public string CompanyCode { get; set; }
             public string EquipmentCode { get; set; }
             public string Categorycode { get; set; }
-            public string SID  { get; set; }
+            public string SID { get; set; }
             public string LineNumber { get; set; }
             public string ActiveStatus { get; set; }
             public string BeginDate { get; set; }
@@ -2315,7 +2541,7 @@ namespace ServiceWeb.Service
             public string TicketType { get; set; }
             public string Name { get; set; }
             public string Description { get; set; }
-            
+
         }
         #endregion
 
@@ -2326,7 +2552,7 @@ namespace ServiceWeb.Service
             List<ERPWPropertyValueHeader> listpvh = new List<ERPWPropertyValueHeader>();
             DataTable result = dbService.selectDataFocusone(sql);
             string strJson = JsonConvert.SerializeObject(result);
-            listpvh  =  JsonConvert.DeserializeObject<List<ERPWPropertyValueHeader>>(strJson);
+            listpvh = JsonConvert.DeserializeObject<List<ERPWPropertyValueHeader>>(strJson);
             return listpvh;
         }
 
@@ -2337,16 +2563,16 @@ namespace ServiceWeb.Service
             public string HeaderCode { get; set; }
             public string HeaderDescription { get; set; }
             public string CreatedBy { get; set; }
-            public string CreatedOn { get; set;}
+            public string CreatedOn { get; set; }
             public string UpdateBy { get; set; }
             public string UpdateOn { get; set; }
         }
         #endregion
 
-        public void addERPWPropertyValue(string sid,string companyCode,string fiscalYear,string documentType,string documentNo,DataTable dt,string createby,string postingtype,string headercode) {
+        public void addERPWPropertyValue(string sid, string companyCode, string fiscalYear, string documentType, string documentNo, DataTable dt, string createby, string postingtype, string headercode) {
             List<string> listInsert = new List<string>();
             string createdOn = Validation.getCurrentServerStringDateTime();
-          
+
             string sqldelete = "delete from ERPW_Property_Value_Item where SID = '" + sid + @"' and CompanyCode = '" + companyCode + @"' and  RefFiscalYear = '" + fiscalYear + @"' and RefDocumentType = '" + documentType + @"' and  RefDocumentNo = '" + documentNo + @"' and  PostingType = '" + postingtype + @"' and  HeaderCode = '" + headercode + @"'";
             dbService.executeSQLForFocusone(sqldelete);
 
@@ -2358,13 +2584,13 @@ namespace ServiceWeb.Service
                 }
                 dbService.executeSQLForFocusone(listInsert);
             }
-            
+
 
         }
 
-        public DataTable GetErpwPropertyValueItem(string sid, string companyCode, string fiscalYear, string documentType,string documentNo, string postingType,string headerCode) {
+        public DataTable GetErpwPropertyValueItem(string sid, string companyCode, string fiscalYear, string documentType, string documentNo, string postingType, string headerCode) {
             string sql = "select ItemCode as ItemNo,PostingType,HeaderCode,ItemCode,ItemDescription as ItemDesc ,xValue as Value from ERPW_Property_Value_Item WITH (NOLOCK)  where SID = '" + sid + @"' and  CompanyCode = '" + companyCode + @"' and RefFiscalYear = '" + fiscalYear + @"' and RefDocumentType = '" + documentType + @"'  and RefDocumentNo = '" + documentNo + @"' and  PostingType = '" + postingType + @"' and HeaderCode = '" + headerCode + @"'";
-            
+
             DataTable result = dbService.selectDataFocusone(sql);
 
             return result;
@@ -2464,7 +2690,7 @@ namespace ServiceWeb.Service
 
         public List<KeyValue> getCustomerSoldToPartyRefEquipment(string SID, string companyCode, string EquipmentCode)
         {
-            DataTable dt =  getCustomerRefSoForEquipment(SID, companyCode, "SoldToParty", EquipmentCode);
+            DataTable dt = getCustomerRefSoForEquipment(SID, companyCode, "SoldToParty", EquipmentCode);
             List<KeyValue> datas = JsonConvert.DeserializeObject<List<KeyValue>>(
                 JsonConvert.SerializeObject(dt)
             );
@@ -2551,7 +2777,7 @@ namespace ServiceWeb.Service
         {
             bool isCurrentTier = false;
             string curActivityCode = ServiceLibrary.LookUpTable(
-                "AOBJECTLINK", 
+                "AOBJECTLINK",
                 "CRM_SERVICECALL_MAPPING_ACTIVITY",
                 "WHERE SNAID = '" + CompanyCode + "' AND ServiceDocNo = '" + TicketNumber + "' AND TierCode <> '' order by created_on desc"
             );
@@ -2710,15 +2936,14 @@ namespace ServiceWeb.Service
         }
         public DataTable getSlaTime(string docType, string priority)
         {
-           string sql= "SELECT c.Resolution , b.TierCode " +
-                "From ERPW_BUSINESSOBJECT_MAPPING_TICKET_TYPE a " +
-                "JOIN Link_Tier_Master b ON a.Default_SLAGroup = b.TierGroupCode " +
-                "JOIN Link_Tier_Master_Item c ON c.TierCode = b.TierCode " +
-                "WHERE b.PriorityCode = '" + priority + @"' AND a.TicketType = '" + docType+@"'";
+            string sql = "SELECT c.Resolution , b.TierCode " +
+                 "From ERPW_BUSINESSOBJECT_MAPPING_TICKET_TYPE a " +
+                 "JOIN Link_Tier_Master b ON a.Default_SLAGroup = b.TierGroupCode " +
+                 "JOIN Link_Tier_Master_Item c ON c.TierCode = b.TierCode " +
+                 "WHERE b.PriorityCode = '" + priority + @"' AND a.TicketType = '" + docType + @"'";
             DataTable dt = dbService.selectDataFocusone(sql);
             return dt;
         }
-
         public void saveRating(string callerID, string employeeCode, string rating, string comment)
         {
             string dateStr = DateTime.Now.ToString("yyyyMMddHHmmss", new CultureInfo("en-US"));
@@ -2738,8 +2963,323 @@ namespace ServiceWeb.Service
             DataTable dt = dbService.selectDataFocusone(sql);
             return dt;
         }
-        
 
+        #region method for New EndDateTime [stop timer]
+
+        private string[] ignoreStatusList = {
+            ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_CANCEL),
+            ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_CLOSED),
+            ServiceTicketLibrary.GetInstance().GetTicketStatusFromEvent(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_RESOLVE)
+        };
+        private DataTable getCurrentTierTicketServiceHeader(string sid, string companyCode, string serviceDocNo)
+        {
+            string sql = @" select h.*, m.TierCode, m.Tier, cs.Fiscalyear, cs.Doctype from ticket_service_header as h
+	                        inner join CRM_SERVICECALL_MAPPING_ACTIVITY as m
+	                        on h.TicketCode = m.AOBJECTLINK
+	                        inner join (select SNAID, DOCYEAR, ServiceDocNo, max(Tier) as Tier
+		                        from CRM_SERVICECALL_MAPPING_ACTIVITY
+		                        where SNAID = '" + companyCode + @"' and ServiceDocNo = '" + serviceDocNo + @"'
+		                        group by SNAID, DOCYEAR, ServiceDocNo) as currentTier
+	                        on currentTier.SNAID = m.SNAID 
+	                        and currentTier.DOCYEAR = m.DOCYEAR 
+	                        and currentTier.ServiceDocNo = m.ServiceDocNo
+	                        and currentTier.Tier = m.Tier
+                            inner join cs_servicecall_header as cs
+	                        on cs.SID = h.SID 
+	                        and cs.CompanyCode = h.CompanyCode
+	                        and cs.CallerID = currentTier.ServiceDocNo
+	                        where h.SID = '" + sid + @"' and h.CompanyCode = '" + companyCode + "'";
+            DataTable dt = dbService.selectDataFocusone(sql);
+            return dt;
+        }
+        public void PauseTriggerEscalate(string sid, string companyCode, string ticketStatusCode, string serviceDocNo)
+        {       
+            if (!ignoreStatusList.Contains(ticketStatusCode))
+            {
+                DataTable ticketServiceHeaderDT = getCurrentTierTicketServiceHeader(sid, companyCode, serviceDocNo);
+                if (ticketServiceHeaderDT.Rows.Count > 0)
+                {
+                    string transactionID = ticketServiceHeaderDT.Rows[0]["TicketCode"].ToString();
+                    TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(sid, companyCode, transactionID, TriggerService.TRIGGER_STATUS_PAUSE); // เปลี่ยน trigger status เป็น pause เพื่อให้ TriggerAPI ไม่สนใจการทำงานของ trigger ที่เพิ่มไว้ก่อนหน้า
+                }
+                else
+                {
+                    throw new Exception("TicketServiceHeader is not found DocNo:" + serviceDocNo);
+                }
+            }
+        }
+        private void CalculateNewEndDateTime(string sid, string companyCode, string ticketStatusCode, string serviceDocNo, string lastxLineNo, string reStartDateTimeStr)
+        {
+            if (!ignoreStatusList.Contains(ticketStatusCode))
+            {
+              
+                DataTable ticketServiceHeaderDT = getCurrentTierTicketServiceHeader(sid, companyCode, serviceDocNo);
+                if (ticketServiceHeaderDT.Rows.Count > 0)
+                {
+                    string ticketCode = ticketServiceHeaderDT.Rows[0]["TicketCode"].ToString();
+                    DateTime startDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["StartDateTime"].ToString());
+                    if (CheckCurrentStopTimer(ticketCode) || CheckPauseBeforeStartTier(sid, companyCode, serviceDocNo, lastxLineNo, startDateTime)) // check ว่า pause อยู่ไหม จึงจะทำงานได้
+                    {
+                        TimeSpan tsWorkTime = new TimeSpan(0);
+
+                        #region หาเวลาทำงานที่ใช้
+                        string where = @" WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + @"' 
+                              AND CallerID = '" + serviceDocNo + "'";
+                        string sqlStop = "SELECT * FROM cs_servicecall_stop_timer " + where + " ORDER BY xLineNo ASC";
+                        DataTable dtStop = dbService.selectDataFocusone(sqlStop);
+
+                        DataRow[] resultdtStopQuery = (from DataRow myR in dtStop.Rows
+                                                       where ObjectUtil.ConvertDateTimeDBToDateTime(myR["StopDate"].ToString() + myR["StopTime"].ToString()) >= startDateTime
+                                                       select myR).ToArray();
+
+                        if (resultdtStopQuery.Length > 0)
+                        {
+                            for (int i = 0; i < resultdtStopQuery.Length; i++)
+                            {
+                                DateTime stop = ObjectUtil.ConvertDateTimeDBToDateTime(resultdtStopQuery[i]["StopDate"].ToString() + resultdtStopQuery[i]["StopTime"].ToString());
+
+                                if (stop >= startDateTime)
+                                {
+                                    if (i == 0)
+                                    {
+                                        tsWorkTime += (stop - startDateTime) - CalculateOtherTime(startDateTime, stop);
+                                    }
+                                    else
+                                    {
+                                        DateTime restartLowerLine = ObjectUtil.ConvertDateTimeDBToDateTime(resultdtStopQuery[i - 1]["RestartDate"].ToString() + resultdtStopQuery[i]["RestartTime"].ToString());
+                                        tsWorkTime += (stop - restartLowerLine) - CalculateOtherTime(restartLowerLine, stop);
+                                    }
+                                }
+                            }
+                        }
+
+                        #endregion
+
+                        #region Set Trigger
+                        DataTable dtTier = AfterSaleService.getInstance().getTierOperation(sid, ticketServiceHeaderDT.Rows[0]["TierCode"].ToString(), serviceDocNo);
+                        DataRow[] drr = dtTier.Select("Tier = '" + ticketServiceHeaderDT.Rows[0]["Tier"].ToString() + "'");
+
+                        TimeSpan tsResolutionTimeOriginal = new TimeSpan(0, 0, Convert.ToInt32(drr[0]["Resolution"].ToString())); // เวลา SLA ดั้งเดิม ก่อนคำนวณวันหยุด
+
+                        TimeSpan tsNewResolutionTime = tsResolutionTimeOriginal - (tsWorkTime.TotalSeconds >= TimeSpan.FromSeconds(0).TotalSeconds ? tsWorkTime : TimeSpan.FromSeconds(0)); // เวลา SLA ที่เหลือ
+                        double tsNewResolutionTimeSeconds = tsNewResolutionTime.TotalSeconds;
+
+                        DateTime restartCurrent = ObjectUtil.ConvertDateTimeDBToDateTime(reStartDateTimeStr);
+                        double newResolutionTime = CalculateNewResolutionTime(tsNewResolutionTimeSeconds, restartCurrent); // เวลา SLA ที่เหลือหลังจากคำนวณวันหยุด
+
+                        double seconds = newResolutionTime;        
+                        string ticketType = ticketServiceHeaderDT.Rows[0]["Doctype"].ToString();
+                        string ticketYear = ticketServiceHeaderDT.Rows[0]["Fiscalyear"].ToString();
+                        double requesterTime = Convert.ToDouble(drr[0]["Requester"].ToString());
+
+                        int newResolutionTimeInt = Convert.ToInt32(newResolutionTime);
+                        TimeSpan newResolutionTimeTS = new TimeSpan(0, 0, 0, newResolutionTimeInt);
+                        DateTime newEndDateTime = restartCurrent.Add(newResolutionTimeTS);
+                        DateTime oldEndDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["EndDateTime"].ToString());
+
+                        RemoveTriggerEscalateAndbefOverdue(sid, companyCode, ticketCode); // ลบ Trigger เดิมออก
+
+                        SetTriggerBeforeOverdue(ticketCode, ticketType, serviceDocNo, ticketYear, seconds, requesterTime, ERPWAuthentication.UserName); // เพิ่ม Trigger ที่คำนวณเวลาใหม่
+                        TriggerService.GetInstance().EscalateTicket(ticketCode, ticketType, serviceDocNo, ticketYear, seconds.ToString(), ERPWAuthentication.UserName); // เพิ่ม Trigger ที่คำนวณเวลาใหม่
+
+                        if (restartCurrent < oldEndDateTime)
+                        {
+                            TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(sid, companyCode, ticketCode, TriggerService.TRIGGER_STATUS_CONTINUE); // ระบุเพื่อให้ TriggerAPI รู้ว่าให้ทำงานต่อไปได้
+                        }
+
+                        CultureInfo cul = new CultureInfo("en-US");
+                        string newEndDateTimeStr = Validation.Convert2DateTimeDB(newEndDateTime.ToString("dd/MM/yyyy HH:mm:ss", cul));
+                        UpdateEndDateTimeToTicketServiceHeader(sid, companyCode, ticketCode, newEndDateTimeStr);
+                        #endregion
+                    }
+                } else
+                {
+                    throw new Exception("TicketServiceHeader is not found DocNo:" + serviceDocNo);
+                }
+            }
+        }
+        private void UpdateEndDateTimeToTicketServiceHeader(string SID, string CompanyCode, string TicketCode, string newEndDateTime)
+        {
+            string sql = @"
+                update ticket_service_header 
+                set EndDateTime = '" + newEndDateTime + @"' 
+                where SID = '" + SID + @"' 
+                AND CompanyCode = '" + CompanyCode + @"' 
+                AND TicketCode = '" + TicketCode + @"'
+                ";
+            dbService.executeSQLForFocusone(sql);
+        }
+        private void RemoveTriggerEscalateAndbefOverdue(string SID, string CompanyCode, string TicketCode)
+        {
+            string sql = @"
+                delete from ERPW_TRIGGER_STATUS 
+                where SID = '" + SID + @"' 
+                AND CompanyCode = '" + CompanyCode + @"' 
+                AND (TransactionID = '" + TicketCode + @"' or TransactionID = '" + TicketCode + "befOverdue')";
+            dbService.executeSQLForFocusone(sql);
+        }
+        public bool CheckCurrentStopTimer(string aojectlink)
+        {
+            bool nowStop = false;
+
+            if (!String.IsNullOrEmpty(aojectlink))
+            {
+                ERPW_TRIGGER_STATUS triggerData = TriggerService.GetInstance().GetTriggerData(aojectlink);
+
+                if (triggerData.TriggerStatus == TriggerService.TRIGGER_STATUS_PAUSE)
+                {
+                    nowStop = true;
+                }
+            }
+            return nowStop;
+        }
+        private TimeSpan CalculateOtherTime(DateTime startDateTime, DateTime endDateTime)
+        {
+            CultureInfo cul = new CultureInfo("en-US");
+            MasterWorkingTimeConfigLib workingtimeConfigLib = new MasterWorkingTimeConfigLib();
+            List<WorkingTimeConfig> lst_wtEn = workingtimeConfigLib.GetWorkingTime_Config(
+                   ERPWAuthentication.SID,
+                   ERPWAuthentication.CompanyCode
+            );
+
+            TimeSpan totalTimeOther = new TimeSpan(0);
+
+            if (lst_wtEn.Count > 0)
+            {
+                int hhStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(0, 2));
+                int mmStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(2, 2));
+                int ssStart = Convert.ToInt32(lst_wtEn[0].StartTime.Substring(4, 2));
+                int hhEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(0, 2));
+                int mmEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(2, 2));
+                int ssEnd = Convert.ToInt32(lst_wtEn[0].EndTime.Substring(4, 2));
+                TimeSpan workdayStart = new TimeSpan(hhStart, mmStart, ssStart);
+                TimeSpan workdayEnd = new TimeSpan(hhEnd, mmEnd, ssEnd);
+
+                var dueStartDate = startDateTime;
+                var totalTime = (endDateTime - startDateTime);
+
+                do
+                {
+                    List<string> list_holidays = workingtimeConfigLib.GetHolidaysByDate(
+                                            ERPWAuthentication.SID,
+                                            ERPWAuthentication.CompanyCode,
+                                            MasterWorkingTimeConfigLib.Holidays_TYPE,
+                                            Validation.Convert2DateTimeDB(dueStartDate.ToString("dd/MM/yyyy HH:mm:ss", cul)).Substring(0, 8));
+
+                    if (lst_wtEn[0].Workday[(int)dueStartDate.DayOfWeek] == '0' || list_holidays.Contains(dueStartDate.ToString("yyyyMMdd", cul)))
+                    {
+                        DateTime dueStartDateTemp = dueStartDate;
+
+                        //jump to start of next day
+                        dueStartDateTemp = dueStartDateTemp.AddDays(1);
+                        dueStartDateTemp = new DateTime(dueStartDateTemp.Year, dueStartDateTemp.Month, dueStartDateTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                        TimeSpan tsStop = dueStartDateTemp - dueStartDate;
+                        totalTime = totalTime.Subtract(tsStop);
+                        totalTimeOther = totalTimeOther.Add(tsStop);
+
+                        dueStartDate = dueStartDateTemp;
+                    }
+                    else
+                    {
+                        DateTime startWorkDayTemp = new DateTime(dueStartDate.Year, dueStartDate.Month, dueStartDate.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+                        DateTime endWorkDayTemp = new DateTime(dueStartDate.Year, dueStartDate.Month, dueStartDate.Day, workdayEnd.Hours, workdayEnd.Minutes, workdayEnd.Seconds);
+
+                        if (endDateTime > endWorkDayTemp) // หยุดงานเกินเวลางานใน 1 วัน
+                        {
+                            DateTime dueStartDateTemp = dueStartDate;
+
+                            //jump to start of next day
+                            dueStartDateTemp = dueStartDateTemp.AddDays(1);
+                            dueStartDateTemp = new DateTime(dueStartDateTemp.Year, dueStartDateTemp.Month, dueStartDateTemp.Day, workdayStart.Hours, workdayStart.Minutes, workdayStart.Seconds);
+
+                            TimeSpan tsStop = dueStartDateTemp - dueStartDate;
+                            totalTime = totalTime.Subtract(tsStop);
+
+                            TimeSpan tsStopOther = dueStartDateTemp - endWorkDayTemp;
+                            totalTimeOther = totalTimeOther.Add(tsStopOther);
+
+                            dueStartDate = dueStartDateTemp;
+                        }
+                        else
+                        {
+                            if (dueStartDate <= startWorkDayTemp)
+                            {
+                                TimeSpan tsStopOther = (startWorkDayTemp - dueStartDate);
+                                totalTimeOther = totalTimeOther.Add(tsStopOther);
+                            }
+
+                            TimeSpan tsStop = endDateTime - dueStartDate;
+                            totalTime = totalTime.Subtract(tsStop);
+                        }
+                    }
+                } while (totalTime.Ticks > 0);
+            }
+
+            return totalTimeOther;
+        }
+        private bool IsOverTime(string sid, string companyCode, string serviceDocNo)
+        {
+            bool overtime = false;
+            DataTable ticketServiceHeaderDT = getCurrentTierTicketServiceHeader(sid, companyCode, serviceDocNo);
+            if (ticketServiceHeaderDT.Rows.Count > 0)
+            {
+                //DataTable dtTier = AfterSaleService.getInstance().getTierOperation(sid, ticketServiceHeaderDT.Rows[0]["TierCode"].ToString(), serviceDocNo);
+                //DataRow[] drr = dtTier.Select("Tier = '" + ticketServiceHeaderDT.Rows[0]["Tier"].ToString() + "'");
+
+                //string currentSequence = drr[0]["sequence"].ToString();
+
+                //drr = dtTier.Select("sequence > " + currentSequence, "sequence ASC");
+
+                //if (drr.Length > 0) // Check has next tier
+                //{
+                //    overdue = false;
+                //}
+
+                DateTime endDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["EndDateTime"].ToString());
+                string currentDateTimeStr = Validation.Convert2DateTimeDB(Validation.getCurrentServerDateTime().ToString("dd/MM/yyyy HH:mm:ss", new CultureInfo("en-US")));
+                DateTime currentDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(currentDateTimeStr);
+                if (currentDateTime > endDateTime)
+                {
+                    overtime = true;
+                }
+            }
+            return overtime;
+        }
+        private bool CheckPauseBeforeStartTier(string sid, string companyCode, string ticketNo, string xLineNo, DateTime startDateTime)
+        {
+            bool isBefore = false;
+            string where = @" WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + @"' 
+                              AND CallerID = '" + ticketNo + "' AND xLineNo = '" + xLineNo + "'";
+
+            string stopDateString = ServiceTicketLibrary.LookUpTable("StopDate", "cs_servicecall_stop_timer",where);
+            string stopTimeString = ServiceTicketLibrary.LookUpTable("StopTime", "cs_servicecall_stop_timer", where);
+
+            DateTime stopDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(stopDateString + stopTimeString);
+
+            if (stopDateTime <= startDateTime)
+            {
+                isBefore = true;
+            }
+
+            return isBefore;
+        }
+        public bool IsTicketStatusStopTimer(string sid, string companyCode, string callid)
+        {
+            bool stopTimer = false;
+            DataTable dt = getDataServiceTicketHeader(sid, companyCode, callid);
+            if (dt.Rows.Count > 0)
+            {
+                string statusCode = dt.Rows[0]["Docstatus"].ToString();
+                //Get event start / stop from status
+                string stopTimerString = ServiceTicketLibrary.LookUpTable("StopTimer", "ERPW_TICKET_STATUS",
+                    "WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + "' AND TicketStatusCode = '" + statusCode + "'");
+
+                bool.TryParse(stopTimerString, out stopTimer);
+            }
+            return stopTimer;
+        }
+        #endregion
 
         #region Get & Update Ticket API
 
@@ -2835,6 +3375,8 @@ namespace ServiceWeb.Service
             DataTable dt = dbService.selectDataFocusone(sql);
             return dt;
         }
+
+
 
         #endregion
 

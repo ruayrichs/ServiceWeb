@@ -3388,6 +3388,9 @@ namespace ServiceWeb.crm.AfterSale
             DataTable dtCI = libCI.getEquipmentDetail(SID, CompanyCode, listEquipment);
             rptEquipment.DataSource = dtCI;
             rptEquipment.DataBind();
+
+            setDDLSelectAccountability();
+
             udpLiatCI.Update();
         }
 
@@ -5237,11 +5240,64 @@ namespace ServiceWeb.crm.AfterSale
 
         private void bindCustomer()
         {
-
+            
             cusLists.DataSource = servicecallCustomer;
             cusLists.DataBind();
-            updateCus.Update();
 
+            setDDLSelectAccountability();
+
+            updateCus.Update();
+        }
+        string firstClientSelected
+        {
+            get
+            {
+                string _firstClientSelected = "";
+                if (cusLists.Items.Count > 0)
+                {
+                    HiddenField hddEquipmentCode = cusLists.Items[0].FindControl("hddCustomerCode") as HiddenField;
+                    _firstClientSelected = hddEquipmentCode.Value;
+                }
+                return _firstClientSelected;
+            }
+           
+        }
+        string firstCISelected
+        {
+            get
+            {
+                string _firstCISelected = "";
+                if (rptEquipment.Items.Count > 0)
+                {
+                    HiddenField hddEquipmentCode = rptEquipment.Items[0].FindControl("hddEquipmentCode") as HiddenField;
+                    _firstCISelected = hddEquipmentCode.Value;
+                }               
+                return _firstCISelected;
+            }
+        }
+        private void setDDLSelectAccountability()
+        {
+            if (!String.IsNullOrEmpty(firstClientSelected) && !String.IsNullOrEmpty(firstCISelected))
+            {
+                string customerCode = firstClientSelected;            
+                string equipmentNo = firstCISelected;
+
+                string accountabilityCode = libCI.getAccountabilityfromEquipmentOwnerAssignment(SID, CompanyCode, equipmentNo, customerCode);
+               
+                if (ddlAccountability.Items.FindByValue(accountabilityCode) != null)
+                {
+                    ddlAccountability.SelectedValue = accountabilityCode;
+                }
+                else
+                {
+                    ddlAccountability.SelectedValue = "";
+                }         
+            } 
+            else
+            {
+                ddlAccountability.SelectedValue = "";
+            }
+            updDDLAcc.Update();
         }
 
         private void bindCustomerChangeMode()

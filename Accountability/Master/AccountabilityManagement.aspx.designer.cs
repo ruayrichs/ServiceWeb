@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceWeb.Accountability.Master {
-    
-    
-    public partial class AccountabilityManagement {
-        
+namespace ServiceWeb.Accountability.Master
+{
+
+
+    public partial class AccountabilityManagement
+    {
+
         /// <summary>
         /// hddStructureCode control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hddStructureCode;
-        
+
         /// <summary>
         /// btnBindData control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBindData;
-        
+
         /// <summary>
         /// udpTitle control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpTitle;
-        
+
         /// <summary>
         /// lblTitle control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitle;
-        
+
         /// <summary>
         /// udpCheckAutoWorkflow control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel udpCheckAutoWorkflow;
-        
+
         /// <summary>
         /// chk_IsAutoWorkflow control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chk_IsAutoWorkflow;
-        
+
         /// <summary>
         /// btnUpdateIsAutoWorkflow control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnUpdateIsAutoWorkflow;
-        
+
         /// <summary>
         /// updEventObject control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updEventObject;
-        
+
         /// <summary>
         /// rptEventLevel control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptEventLevel;
-        
+
         /// <summary>
         /// ddlEventObjec control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEventObjec;
-        
+
         /// <summary>
         /// ddlParticipantsDescription control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlParticipantsDescription;
-        
+
         /// <summary>
         /// txtSubProjectDescriptionObject control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtSubProjectDescriptionObject;
-        
+
         /// <summary>
         /// UpdatePanel2 control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel2;
-        
+
         /// <summary>
         /// txtChangeFolderSubProjectObject control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtChangeFolderSubProjectObject;
-        
+
         /// <summary>
         /// txtChangeFolderSubProject control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtChangeFolderSubProject;
-        
+
         /// <summary>
         /// btnChangeSubProjectObject control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnChangeSubProjectObject;
-        
+
         /// <summary>
         /// ddlSubProjectObject control.
         /// </summary>
@@ -164,7 +166,16 @@ namespace ServiceWeb.Accountability.Master {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSubProjectObject;
-        
+
+        /// <summary>
+        /// ddlTicketStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTicketStatus;
+
         /// <summary>
         /// btnEventObject control.
         /// </summary>

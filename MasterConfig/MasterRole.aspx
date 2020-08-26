@@ -60,7 +60,7 @@
                                                 <th colspan="2" class="text-center">Request</th>
                                                 <th colspan="2" class="text-center">Problem</th>
                                                 <th colspan="2" class="text-center">Change Order</th>
-                                                <th colspan="2" class="text-center">Configuration Item</th>
+                                                <th colspan="3" class="text-center">Configuration Item</th>
                                                 <th colspan="2" class="text-center">Contact</th>
                                                 <th colspan="2" class="text-center">Knowledge<br />
                                                     Mannagement</th>
@@ -114,6 +114,7 @@
 
                                                 <th>View</th>
                                                 <th>Modify</th>
+                                                <th>Attributes</th>
 
                                                 <th>View</th>
                                                 <th>Modify</th>
@@ -172,6 +173,7 @@
                                                                 alt="line 1&#013;line 2" 
                                                                 title="ServiceCallTransaction-show-menu&#013;- Overview&#013;- Configuration Item&#013;- Comment
                                                                 &#013;ServiceCallTransaction-delete&#013;- Button Close Ticket
+                                                                &#013;ServiceCallTransaction-disabled&#013;- Ticket Status
                                                                 "/>
                                                             <asp:ListItem Text="LV.2" Value="2" 
                                                                 alt="line 1&#013;line 2" 
@@ -255,6 +257,9 @@
                                                     </td>
                                                     <td>
                                                         <asp:CheckBox runat="server" Checked='<%# Convert.ToBoolean(Eval("ConfigurationItemModify")) %>' ID="cbConfigurationItemModify" />
+                                                    </td>
+                                                    <td>
+                                                        <asp:CheckBox runat="server" Checked='<%# Eval("ConfigurationItemAttributes") == DBNull.Value ? Convert.ToBoolean("False") : Convert.ToBoolean(Eval("ConfigurationItemAttributes")) %>' ID="cbConfigurationItemAttributes" />
                                                     </td>
                                                     <td>
                                                         <asp:CheckBox runat="server" Checked='<%# Convert.ToBoolean(Eval("ContactView")) %>' ID="cbContactView" />

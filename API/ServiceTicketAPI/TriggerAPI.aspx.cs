@@ -102,11 +102,23 @@ namespace ServiceWeb.API.ServiceTicketAPI
                             return;
                         }
 
-                        if (triggerData != null)
+                        if (triggerData.TriggerStatus == TriggerService.TRIGGER_STATUS_PAUSE)
                         {
-                            action = triggerData.TriggerAction;
+                            return;
+                        }
+                        else if (triggerData.TriggerStatus == TriggerService.TRIGGER_STATUS_CONTINUE)
+                        {
+                            TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(triggerData.SID, triggerData.CompanyCode, triggerData.TransactionID, TriggerService.TRIGGER_STATUS_START);
+                            return;
+                        }
+                        else
+                        {
+                            if (triggerData != null)
+                            {
+                                action = triggerData.TriggerAction;
 
-                            TriggerService.GetInstance().UpdateTrigger(en.TransectionID, en.StartTime, en.StopTime);
+                                TriggerService.GetInstance().UpdateTrigger(en.TransectionID, en.StartTime, en.StopTime);
+                            }
                         }
                     }
                 }
@@ -236,197 +248,197 @@ namespace ServiceWeb.API.ServiceTicketAPI
 
                 DataTable dt = dbService.selectDataFocusone(sql);
 
-                if (dt.Rows.Count == 0) // not found = don't close
-                {
-                    sql = @"SELECT * FROM CRM_SERVICECALL_MAPPING_ACTIVITY 
+                    if (dt.Rows.Count == 0) // not found = don't close
+                    {
+                        sql = @"SELECT * FROM CRM_SERVICECALL_MAPPING_ACTIVITY 
                                    WHERE SNAID = '" + triggerData.CompanyCode + "' AND AOBJECTLINK = '" + triggerData.TransactionID + @"' 
                                    AND DOCYEAR = '" + triggerData.FiscalYear + "' AND ServiceDocNo = '" + triggerData.DocumentNo + "'";
 
-                    DataTable dtTicket = dbService.selectDataFocusone(sql);
+                        DataTable dtTicket = dbService.selectDataFocusone(sql);
 
-                    if (dtTicket.Rows.Count > 0)
-                    {
-                        dtTier = AfterSaleService.getInstance().getTierOperation(triggerData.SID, dtTicket.Rows[0]["TierCode"].ToString(), triggerData.DocumentNo);
-
-                        if (dtTier.Rows.Count > 0)
+                        if (dtTicket.Rows.Count > 0)
                         {
-                            DataRow[] drr = dtTier.Select("Tier = '" + dtTicket.Rows[0]["Tier"] + "'");
+                            dtTier = AfterSaleService.getInstance().getTierOperation(triggerData.SID, dtTicket.Rows[0]["TierCode"].ToString(), triggerData.DocumentNo);
 
-                            if (drr.Length > 0)
+                            if (dtTier.Rows.Count > 0)
                             {
-                                ticketSubject = drr[0]["Remark"].ToString();
+                                DataRow[] drr = dtTier.Select("Tier = '" + dtTicket.Rows[0]["Tier"] + "'");
 
-                                string currentSequence = drr[0]["sequence"].ToString();
-
-                                drr = dtTier.Select("sequence > " + currentSequence, "sequence ASC");
-
-                                if (drr.Length > 0) // Check has next tier
+                                if (drr.Length > 0)
                                 {
-                                    if (string.IsNullOrEmpty(drr[0]["AOBJECTLINK"].ToString())) // empty = don't escalate
+                                    ticketSubject = drr[0]["Remark"].ToString();
+
+                                    string currentSequence = drr[0]["sequence"].ToString();
+
+                                    drr = dtTier.Select("sequence > " + currentSequence, "sequence ASC");
+
+                                    if (drr.Length > 0) // Check has next tier
                                     {
-                                        escalate = true;
-                                        tierCode = drr[0]["TierCode"].ToString();
-                                        escalateTier = drr[0]["Tier"].ToString();
-                                        escalateTierDesc = drr[0]["TierDescription"].ToString();
+                                        if (string.IsNullOrEmpty(drr[0]["AOBJECTLINK"].ToString())) // empty = don't escalate
+                                        {
+                                            escalate = true;
+                                            tierCode = drr[0]["TierCode"].ToString();
+                                            escalateTier = drr[0]["Tier"].ToString();
+                                            escalateTierDesc = drr[0]["TierDescription"].ToString();
 
-                                        double.TryParse(drr[0]["Resolution"].ToString(), out resolutionMinutes);
-                                        double.TryParse(drr[0]["Requester"].ToString(), out requesterTime);
+                                            double.TryParse(drr[0]["Resolution"].ToString(), out resolutionMinutes);
+                                            double.TryParse(drr[0]["Requester"].ToString(), out requesterTime);
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    overDue = true;
+                                    else
+                                    {
+                                        overDue = true;
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                if (escalate && escalateTier != "")
-                {
-                    string incidentArea = "";
-                    string equipmentCode = "";
+                    if (escalate && escalateTier != "")
+                    {
+                        string incidentArea = "";
+                        string equipmentCode = "";
 
-                    // Get equipment and incident area
-                    sql = @"SELECT ObjectID FROM cs_servicecall_header 
+                        // Get equipment and incident area
+                        sql = @"SELECT ObjectID FROM cs_servicecall_header 
                             WHERE SID = '" + triggerData.SID + "' AND CompanyCode = '" + triggerData.CompanyCode + @"' 
                             AND DocType = '" + triggerData.DocumentType + "' AND CallerID = '" + triggerData.DocumentNo + @"' 
                             AND FiscalYear = '" + triggerData.FiscalYear + "'";
 
-                    DataTable dtHeader = dbService.selectDataFocusone(sql);
+                        DataTable dtHeader = dbService.selectDataFocusone(sql);
 
-                    if (dtHeader.Rows.Count > 0)
-                    {
-                        sql = @"SELECT EquipmentNo, IncidentArea FROM cs_servicecall_item 
+                        if (dtHeader.Rows.Count > 0)
+                        {
+                            sql = @"SELECT EquipmentNo, IncidentArea FROM cs_servicecall_item 
                                 WHERE SID = '" + triggerData.SID + "' AND CompanyCode = '" + triggerData.CompanyCode + @"' 
                                 AND ObjectID = '" + dtHeader.Rows[0]["ObjectID"] + "' AND xLineNo = '001'";
 
-                        DataTable dtItem = dbService.selectDataFocusone(sql);
+                            DataTable dtItem = dbService.selectDataFocusone(sql);
 
-                        if (dtItem.Rows.Count > 0)
-                        {
-                            incidentArea = dtItem.Rows[0]["IncidentArea"].ToString();
-                            equipmentCode = dtItem.Rows[0]["EquipmentNo"].ToString();
-                        }
-                    }
-
-                    try
-                    {
-                        string MainDelegate = "";
-                        List<string> participantsArray = new List<string>();
-
-                        string TierCode = "";
-                        string Tier = "";
-                        string OwnerGroupService = ServiceLibrary.LookUpTable("QueueOption", "cs_servicecall_item", "where ObjectID = '" +
-                            ServiceLibrary.LookUpTable("ObjectID", "cs_servicecall_header", "where CallerID = '" + triggerData.DocumentNo + "'") +
-                        "'");
-
-                        DataTable dtMain = new DataTable();
-                        DataTable dtParticipant = new DataTable();
-
-                        foreach (DataRow drTier in dtTier.Rows)
-                        {
-                            if (!string.IsNullOrEmpty(TierCode) && !string.IsNullOrEmpty(Tier))
+                            if (dtItem.Rows.Count > 0)
                             {
-                                continue;
-                            }
-
-                            if (string.IsNullOrEmpty(drTier["AOBJECTLINK"].ToString()))
-                            {
-                                TierCode = drTier["TierCode"].ToString();
-                                Tier = drTier["Tier"].ToString();
+                                incidentArea = dtItem.Rows[0]["IncidentArea"].ToString();
+                                equipmentCode = dtItem.Rows[0]["EquipmentNo"].ToString();
                             }
                         }
 
-                        //using (EventLog eventLog = new EventLog("Application"))
-                        //{
-                        //    eventLog.Source = "Application";
-                        //    eventLog.WriteEntry(
-                        //        "Log TierCode : " + TierCode + 
-                        //        ", Tier : " + Tier + 
-                        //        ", OwnerGroupService : " + OwnerGroupService +
-                        //        ", SID : " + triggerData.SID +
-                        //        ", CompanyCode : " + triggerData.CompanyCode +
-                        //        ", DocumentType : " + triggerData.DocumentType
-                        //        , EventLogEntryType.Information, 101, 1
-                        //    );
-                        //}
-
-                        dtMain = AfterSaleService.getInstance().GetTierMainDelegate(
-                            triggerData.SID, triggerData.CompanyCode,
-                            TierCode, Tier, triggerData.DocumentType,
-                            "", OwnerGroupService
-                        );
-
-                        dtParticipant = AfterSaleService.getInstance().GetTierParticipants(
-                            triggerData.SID, triggerData.CompanyCode,
-                            TierCode, Tier, triggerData.DocumentType,
-                            "", OwnerGroupService
-                        );
-
-                        foreach (DataRow drMain in dtMain.Rows)
+                        try
                         {
-                            MainDelegate = drMain["EmployeeCode"].ToString();
-                        }
+                            string MainDelegate = "";
+                            List<string> participantsArray = new List<string>();
 
-                        //using (EventLog eventLog = new EventLog("Application"))
-                        //{
-                        //    eventLog.Source = "Application";
-                        //    eventLog.WriteEntry(
-                        //        "Log MainDelegate : " + MainDelegate
-                        //        , EventLogEntryType.Information, 101, 1
-                        //    );
-                        //}
+                            string TierCode = "";
+                            string Tier = "";
+                            string OwnerGroupService = ServiceLibrary.LookUpTable("QueueOption", "cs_servicecall_item", "where ObjectID = '" +
+                                ServiceLibrary.LookUpTable("ObjectID", "cs_servicecall_header", "where CallerID = '" + triggerData.DocumentNo + "'") +
+                            "'");
 
-                        foreach (DataRow drParticipant in dtParticipant.Rows)
-                        {
-                            participantsArray.Add(drParticipant["EmployeeCode"].ToString());
-                        }
+                            DataTable dtMain = new DataTable();
+                            DataTable dtParticipant = new DataTable();
 
-                        //using (EventLog eventLog = new EventLog("Application"))
-                        //{
-                        //    eventLog.Source = "Application";
-                        //    eventLog.WriteEntry(
-                        //        "Log participantsArray : " + string.Join(", ", participantsArray)
-                        //        , EventLogEntryType.Information, 101, 1
-                        //    );
-                        //}
+                            foreach (DataRow drTier in dtTier.Rows)
+                            {
+                                if (!string.IsNullOrEmpty(TierCode) && !string.IsNullOrEmpty(Tier))
+                                {
+                                    continue;
+                                }
+
+                                if (string.IsNullOrEmpty(drTier["AOBJECTLINK"].ToString()))
+                                {
+                                    TierCode = drTier["TierCode"].ToString();
+                                    Tier = drTier["Tier"].ToString();
+                                }
+                            }
+
+                            //using (EventLog eventLog = new EventLog("Application"))
+                            //{
+                            //    eventLog.Source = "Application";
+                            //    eventLog.WriteEntry(
+                            //        "Log TierCode : " + TierCode + 
+                            //        ", Tier : " + Tier + 
+                            //        ", OwnerGroupService : " + OwnerGroupService +
+                            //        ", SID : " + triggerData.SID +
+                            //        ", CompanyCode : " + triggerData.CompanyCode +
+                            //        ", DocumentType : " + triggerData.DocumentType
+                            //        , EventLogEntryType.Information, 101, 1
+                            //    );
+                            //}
+
+                            dtMain = AfterSaleService.getInstance().GetTierMainDelegate(
+                                triggerData.SID, triggerData.CompanyCode,
+                                TierCode, Tier, triggerData.DocumentType,
+                                "", OwnerGroupService
+                            );
+
+                            dtParticipant = AfterSaleService.getInstance().GetTierParticipants(
+                                triggerData.SID, triggerData.CompanyCode,
+                                TierCode, Tier, triggerData.DocumentType,
+                                "", OwnerGroupService
+                            );
+
+                            foreach (DataRow drMain in dtMain.Rows)
+                            {
+                                MainDelegate = drMain["EmployeeCode"].ToString();
+                            }
+
+                            //using (EventLog eventLog = new EventLog("Application"))
+                            //{
+                            //    eventLog.Source = "Application";
+                            //    eventLog.WriteEntry(
+                            //        "Log MainDelegate : " + MainDelegate
+                            //        , EventLogEntryType.Information, 101, 1
+                            //    );
+                            //}
+
+                            foreach (DataRow drParticipant in dtParticipant.Rows)
+                            {
+                                participantsArray.Add(drParticipant["EmployeeCode"].ToString());
+                            }
+
+                            //using (EventLog eventLog = new EventLog("Application"))
+                            //{
+                            //    eventLog.Source = "Application";
+                            //    eventLog.WriteEntry(
+                            //        "Log participantsArray : " + string.Join(", ", participantsArray)
+                            //        , EventLogEntryType.Information, 101, 1
+                            //    );
+                            //}
 
 
-                        // Escalate to next tier
-                        AfterSaleService.getInstance().EscalateTicket(
-                            triggerData.SID, triggerData.CompanyCode, triggerData.DocumentType, triggerData.DocumentNo,
-                            triggerData.FiscalYear, tierCode, escalateTier, escalateTierDesc, resolutionMinutes,
-                            requesterTime,
-                            incidentArea, equipmentCode, ticketSubject, "System Auto", "", "System Auto", false,
-                            MainDelegate, participantsArray.ToArray(), null, null);
+                            // Escalate to next tier
+                            AfterSaleService.getInstance().EscalateTicket(
+                                triggerData.SID, triggerData.CompanyCode, triggerData.DocumentType, triggerData.DocumentNo,
+                                triggerData.FiscalYear, tierCode, escalateTier, escalateTierDesc, resolutionMinutes,
+                                requesterTime,
+                                incidentArea, equipmentCode, ticketSubject, "System Auto", "", "System Auto", false,
+                                MainDelegate, participantsArray.ToArray(), null, null);
 
-                        //AfterSaleService.getInstance().SetTriggerBeforeOverdue(
-                        //        "", triggerData.DocumentType, triggerData.DocumentNo
-                        //    );
+                            //AfterSaleService.getInstance().SetTriggerBeforeOverdue(
+                            //        "", triggerData.DocumentType, triggerData.DocumentNo
+                            //    );
 
                     }
-                    catch (Exception ex)
+                        catch (Exception ex)
+                        {
+                            using (EventLog eventLog = new EventLog("Application"))
+                            {
+                                eventLog.Source = "Application";
+                                eventLog.WriteEntry("Log message " + ex.Message, EventLogEntryType.Information, 101, 1);
+                            }
+
+                            // Escalate to next tier
+                            AfterSaleService.getInstance().EscalateTicket(
+                                triggerData.SID, triggerData.CompanyCode, triggerData.DocumentType, triggerData.DocumentNo,
+                                triggerData.FiscalYear, tierCode, escalateTier, escalateTierDesc, resolutionMinutes,
+                                requesterTime,
+                                incidentArea, equipmentCode, ticketSubject, "System Auto", "", "System Auto", false);
+                        }
+                    }
+
+                    bool overDueActive = overDue;
+                    if (overDue)
                     {
-                        using (EventLog eventLog = new EventLog("Application"))
-                        {
-                            eventLog.Source = "Application";
-                            eventLog.WriteEntry("Log message " + ex.Message, EventLogEntryType.Information, 101, 1);
-                        }
-
-                        // Escalate to next tier
-                        AfterSaleService.getInstance().EscalateTicket(
-                            triggerData.SID, triggerData.CompanyCode, triggerData.DocumentType, triggerData.DocumentNo,
-                            triggerData.FiscalYear, tierCode, escalateTier, escalateTierDesc, resolutionMinutes,
-                            requesterTime,
-                            incidentArea, equipmentCode, ticketSubject, "System Auto", "", "System Auto", false);
-                    }
-                }
-
-                bool overDueActive = overDue;
-                if (overDue)
-                {
-                    sql = @"select b.EventType from cs_servicecall_header a
+                        sql = @"select b.EventType from cs_servicecall_header a
                         inner join ERPW_TICKET_STATUS b
                         on a.SID = b.SID
                         and a.CompanyCode = b.CompanyCode
@@ -435,37 +447,37 @@ namespace ServiceWeb.API.ServiceTicketAPI
                         and a.CompanyCode = '" + triggerData.CompanyCode + @"' 
                         and a.CallerID = '" + triggerData.DocumentNo + "'";
 
-                    DataTable dtEventTypeStatus = dbService.selectDataFocusone(sql);
-                    string EventTypeStatus = dtEventTypeStatus.Rows[0]["EventType"].ToString();
-                    if (EventTypeStatus == "CANCEL" || EventTypeStatus == "CANCEL_CHANGE" || EventTypeStatus == "CLOSED" || EventTypeStatus == "CLOSED_CHANGE")
-                    {
-                        overDueActive = false;
+                        DataTable dtEventTypeStatus = dbService.selectDataFocusone(sql);
+                        string EventTypeStatus = dtEventTypeStatus.Rows[0]["EventType"].ToString();
+                        if (EventTypeStatus == "CANCEL" || EventTypeStatus == "CANCEL_CHANGE" || EventTypeStatus == "CLOSED" || EventTypeStatus == "CLOSED_CHANGE")
+                        {
+                            overDueActive = false;
+                        }
                     }
-                }
 
-                if (overDueActive)
-                {
-                    NotificationLibrary.GetInstance().TicketAlertEvent(
-                        NotificationLibrary.EVENT_TYPE.TICKET_OVERDUE,
-                        triggerData.SID,
-                        triggerData.CompanyCode,
-                        triggerData.DocumentNo,
-                        "System Auto",
-                        ThisPage
-                    );
-                }
+                    if (overDueActive)
+                    {
+                        NotificationLibrary.GetInstance().TicketAlertEvent(
+                            NotificationLibrary.EVENT_TYPE.TICKET_OVERDUE,
+                            triggerData.SID,
+                            triggerData.CompanyCode,
+                            triggerData.DocumentNo,
+                            "System Auto",
+                            ThisPage
+                        );
+                    }
 
-                if (triggerData.DocumentType == "CI")
-                {
-                    NotificationLibrary.GetInstance().TicketAlertEvent(
-                        NotificationLibrary.EVENT_TYPE.CI_MA_OVERDUE,
-                        triggerData.SID,
-                        triggerData.CompanyCode,
-                        triggerData.DocumentNo,
-                        "System Auto",
-                        ThisPage + "_CI"
-                    );
-                }
+                    if (triggerData.DocumentType == "CI")
+                    {
+                        NotificationLibrary.GetInstance().TicketAlertEvent(
+                            NotificationLibrary.EVENT_TYPE.CI_MA_OVERDUE,
+                            triggerData.SID,
+                            triggerData.CompanyCode,
+                            triggerData.DocumentNo,
+                            "System Auto",
+                            ThisPage + "_CI"
+                        );
+                    }         
 
                 AGResponse.generate(response, HttpStatusCode.OK);
             }
