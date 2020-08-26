@@ -118,6 +118,8 @@
                         OnClick="btnLoadBindingOwnerAssignment_Click" OnClientClick="AGLoading(true);" />
                     <asp:Button Text="" runat="server" CssClass="d-none" ID="btnLoadBindingTicket" ClientIDMode="Static"
                         OnClick="btnLoadBindingTicket_Click" OnClientClick="AGLoading(true);" />
+                    <asp:Button Text="" runat="server" CssClass="d-none" ID="btnLoadBindingPriority" ClientIDMode="Static"
+                        OnClick="btnLoadBindingPriority_Click" OnClientClick="AGLoading(true);" />
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>
@@ -258,6 +260,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#panelTicket" role="tab" data-toggle="tab" onclick="bindingTicket();">Ticket</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#panelPriority" role="tab" data-toggle="tab" onclick="bindingPriority();">Priority</a>
                             </li>
                         </ul>
                     </div>
@@ -1654,11 +1659,76 @@
                                     </asp:UpdatePanel>
                                 </div>
                             </div>
+                            <div id="panelPriority" class="tab-pane">
+                                    <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpListPriority">
+                                        <ContentTemplate>
+                                            <asp:Button runat="server" CssClass="hide" ID="btnRemovePriority"
+                                                OnClick="btnRemovePriority_Click" OnClientClick="AGLoading(true);" />
+                                            <asp:HiddenField runat="server" ID="hddPriorityCodeItem" ClientIDMode="Static" />
+                                            <div class="table-responsive">
+                                                <table id="tableListPriority" class="table table-bordered table-striped table-hover table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center" style="width: 10px;">#</th>
+                                                            <th class="">Priority</th>
+                                                            <th class="">Add By</th>
+                                                            <th class="">Add On</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <asp:Repeater ID="rptListPriority" runat="server">
+                                                            <ItemTemplate>
+                                                                <tr class="">
+                                                                    <td class="text-center" style="width: 10px;">
+                                                                        <i class="fa fa-times text-danger" style="cursor: pointer;" onclick="removePriority('<%# Eval("PriorityCode").ToString()%>');"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%# getPriorityName(Eval("PriorityCode").ToString())%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%# ERPW.Lib.Master.EmployeeService.GetInstance().GetEmployeeName(SID, CompanyCode, Eval("CREATED_BY").ToString())%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%# Agape.FocusOne.Utilities.Validation.Convert2DateTimeDisplay(Eval("CREATED_ON").ToString())%>
+                                                                    </td>
+                                                                </tr>
+                                                            </ItemTemplate>
+                                                        </asp:Repeater>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <thead>
+                                                            <tr>
+                                                                <td colspan="9">
+                                                                    <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+                                                                        <ContentTemplate>
+                                                                            <div>
+                                                                                <i class="fa fa-plus-square-o text-success fa-fw"
+                                                                                    style="cursor: pointer;" onclick="$(this).next().click();"></i>
+                                                                                <asp:Button Text="" runat="server" CssClass="hide" ID="btnOpenModalAddPriority"
+                                                                                    OnClick="btnOpenModalAddPriority_Click" OnClientClick="AGLoading(true);" />
+                                                                            </div>
+                                                                        </ContentTemplate>
+                                                                    </asp:UpdatePanel>
+
+                                                                </td>
+                                                            </tr>
+                                                        </thead>
+
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <script>
+                function removePriority(priorityCode) {
+                    $("#<%= hddPriorityCodeItem.ClientID %>").val(priorityCode);
+                    $("#<%= btnRemovePriority.ClientID %>").click();
+                }
                 function bindingOwnerAssignment() {
                     setTimeout(function () {
                         $("#<%= btnLoadBindingOwnerAssignment.ClientID %>").click();
@@ -1668,6 +1738,12 @@
                 function bindingTicket() {
                     setTimeout(function () {
                         $("#<%= btnLoadBindingTicket.ClientID %>").click();
+                    }, 10);
+                }
+
+                function bindingPriority() {
+                    setTimeout(function () {
+                        $("#<%= btnLoadBindingPriority.ClientID %>").click();
                     }, 10);
                 }
                 
@@ -1740,6 +1816,16 @@
 
                 function bindingDataTableJSTicket() {
                     $("#tableListTicketItems").dataTable({
+                        columnDefs: [{
+                            "orderable": false,
+                            "targets": [0]
+                        }],
+                        "order": [[1, "asc"]]
+                    });
+                }
+
+                function bindingDataTableJSPriority() {
+                    $("#tableListPriority").dataTable({
                         columnDefs: [{
                             "orderable": false,
                             "targets": [0]
@@ -2034,6 +2120,54 @@
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-add-priority">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Priority</h4>                    
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpDropDownListPriority">
+                        <ContentTemplate>
+                            <fieldset class="fieldset-defult">
+                                <legend class="legend-defult">Priority
+                                </legend>
+                                <div style="padding: 0px 8px;">
+                                    <div class="form-row">
+                                        <div class="form-group col-sm-12 col-md-12">
+                                            <div class="form-row">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <asp:DropDownList runat="server" CssClass="form-control form-control-sm" ID="ddlPriority">
+                                                    </asp:DropDownList>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:Button Text="Add" ID="btnAddPriority" runat="server" CssClass="btn btn-success"
+                                OnClick="btnAddPriority_Click" OnClientClick="AGLoading(true);" />
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+
             </div>
         </div>
     </div>

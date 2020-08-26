@@ -60,6 +60,15 @@ namespace ServiceWeb.crm.Master.Equipment
         protected global::System.Web.UI.WebControls.Button btnLoadBindingTicket;
 
         /// <summary>
+        /// btnLoadBindingPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLoadBindingPriority;
+
+        /// <summary>
         /// udppanelHeader control.
         /// </summary>
         /// <remarks>
@@ -1131,6 +1140,51 @@ namespace ServiceWeb.crm.Master.Equipment
         protected global::System.Web.UI.WebControls.HiddenField hddCallerID;
 
         /// <summary>
+        /// udpListPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel udpListPriority;
+
+        /// <summary>
+        /// btnRemovePriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRemovePriority;
+
+        /// <summary>
+        /// hddPriorityCodeItem control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddPriorityCodeItem;
+
+        /// <summary>
+        /// rptListPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptListPriority;
+
+        /// <summary>
+        /// btnOpenModalAddPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnOpenModalAddPriority;
+
+        /// <summary>
         /// udpAssetList control.
         /// </summary>
         /// <remarks>
@@ -1291,5 +1345,32 @@ namespace ServiceWeb.crm.Master.Equipment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::ServiceWeb.widget.usercontrol.AttachFileUserControl AttachFileUserControl;
+
+        /// <summary>
+        /// udpDropDownListPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel udpDropDownListPriority;
+
+        /// <summary>
+        /// ddlPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPriority;
+
+        /// <summary>
+        /// btnAddPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddPriority;
     }
 }

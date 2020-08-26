@@ -450,6 +450,60 @@ namespace ServiceWeb.crm.AfterSale
 
         }
 
+        private void GetImpact(List<string> lstImpact)
+        {
+            DataTable dt = lib.GetImpactMaster(SID);
+
+            dt = (from DataRow dr in dt.Rows
+                  where lstImpact.Contains(dr["ImpactCode"].ToString())
+                  select dr).CopyToDataTable();
+
+            ddlImpact.DataTextField = "ImpactName";
+            ddlImpact.DataValueField = "ImpactCode";
+            ddlImpact.DataSource = dt;
+            ddlImpact.DataBind();
+            ddlImpact.Items.Insert(0, new ListItem("", ""));
+        }
+
+        private void GetUrgency(List<string> lstUrgency)
+        {
+            DataTable dt = lib.GetUrgencyMaster(SID);
+
+            dt = (from DataRow dr in dt.Rows
+                  where lstUrgency.Contains(dr["UrgencyCode"].ToString())
+                  select dr).CopyToDataTable();
+
+            ddlUrgency.DataTextField = "UrgencyName";
+            ddlUrgency.DataValueField = "UrgencyCode";
+            ddlUrgency.DataSource = dt;
+            ddlUrgency.DataBind();
+            ddlUrgency.Items.Insert(0, new ListItem("", ""));
+        }
+
+        private void GetPriority(List<string> lstPriority)
+        {
+            DataTable dt = dtPriority.Clone();
+
+            if (dtPriority.Rows.Count > 0)
+            {
+                dt = dtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
+            }
+
+            dt = (from DataRow dr in dt.Rows
+                  where lstPriority.Contains(dr["PriorityCode"].ToString())
+                  select dr).CopyToDataTable();
+
+            ddlPriority.DataSource = dt;
+            ddlPriority.DataBind();
+            ddlPriority.Items.Insert(0, new ListItem("", ""));
+
+            if (dtPriority.Rows.Count > 0)
+            {
+                ddlPriority.SelectedIndex = 0;
+            }
+
+        }
+
         #endregion
 
 
@@ -935,14 +989,27 @@ namespace ServiceWeb.crm.AfterSale
 
 
             DataTable dt = dtPriority.Clone();
-            DataRow[] drr = dtPriority.Select("ImpactCode='" + impactCode + "' and UrgencyCode='" + urgencyCode + "' ");
+            DataTable tmpdtPriority = dtPriority;
+            string equipmentCode = equipmentSelect.SelectedValue.Trim();
+            DataTable dtSeverityEquipment = ServiceEquipment.getSeverityConfigByEquipment(SID, CompanyCode, equipmentCode);
+            if (dtSeverityEquipment.Rows.Count > 0)
+            {
+                List<string> lstPriority = (from DataRow dr in dtSeverityEquipment.Rows select dr["PriorityCode"].ToString()).ToList();
+
+                tmpdtPriority = (from DataRow dr in dtPriority.Rows
+                      where lstPriority.Contains(dr["PriorityCode"].ToString())
+                      select dr)
+                      .CopyToDataTable();
+            }
+
+            DataRow[] drr = tmpdtPriority.Select("ImpactCode='" + impactCode + "' and UrgencyCode='" + urgencyCode + "' ");
             if (drr.Length > 0)
             {
                 dt = drr.CopyToDataTable();
             }
             else
             {
-                dt = dtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
+                dt = tmpdtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
             }
             ddlPriority.Items.Clear();
             ddlPriority.DataSource = dt;
@@ -1683,12 +1750,207 @@ namespace ServiceWeb.crm.AfterSale
             udpSearchCustomerCriteria.Update();
             ClientService.DoJavascript("afterSearchBindCustomerCriteria(" + data + ");");
         }
-        #endregion
 
 
         #endregion
 
+        #endregion
+        private void setDDLCriteria()
+        {
+            string equipmentCode = equipmentSelect.SelectedValue.Trim();
+            DataTable dt = ServiceEquipment.getSeverityConfigByEquipment(SID, CompanyCode, equipmentCode);
 
+            if (dt.Rows.Count > 0)
+            {
+                List<string> lstImpact = (from DataRow dr in dt.Rows select dr["ImpactCode"].ToString()).ToList();
+                List<string> lstUrgency = (from DataRow dr in dt.Rows select dr["UrgencyCode"].ToString()).ToList();
+                List<string> lstPriority = (from DataRow dr in dt.Rows select dr["PriorityCode"].ToString()).ToList();
+
+                GetImpact(lstImpact);
+                GetUrgency(lstUrgency);
+                GetPriority(lstPriority);
+
+
+            }
+            else
+            {
+                GetImpact();
+                GetUrgency();
+                GetPriority();
+            }
+            udpnProblem.Update();
+        }
+        protected void btnLoadPriorityEquipment_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                setDDLCriteria();
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            }
+        }
+
+        protected void ddlSelectBindPriority_ImpactSelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string impactCode = ddlImpact.SelectedValue;
+                string urgencyCode = ddlUrgency.SelectedValue;
+
+                DataTable dt = dtPriority.Clone();
+                DataTable tmpdtPriority = dtPriority;
+                string equipmentCode = equipmentSelect.SelectedValue.Trim();
+                DataTable dtSeverityEquipment = ServiceEquipment.getSeverityConfigByEquipment(SID, CompanyCode, equipmentCode);
+                if (dtSeverityEquipment.Rows.Count > 0)
+                {
+                    List<string> lstPriority = (from DataRow dr in dtSeverityEquipment.Rows select dr["PriorityCode"].ToString()).ToList();
+
+                    tmpdtPriority = (from DataRow dr in dtPriority.Rows
+                                     where lstPriority.Contains(dr["PriorityCode"].ToString())
+                                     select dr)
+                          .CopyToDataTable();
+
+                    if (!String.IsNullOrEmpty(impactCode))
+                    {
+                        DataTable tmpdtImpactCheck = (from DataRow dr in tmpdtPriority.Rows
+                                                      where dr["ImpactCode"].ToString() == impactCode
+                                                      select dr)
+                          .CopyToDataTable();
+
+                        List<string> lstUrgency = (from DataRow dr in tmpdtImpactCheck.Rows select dr["UrgencyCode"].ToString()).ToList();
+
+                        GetUrgency(lstUrgency);
+
+                        if (lstUrgency.Contains(urgencyCode))
+                        {
+                            ddlUrgency.SelectedValue = urgencyCode;
+                        }
+                        else
+                        {
+                            ddlUrgency.SelectedValue = "";
+                        }
+                    }  
+                }
+
+                DataRow[] drr = tmpdtPriority.Select("ImpactCode='" + impactCode + "' and UrgencyCode='" + urgencyCode + "' ");
+                
+                if (drr.Length > 0)
+                {
+                    dt = drr.CopyToDataTable();
+                }
+                else
+                {
+                    dt = tmpdtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
+                }
+                ddlPriority.Items.Clear();
+                ddlPriority.DataSource = dt;
+                ddlPriority.DataBind();
+                ddlPriority.Items.Insert(0, new ListItem("", ""));
+                if (drr.Length == 1)
+                {
+                    ddlPriority.SelectedValue = drr[0]["PriorityCode"].ToString();
+                }
+                else
+                {
+                    ddlPriority.SelectedValue = "";
+                }
+
+                udpnProblem.Update();
+
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            }
+        }
+
+        protected void ddlSelectBindPriority_UrgencySelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string impactCode = ddlImpact.SelectedValue;
+                string urgencyCode = ddlUrgency.SelectedValue;
+
+                DataTable dt = dtPriority.Clone();
+                DataTable tmpdtPriority = dtPriority;
+                string equipmentCode = equipmentSelect.SelectedValue.Trim();
+                DataTable dtSeverityEquipment = ServiceEquipment.getSeverityConfigByEquipment(SID, CompanyCode, equipmentCode);
+                if (dtSeverityEquipment.Rows.Count > 0)
+                {
+                    List<string> lstPriority = (from DataRow dr in dtSeverityEquipment.Rows select dr["PriorityCode"].ToString()).ToList();
+
+                    tmpdtPriority = (from DataRow dr in dtPriority.Rows
+                                     where lstPriority.Contains(dr["PriorityCode"].ToString())
+                                     select dr)
+                          .CopyToDataTable();
+
+                    if (!String.IsNullOrEmpty(urgencyCode))
+                    {
+                        DataTable tmpdtUrgencyCheck = (from DataRow dr in tmpdtPriority.Rows
+                                                       where dr["UrgencyCode"].ToString() == urgencyCode
+                                                       select dr)
+                          .CopyToDataTable();
+
+                        List<string> lstImpact = (from DataRow dr in tmpdtUrgencyCheck.Rows select dr["ImpactCode"].ToString()).ToList();
+
+                        GetImpact(lstImpact);
+
+                        if (lstImpact.Contains(impactCode))
+                        {
+                            ddlImpact.SelectedValue = impactCode;
+                        }
+                        else
+                        {
+                            ddlImpact.SelectedValue = "";
+                        }
+                    } 
+                }
+
+                DataRow[] drr = tmpdtPriority.Select("ImpactCode='" + impactCode + "' and UrgencyCode='" + urgencyCode + "' ");
+
+                if (drr.Length > 0)
+                {
+                    dt = drr.CopyToDataTable();
+                }
+                else
+                {
+                    dt = tmpdtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
+                }
+                ddlPriority.Items.Clear();
+                ddlPriority.DataSource = dt;
+                ddlPriority.DataBind();
+                ddlPriority.Items.Insert(0, new ListItem("", ""));
+                if (drr.Length == 1)
+                {
+                    ddlPriority.SelectedValue = drr[0]["PriorityCode"].ToString();
+                }
+                else
+                {
+                    ddlPriority.SelectedValue = "";
+                }
+
+                udpnProblem.Update();
+
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            }
+        }
+
+        protected void btnCriteriaReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                setDDLCriteria();
+            }
+            catch(Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            }
+        }
     }
 
     [Serializable]

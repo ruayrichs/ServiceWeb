@@ -150,6 +150,15 @@ namespace ServiceWeb.crm.AfterSale
         protected global::System.Web.UI.UpdatePanel udpnProblem;
 
         /// <summary>
+        /// btnCriteriaReset control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCriteriaReset;
+
+        /// <summary>
         /// ddlImpact control.
         /// </summary>
         /// <remarks>
@@ -276,6 +285,15 @@ namespace ServiceWeb.crm.AfterSale
         protected global::System.Web.UI.UpdatePanel udpnAction;
 
         /// <summary>
+        /// btnLoadPriorityEquipment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLoadPriorityEquipment;
+
+        /// <summary>
         /// btnLoadCustomerEquipment control.
         /// </summary>
         /// <remarks>
@@ -355,6 +373,24 @@ namespace ServiceWeb.crm.AfterSale
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSelectCriteriaBindPriority;
+
+        /// <summary>
+        /// btnSelectImpactBindPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSelectImpactBindPriority;
+
+        /// <summary>
+        /// btnSelectUrgencyBindPriority control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSelectUrgencyBindPriority;
 
         /// <summary>
         /// updAttachFile control.

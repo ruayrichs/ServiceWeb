@@ -1,6 +1,7 @@
 ﻿using agape.proxy.data.dataset;
 using Agape.FocusOne.Utilities;
 using Agape.Lib.DBService;
+using ERPW.Lib.Authentication;
 using ERPW.Lib.F1WebService.ICMUtils;
 using ERPW.Lib.Master;
 using ERPW.Lib.Master.Entity;
@@ -1465,6 +1466,90 @@ namespace ServiceWeb.Service
             }
 
             return result;
+        }
+        
+        public DataTable getMasterEquipmentMappingPriority(string SID, string CompanyCode, string equipmentCode)
+        {
+            string sql = @" SELECT * FROM master_equipment_mapping_priority
+                            WHERE SID = '" + SID + @"'
+                            AND CompanyCode = '" + CompanyCode + @"'
+                            AND EquipmentCode = '" + equipmentCode + @"'";
+
+            DataTable dt = dbService.selectDataFocusone(sql);
+            return dt;
+        }
+
+        public void setMasterEquipmentMappingPriority(string SID, string CompanyCode, string equipmentCode, DataTable newData)
+        {
+            // clear old data
+            string sqlClear = @"DELETE FROM master_equipment_mapping_priority
+                                WHERE SID = '" + SID + @"'
+                                AND CompanyCode = '" + CompanyCode + @"'
+                                AND EquipmentCode = '" + equipmentCode + @"'";
+
+            dbService.executeSQLForFocusone(sqlClear);
+
+            // add new data
+            if (newData.Rows.Count > 0)
+            {
+                string sqlAdd = @"INSERT INTO master_equipment_mapping_priority 
+                                (
+                                    SID
+                                    ,CompanyCode
+                                    ,EquipmentCode
+                                    ,PriorityCode
+                                    ,CREATED_BY
+                                    ,CREATED_ON
+                                ) VALUES ";
+                
+                foreach (DataRow drr in newData.Rows)
+                {
+                    int lastIndex = newData.Rows.Count - 1;
+                    string priorityCode = drr["PriorityCode"].ToString();
+                    string createBy = drr["CREATED_BY"].ToString();
+                    string createOn = drr["CREATED_ON"].ToString();
+
+                    if (drr == newData.Rows[lastIndex]) // check last item
+                    {
+
+                        sqlAdd += @"('" + SID + @"',
+                                    '" + CompanyCode + @"',
+                                    '" + equipmentCode + @"',
+                                    '" + priorityCode + @"',
+                                    '" + createBy + @"',
+                                    '" + createOn + @"'
+                                    );";
+
+                    } 
+                    else
+                    {
+                        sqlAdd += @"('" + SID + @"',
+                                    '" + CompanyCode + @"',
+                                    '" + equipmentCode + @"',
+                                    '" + priorityCode + @"',
+                                    '" + createBy + @"',
+                                    '" + createOn + @"'
+                                    ),";
+                    }
+                }
+                dbService.executeSQLForFocusone(sqlAdd);
+            }        
+        }
+        
+        public DataTable getSeverityConfigByEquipment(string SID, string CompanyCode, string equipmentCode)
+        {
+            string sql = @" SELECT a.*, b.Description FROM master_config_severity a
+                            INNER JOIN master_config_priority b
+                            ON a.SID = b.SID and a.PriorityCode = b.PriorityCode and b.ProjectCode=''
+	                        WHERE a.PriorityCode in (	SELECT PriorityCode 
+							                        FROM master_equipment_mapping_priority
+                                                    WHERE SID = '" + SID + @"'
+                                                    AND CompanyCode = '" + CompanyCode + @"'
+                                                    AND EquipmentCode = '" + equipmentCode + @"' )";
+
+            DataTable dt = dbService.selectDataFocusone(sql);
+
+            return dt;
         }
     }
 }

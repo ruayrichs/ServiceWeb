@@ -3000,7 +3000,14 @@ namespace ServiceWeb.Service
                 if (ticketServiceHeaderDT.Rows.Count > 0)
                 {
                     string transactionID = ticketServiceHeaderDT.Rows[0]["TicketCode"].ToString();
-                    TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(sid, companyCode, transactionID, TriggerService.TRIGGER_STATUS_PAUSE); // เปลี่ยน trigger status เป็น pause เพื่อให้ TriggerAPI ไม่สนใจการทำงานของ trigger ที่เพิ่มไว้ก่อนหน้า
+
+                    ERPW_TRIGGER_STATUS triggerData = TriggerService.GetInstance().GetTriggerData(transactionID);
+
+                    if (triggerData != null)
+                    {
+                        TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(sid, companyCode, transactionID, TriggerService.TRIGGER_STATUS_PAUSE); // เปลี่ยน trigger status เป็น pause เพื่อให้ TriggerAPI ไม่สนใจการทำงานของ trigger ที่เพิ่มไว้ก่อนหน้า
+                    }
+      
                 }
                 else
                 {
@@ -3017,81 +3024,87 @@ namespace ServiceWeb.Service
                 if (ticketServiceHeaderDT.Rows.Count > 0)
                 {
                     string ticketCode = ticketServiceHeaderDT.Rows[0]["TicketCode"].ToString();
-                    DateTime startDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["StartDateTime"].ToString());
-                    if (CheckCurrentStopTimer(ticketCode) || CheckPauseBeforeStartTier(sid, companyCode, serviceDocNo, lastxLineNo, startDateTime)) // check ว่า pause อยู่ไหม จึงจะทำงานได้
+
+                    ERPW_TRIGGER_STATUS triggerData = TriggerService.GetInstance().GetTriggerData(ticketCode);
+
+                    if (triggerData != null)
                     {
-                        TimeSpan tsWorkTime = new TimeSpan(0);
-
-                        #region หาเวลาทำงานที่ใช้
-                        string where = @" WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + @"' 
-                              AND CallerID = '" + serviceDocNo + "'";
-                        string sqlStop = "SELECT * FROM cs_servicecall_stop_timer " + where + " ORDER BY xLineNo ASC";
-                        DataTable dtStop = dbService.selectDataFocusone(sqlStop);
-
-                        DataRow[] resultdtStopQuery = (from DataRow myR in dtStop.Rows
-                                                       where ObjectUtil.ConvertDateTimeDBToDateTime(myR["StopDate"].ToString() + myR["StopTime"].ToString()) >= startDateTime
-                                                       select myR).ToArray();
-
-                        if (resultdtStopQuery.Length > 0)
+                        DateTime startDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["StartDateTime"].ToString());
+                        if (CheckCurrentStopTimer(ticketCode) || CheckPauseBeforeStartTier(sid, companyCode, serviceDocNo, lastxLineNo, startDateTime)) // check ว่า pause อยู่ไหม จึงจะทำงานได้
                         {
-                            for (int i = 0; i < resultdtStopQuery.Length; i++)
-                            {
-                                DateTime stop = ObjectUtil.ConvertDateTimeDBToDateTime(resultdtStopQuery[i]["StopDate"].ToString() + resultdtStopQuery[i]["StopTime"].ToString());
+                            TimeSpan tsWorkTime = new TimeSpan(0);
 
-                                if (stop >= startDateTime)
+                            #region หาเวลาทำงานที่ใช้
+                            string where = @" WHERE SID = '" + sid + "' AND CompanyCode = '" + companyCode + @"' 
+                              AND CallerID = '" + serviceDocNo + "'";
+                            string sqlStop = "SELECT * FROM cs_servicecall_stop_timer " + where + " ORDER BY xLineNo ASC";
+                            DataTable dtStop = dbService.selectDataFocusone(sqlStop);
+
+                            DataRow[] resultdtStopQuery = (from DataRow myR in dtStop.Rows
+                                                           where ObjectUtil.ConvertDateTimeDBToDateTime(myR["StopDate"].ToString() + myR["StopTime"].ToString()) >= startDateTime
+                                                           select myR).ToArray();
+
+                            if (resultdtStopQuery.Length > 0)
+                            {
+                                for (int i = 0; i < resultdtStopQuery.Length; i++)
                                 {
-                                    if (i == 0)
+                                    DateTime stop = ObjectUtil.ConvertDateTimeDBToDateTime(resultdtStopQuery[i]["StopDate"].ToString() + resultdtStopQuery[i]["StopTime"].ToString());
+
+                                    if (stop >= startDateTime)
                                     {
-                                        tsWorkTime += (stop - startDateTime) - CalculateOtherTime(startDateTime, stop);
-                                    }
-                                    else
-                                    {
-                                        DateTime restartLowerLine = ObjectUtil.ConvertDateTimeDBToDateTime(resultdtStopQuery[i - 1]["RestartDate"].ToString() + resultdtStopQuery[i]["RestartTime"].ToString());
-                                        tsWorkTime += (stop - restartLowerLine) - CalculateOtherTime(restartLowerLine, stop);
+                                        if (i == 0)
+                                        {
+                                            tsWorkTime += (stop - startDateTime) - CalculateOtherTime(startDateTime, stop);
+                                        }
+                                        else
+                                        {
+                                            DateTime restartLowerLine = ObjectUtil.ConvertDateTimeDBToDateTime(resultdtStopQuery[i - 1]["RestartDate"].ToString() + resultdtStopQuery[i]["RestartTime"].ToString());
+                                            tsWorkTime += (stop - restartLowerLine) - CalculateOtherTime(restartLowerLine, stop);
+                                        }
                                     }
                                 }
                             }
+
+                            #endregion
+
+                            #region Set Trigger
+                            DataTable dtTier = AfterSaleService.getInstance().getTierOperation(sid, ticketServiceHeaderDT.Rows[0]["TierCode"].ToString(), serviceDocNo);
+                            DataRow[] drr = dtTier.Select("Tier = '" + ticketServiceHeaderDT.Rows[0]["Tier"].ToString() + "'");
+
+                            TimeSpan tsResolutionTimeOriginal = new TimeSpan(0, 0, Convert.ToInt32(drr[0]["Resolution"].ToString())); // เวลา SLA ดั้งเดิม ก่อนคำนวณวันหยุด
+
+                            TimeSpan tsNewResolutionTime = tsResolutionTimeOriginal - (tsWorkTime.TotalSeconds >= TimeSpan.FromSeconds(0).TotalSeconds ? tsWorkTime : TimeSpan.FromSeconds(0)); // เวลา SLA ที่เหลือ
+                            double tsNewResolutionTimeSeconds = tsNewResolutionTime.TotalSeconds;
+
+                            DateTime restartCurrent = ObjectUtil.ConvertDateTimeDBToDateTime(reStartDateTimeStr);
+                            double newResolutionTime = CalculateNewResolutionTime(tsNewResolutionTimeSeconds, restartCurrent); // เวลา SLA ที่เหลือหลังจากคำนวณวันหยุด
+
+                            double seconds = newResolutionTime;
+                            string ticketType = ticketServiceHeaderDT.Rows[0]["Doctype"].ToString();
+                            string ticketYear = ticketServiceHeaderDT.Rows[0]["Fiscalyear"].ToString();
+                            double requesterTime = Convert.ToDouble(drr[0]["Requester"].ToString());
+
+                            int newResolutionTimeInt = Convert.ToInt32(newResolutionTime);
+                            TimeSpan newResolutionTimeTS = new TimeSpan(0, 0, 0, newResolutionTimeInt);
+                            DateTime newEndDateTime = restartCurrent.Add(newResolutionTimeTS);
+                            DateTime oldEndDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["EndDateTime"].ToString());
+
+                            RemoveTriggerEscalateAndbefOverdue(sid, companyCode, ticketCode); // ลบ Trigger เดิมออก
+
+                            SetTriggerBeforeOverdue(ticketCode, ticketType, serviceDocNo, ticketYear, seconds, requesterTime, ERPWAuthentication.UserName); // เพิ่ม Trigger ที่คำนวณเวลาใหม่
+                            TriggerService.GetInstance().EscalateTicket(ticketCode, ticketType, serviceDocNo, ticketYear, seconds.ToString(), ERPWAuthentication.UserName); // เพิ่ม Trigger ที่คำนวณเวลาใหม่
+
+                            if (restartCurrent < oldEndDateTime)
+                            {
+                                TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(sid, companyCode, ticketCode, TriggerService.TRIGGER_STATUS_CONTINUE); // ระบุเพื่อให้ TriggerAPI รู้ว่าให้ทำงานต่อไปได้
+                            }
+
+                            CultureInfo cul = new CultureInfo("en-US");
+                            string newEndDateTimeStr = Validation.Convert2DateTimeDB(newEndDateTime.ToString("dd/MM/yyyy HH:mm:ss", cul));
+                            UpdateEndDateTimeToTicketServiceHeader(sid, companyCode, ticketCode, newEndDateTimeStr);
+                            #endregion
                         }
-
-                        #endregion
-
-                        #region Set Trigger
-                        DataTable dtTier = AfterSaleService.getInstance().getTierOperation(sid, ticketServiceHeaderDT.Rows[0]["TierCode"].ToString(), serviceDocNo);
-                        DataRow[] drr = dtTier.Select("Tier = '" + ticketServiceHeaderDT.Rows[0]["Tier"].ToString() + "'");
-
-                        TimeSpan tsResolutionTimeOriginal = new TimeSpan(0, 0, Convert.ToInt32(drr[0]["Resolution"].ToString())); // เวลา SLA ดั้งเดิม ก่อนคำนวณวันหยุด
-
-                        TimeSpan tsNewResolutionTime = tsResolutionTimeOriginal - (tsWorkTime.TotalSeconds >= TimeSpan.FromSeconds(0).TotalSeconds ? tsWorkTime : TimeSpan.FromSeconds(0)); // เวลา SLA ที่เหลือ
-                        double tsNewResolutionTimeSeconds = tsNewResolutionTime.TotalSeconds;
-
-                        DateTime restartCurrent = ObjectUtil.ConvertDateTimeDBToDateTime(reStartDateTimeStr);
-                        double newResolutionTime = CalculateNewResolutionTime(tsNewResolutionTimeSeconds, restartCurrent); // เวลา SLA ที่เหลือหลังจากคำนวณวันหยุด
-
-                        double seconds = newResolutionTime;        
-                        string ticketType = ticketServiceHeaderDT.Rows[0]["Doctype"].ToString();
-                        string ticketYear = ticketServiceHeaderDT.Rows[0]["Fiscalyear"].ToString();
-                        double requesterTime = Convert.ToDouble(drr[0]["Requester"].ToString());
-
-                        int newResolutionTimeInt = Convert.ToInt32(newResolutionTime);
-                        TimeSpan newResolutionTimeTS = new TimeSpan(0, 0, 0, newResolutionTimeInt);
-                        DateTime newEndDateTime = restartCurrent.Add(newResolutionTimeTS);
-                        DateTime oldEndDateTime = ObjectUtil.ConvertDateTimeDBToDateTime(ticketServiceHeaderDT.Rows[0]["EndDateTime"].ToString());
-
-                        RemoveTriggerEscalateAndbefOverdue(sid, companyCode, ticketCode); // ลบ Trigger เดิมออก
-
-                        SetTriggerBeforeOverdue(ticketCode, ticketType, serviceDocNo, ticketYear, seconds, requesterTime, ERPWAuthentication.UserName); // เพิ่ม Trigger ที่คำนวณเวลาใหม่
-                        TriggerService.GetInstance().EscalateTicket(ticketCode, ticketType, serviceDocNo, ticketYear, seconds.ToString(), ERPWAuthentication.UserName); // เพิ่ม Trigger ที่คำนวณเวลาใหม่
-
-                        if (restartCurrent < oldEndDateTime)
-                        {
-                            TriggerService.GetInstance().updateDataTriggerEscalateAndBeforeOverdue(sid, companyCode, ticketCode, TriggerService.TRIGGER_STATUS_CONTINUE); // ระบุเพื่อให้ TriggerAPI รู้ว่าให้ทำงานต่อไปได้
-                        }
-
-                        CultureInfo cul = new CultureInfo("en-US");
-                        string newEndDateTimeStr = Validation.Convert2DateTimeDB(newEndDateTime.ToString("dd/MM/yyyy HH:mm:ss", cul));
-                        UpdateEndDateTimeToTicketServiceHeader(sid, companyCode, ticketCode, newEndDateTimeStr);
-                        #endregion
-                    }
+                    }       
                 } else
                 {
                     throw new Exception("TicketServiceHeader is not found DocNo:" + serviceDocNo);
@@ -3126,9 +3139,12 @@ namespace ServiceWeb.Service
             {
                 ERPW_TRIGGER_STATUS triggerData = TriggerService.GetInstance().GetTriggerData(aojectlink);
 
-                if (triggerData.TriggerStatus == TriggerService.TRIGGER_STATUS_PAUSE)
+                if (triggerData != null)
                 {
-                    nowStop = true;
+                    if (triggerData.TriggerStatus == TriggerService.TRIGGER_STATUS_PAUSE)
+                    {
+                        nowStop = true;
+                    }
                 }
             }
             return nowStop;
@@ -3227,7 +3243,7 @@ namespace ServiceWeb.Service
                 //DataTable dtTier = AfterSaleService.getInstance().getTierOperation(sid, ticketServiceHeaderDT.Rows[0]["TierCode"].ToString(), serviceDocNo);
                 //DataRow[] drr = dtTier.Select("Tier = '" + ticketServiceHeaderDT.Rows[0]["Tier"].ToString() + "'");
 
-                //string currentSequence = drr[0]["sequence"].ToString();
+                //string \rentSequence = drr[0]["sequence"].ToString();
 
                 //drr = dtTier.Select("sequence > " + currentSequence, "sequence ASC");
 

@@ -297,6 +297,8 @@ namespace ServiceWeb.crm.Master.UserManagement
             txtMobilePhone.Text = en.MobilePhone;
             txtTelphone.Text = en.TelephoneNumber;
             chkStatus.Checked = en.USERSTATUS == "A" ? true : false;
+            txtDepartment.Text = en.Department;
+            ddlPosition.SelectedValue = en.PositionCode;
 
             try { ddlCustomerGroup.SelectedValue = en.EmployeeGroup; }
             catch (Exception ex) { }

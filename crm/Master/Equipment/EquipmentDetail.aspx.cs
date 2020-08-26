@@ -84,9 +84,22 @@ namespace ServiceWeb.crm.Master.Equipment
             }
             set { Session["ServicecallEntity"] = value; }
         }
-               
-        #endregion
+        
+        private DataTable dtEquipmentMappingPriority
+        {
+            get
+            {
+                return Session["dtEquipmentMappingPriority"] == null
+                ? new DataTable()
+                : (DataTable)Session["dtEquipmentMappingPriority"];
+            }
+            set
+            {
+                Session["dtEquipmentMappingPriority"] = value;
+            }
+        }
 
+        #endregion
         public string qrcodeurl
         {
             get
@@ -447,6 +460,8 @@ namespace ServiceWeb.crm.Master.Equipment
                 dsEquipment.AcceptChanges();
             }
 
+            dtEquipmentMappingPriority = ServiceEquipment.getMasterEquipmentMappingPriority(SID, CompanyCode, EquipmentCode);
+
             foreach (DataRow drr in dsEquipment.master_equipment.Rows)
             {
                 txtEquipmentCode.Text = drr["EquipmentCode"].ToString();
@@ -602,12 +617,12 @@ namespace ServiceWeb.crm.Master.Equipment
                     ddlMaintenanceType.SelectedIndex = 0;
                 }
             }
-           // //Edit 06/11/2561
-           // DataTable dtMapping = ServiceEquipment.getMappingLineNumber(
-           //    SID,
-           //    CompanyCode,
-           //    EquipmentCode
-           //);
+            // //Edit 06/11/2561
+            // DataTable dtMapping = ServiceEquipment.getMappingLineNumber(
+            //    SID,
+            //    CompanyCode,
+            //    EquipmentCode
+            //);
             //foreach (DataRow drr in dtMapping.Rows)
             //{
             //    //DropDownList1.SelectedValue = drr["LocationCode"].ToString();
@@ -1018,6 +1033,8 @@ namespace ServiceWeb.crm.Master.Equipment
                 if (!string.IsNullOrEmpty(EquipmentCode))
                 {
                     saveDataEquipmentWarranty(EquipmentCode);
+
+                    saveDataEquipmentMappingPriority();
                 }
                 //saveEquipmentLocationMapping();
 
@@ -1106,6 +1123,7 @@ namespace ServiceWeb.crm.Master.Equipment
                     ResultCode = arrResult[1];
                 }
                 saveDataEquipmentWarranty(ResultCode);
+
                 Response.Redirect("EquipmentDetail.aspx?code=" + ResultCode + "&mode=Edit");
             }
             else
@@ -1147,6 +1165,12 @@ namespace ServiceWeb.crm.Master.Equipment
 
             return ResultCode;
         }
+
+        private void saveDataEquipmentMappingPriority()
+        {
+            ServiceEquipment.setMasterEquipmentMappingPriority(SID, CompanyCode, EquipmentCode, dtEquipmentMappingPriority);
+        }
+
         private void saveDataEquipmentWarranty(string EquipmentCode)
         {
             #region Structure
@@ -3079,6 +3103,14 @@ namespace ServiceWeb.crm.Master.Equipment
 
         }
 
+        private void bindDataPriority()
+        {
+            
+            rptListPriority.DataSource = dtEquipmentMappingPriority;
+            rptListPriority.DataBind();
+            udpListPriority.Update();
+            ClientService.DoJavascript("bindingDataTableJSPriority();");
+        }
         public string GetRowColorAssign(string status)
         {
             string result = "";
@@ -3267,6 +3299,169 @@ namespace ServiceWeb.crm.Master.Equipment
                 }
             }
             return result;
+        }
+
+        protected void btnLoadBindingPriority_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                bindDataPriority();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+        }
+
+        protected void btnOpenModalAddPriority_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ServiceTicketLibrary lib = new ServiceTicketLibrary();
+                DataTable dtPriority = lib.GetSeverity(SID, "", "", "");
+                DataTable dt = dtPriority.Clone();
+                if (dtPriority.Rows.Count > 0)
+                {
+                    dt = dtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
+                }
+
+                dt = priorityNoneSelected(dt);
+
+                ddlPriority.DataSource = dt;
+                ddlPriority.DataTextField = "Description";
+                ddlPriority.DataValueField = "PriorityCode";
+                ddlPriority.DataBind();
+
+                udpDropDownListPriority.Update();
+
+                ddlPriority.Items.Insert(0, new ListItem("", ""));
+
+                if (dtPriority.Rows.Count > 0)
+                {
+                    ddlPriority.SelectedIndex = 0;
+                }
+               
+                //udpDropDownListPriority.Update();
+
+                ClientService.DoJavascript("$('#modal-add-priority').modal('show');");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+        }
+
+        protected void btnAddPriority_Click(object sender, EventArgs e)
+        {
+            string priorityCode = ddlPriority.SelectedValue;
+            
+            try
+            {
+                if (String.IsNullOrEmpty(priorityCode)) // validate null or empty DDL priority
+                {
+                    throw new Exception("Priority is Null or Empty.");
+                }
+
+                dtEquipmentMappingPriority.Rows.Add(SID, CompanyCode, EquipmentCode, priorityCode, ERPWAuthentication.EmployeeCode, Validation.getCurrentServerStringDateTime());
+
+                ClientService.DoJavascript("$('#modal-add-priority').modal('hide');");
+                bindDataPriority();
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+            
+        }
+
+        protected void btnRemovePriority_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string priorityCode = hddPriorityCodeItem.Value;
+
+                if (String.IsNullOrEmpty(priorityCode))
+                {
+                    throw new Exception("Priority is Null or Empty.");
+                }
+
+                for(int i = dtEquipmentMappingPriority.Rows.Count - 1; i >= 0 ; i--)
+                {
+                    DataRow dr = dtEquipmentMappingPriority.Rows[i];
+                    if (dr["PriorityCode"].ToString() == priorityCode)
+                    {
+                        dr.Delete();
+                    }
+                }
+
+                dtEquipmentMappingPriority.AcceptChanges();
+
+                bindDataPriority();
+            }
+            catch (Exception ex)
+            {
+                ClientService.AGError(ex.Message);
+            }
+            finally
+            {
+                ClientService.AGLoading(false);
+            }
+        }
+
+        public string getPriorityName(string priorityCode)
+        {
+            string result = "";
+            ServiceTicketLibrary lib = new ServiceTicketLibrary();
+            DataTable dtPriority = lib.GetSeverity(SID, "", "", "");
+            DataTable dt = dtPriority.Clone();
+            if (dtPriority.Rows.Count > 0)
+            {
+                dt = dtPriority.DefaultView.ToTable(true, "PriorityCode", "Description");
+
+                DataRow descRow = (from DataRow dr in dt.Rows
+                               where dr["PriorityCode"].ToString() == priorityCode
+                               select dr).FirstOrDefault();
+                result = descRow["Description"].ToString() == null
+                        ? ""
+                        : descRow["Description"].ToString();
+            }
+
+            return result;
+        }
+        
+        private DataTable priorityNoneSelected(DataTable originalData)
+        {
+            
+            if (dtEquipmentMappingPriority.Rows.Count > 0)
+            {
+                DataTable selectedDT = dtEquipmentMappingPriority.Clone();
+                selectedDT = dtEquipmentMappingPriority.DefaultView.ToTable(true, "PriorityCode");
+
+                for (int i = originalData.Rows.Count - 1; i >= 0; i--)
+                {
+                    DataRow dr = originalData.Rows[i];
+                    bool exists = selectedDT.AsEnumerable().Any(row => dr["PriorityCode"].ToString() == row.Field<String>("PriorityCode"));
+                    if (exists)
+                    {
+                        dr.Delete();
+                    }
+                }
+                originalData.AcceptChanges();
+            }
+
+            return originalData;
         }
     }
 }

@@ -181,17 +181,23 @@
                                     </div>
                                     <asp:UpdatePanel ID="udpnProblem" runat="server" UpdateMode="Conditional">
                                         <ContentTemplate>
+                                            <%--  --%>
                                             <div class="form-row">
                                                 <div class="form-group col-sm-12">
-                                                    <label>Impact</label>
+                                                    <div class="d-flex justify-content-between">
+                                                        <label>Impact</label>
+                                                        <i class="fa fa-refresh " aria-hidden="true" onclick="$(this).next().click();" style="cursor: pointer; color: #0275d8;"></i>
+                                                        <asp:Button ID="btnCriteriaReset" OnClick="btnCriteriaReset_Click" runat="server" Text="Reset" CssClass="btn btn-link d-none" Style="padding: 1px !important; font-size: 0.9em" />
+                                                    </div>
+                                                    
                                                     <asp:DropDownList ID="ddlImpact" runat="server" class="form-control form-control-sm required"
-                                                        onchange="$('#btnSelectCriteriaBindPriority').click();" ClientIDMode="Static">
+                                                        onchange="$('#btnSelectImpactBindPriority').click();" ClientIDMode="Static">
                                                     </asp:DropDownList>
                                                 </div>
                                                 <div class="form-group col-sm-12">
                                                     <label>Urgency</label>
                                                     <asp:DropDownList ID="ddlUrgency" runat="server" class="form-control form-control-sm required"
-                                                        onchange="$('#btnSelectCriteriaBindPriority').click();" ClientIDMode="Static">
+                                                        onchange="$('#btnSelectUrgencyBindPriority').click();" ClientIDMode="Static">
                                                     </asp:DropDownList>
                                                 </div>
                                                 <div class="form-group col-sm-12">
@@ -200,7 +206,7 @@
                                                         DataTextField="Description" DataValueField="PriorityCode" ClientIDMode="Static">
                                                     </asp:DropDownList>
                                                     <%--PriorityCode--%>
-                                                </div>
+                                                </div>                                              
                                             </div>
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
@@ -334,6 +340,7 @@
 
                     <asp:UpdatePanel ID="udpnAction" runat="server" UpdateMode="Conditional" class="d-none">
                         <ContentTemplate>
+                            <asp:Button ID="btnLoadPriorityEquipment" runat="server" OnClick="btnLoadPriorityEquipment_Click" />
                             <asp:Button ID="btnLoadCustomerEquipment" runat="server" OnClick="btnLoadCustomerEquipment_Click" />
                             <asp:Button ID="btnOpenModalSearch" runat="server" OnClientClick="AGLoading(true);" OnClick="btnOpenModalSearch_Click" />
                             <asp:Button ID="btnSearch" runat="server" OnClientClick="AGLoading(true);" OnClick="btnSearch_Click" />
@@ -345,7 +352,8 @@
                             <asp:HiddenField ID="hhdModeSearch" runat="server" />
 
                             <asp:Button ID="btnSelectCriteriaBindPriority" ClientIDMode="Static" OnClick="ddlSelectBindPriority_SelectedIndexChanged" Text="btnChangeSelctPriorityCode" runat="server" />
-
+                            <asp:Button ID="btnSelectImpactBindPriority" ClientIDMode="Static" OnClick="ddlSelectBindPriority_ImpactSelectedIndexChanged" Text="btnImpactChangeSelctPriorityCode" runat="server" />
+                            <asp:Button ID="btnSelectUrgencyBindPriority" ClientIDMode="Static" OnClick="ddlSelectBindPriority_UrgencySelectedIndexChanged" Text="btnUrgencyChangeSelctPriorityCode" runat="server" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
 
@@ -1239,6 +1247,7 @@
             console.log("loadCustomerByEquipment : " + _loadCustomerByEquipment);
 
             $("#<%= btnLoadCustomerEquipment.ClientID%>").click();
+            $("#<%= btnLoadPriorityEquipment.ClientID%>").click();
         }
 
         var _loadEquipmentAndContact = 0;
