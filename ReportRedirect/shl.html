@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML Meta Tag</title>
+      <meta http-equiv = "refresh" content = "0; url = https://www.google.com" />
+   </head>
+   <body>
+     <script>
+          function webOnLoad() {
+              //clear old active
+              var onav = document.getElementsByClassName("nav-link shl")[0].id;
+              document.getElementById(onav).className = "nav-link";
+              //set new active
+              document.getElementById("nav-menu-shl").className = "nav-link shl";
+          };
+
+          $(document).ready(function () { webOnLoad(); })
+     </script>
+     <p>Hello HTML5!</p>
+   </body>
+</html>
