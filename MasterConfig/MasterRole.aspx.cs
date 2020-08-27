@@ -68,6 +68,7 @@ namespace ServiceWeb.MasterConfig
                     roleMaster.changeordermodify = "False";
                     roleMaster.configuretionitemview = "False";
                     roleMaster.configuretionitemmodify = "False";
+                    roleMaster.configuretionitemattributes = "False";
                     roleMaster.contactview = "False";
                     roleMaster.contactmodify = "False";
                     roleMaster.km_view = "False";
@@ -164,7 +165,12 @@ namespace ServiceWeb.MasterConfig
                         roleMaster.changeordermodify = (item.FindControl("cbChangeOrderModify") as CheckBox).Checked.ToString();
                         roleMaster.configuretionitemview = (item.FindControl("cbConfigurationItemView") as CheckBox).Checked.ToString();
                         roleMaster.configuretionitemmodify = (item.FindControl("cbConfigurationItemModify") as CheckBox).Checked.ToString();
-                        roleMaster.contactview = (item.FindControl("cbContactView") as CheckBox).Checked.ToString();
+                    if ((item.FindControl("cbConfigurationItemModify") as CheckBox).Checked)
+                    {
+                        (item.FindControl("cbConfigurationItemAttributes") as CheckBox).Checked = true;
+                    }
+                    roleMaster.configuretionitemattributes = (item.FindControl("cbConfigurationItemAttributes") as CheckBox).Checked.ToString();
+                    roleMaster.contactview = (item.FindControl("cbContactView") as CheckBox).Checked.ToString();
                         roleMaster.contactmodify = (item.FindControl("cbContactModify") as CheckBox).Checked.ToString();
                         roleMaster.km_view = (item.FindControl("cbKM_View") as CheckBox).Checked.ToString();
                         roleMaster.km_modify = (item.FindControl("cbKM_Modify") as CheckBox).Checked.ToString();

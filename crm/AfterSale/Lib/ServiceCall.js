@@ -1078,6 +1078,19 @@ function addControlTicketStatus(a, b) {
         Elt_ddl.prop("disabled", true);
     }
 
+    var IsDisableView = $("#hddDisableStatusEdit").val().toLowerCase() == "true";
+    if (IsDisableView) {
+        Elt_ddl.prop("disabled", true);
+        var selectTxt = Elt_ddl.find(":selected").text();
+        var selectVal = Elt_ddl.find(":selected").val();
+        Elt_ddl
+            .find('option')
+            .remove()
+            .end()
+            .append('<option value="' + selectVal + '">' + selectTxt +'</option>')
+            .val(selectVal)
+        ;
+    }
 }
 
 function postSuccessCallBack(a, b, c) {

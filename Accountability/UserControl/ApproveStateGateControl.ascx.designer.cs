@@ -60,6 +60,51 @@ namespace ServiceWeb.Accountability.UserControl
         protected global::System.Web.UI.WebControls.HiddenField hddTicketCodeApprovalControl;
 
         /// <summary>
+        /// hddTikcetStatusCodeTargetApprovalControl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddTikcetStatusCodeTargetApprovalControl;
+
+        /// <summary>
+        /// hddTicketDocumentType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddTicketDocumentType;
+
+        /// <summary>
+        /// hddTicketFiscalYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddTicketFiscalYear;
+
+        /// <summary>
+        /// hddTicketDocumentNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddTicketDocumentNo;
+
+        /// <summary>
+        /// hddTicketStatusCodeOld control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hddTicketStatusCodeOld;
+
+        /// <summary>
         /// udpControls control.
         /// </summary>
         /// <remarks>

@@ -1205,13 +1205,18 @@
                                                                 <%--<label>Responsible Organization</label>--%>
                                                                 <asp:TextBox Enabled="false" Text="" CssClass="form-control form-control-sm" placeholder="Text EN" runat="server" ID="_txt_CD_ForeignName" />
                                                             </div>
-                                                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
                                                                 <label>Sales Employee</label>
                                                                 <uc1:AutoCompleteEmployee runat="server" id="AutoCompleteEmployee" placeholder="Text" CssClass="form-control form-control-sm"  Enabled="false" />
                                                             </div>
-                                                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
                                                                 <label>Owner Service</label>
                                                                 <asp:DropDownList ID="ddlOwnerService" CssClass="form-control form-control-sm" runat="server">
+                                                                </asp:DropDownList>
+                                                            </div>
+                                                             <div class="form-group col-md-4 col-sm-12 col-xs-12">
+                                                                <label>Accountability</label>
+                                                                <asp:DropDownList ID="ddlAccountability" CssClass="form-control form-control-sm" runat="server">
                                                                 </asp:DropDownList>
                                                             </div>
                                                             

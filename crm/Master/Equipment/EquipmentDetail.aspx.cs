@@ -194,7 +194,7 @@ namespace ServiceWeb.crm.Master.Equipment
                 }
                 else
                 {
-                    bindDefaultToScreen();              
+                    bindDefaultToScreen();
                 }
 
                 Complete_OwnerAssignmentBox_CustomerSelect.initialDataAutoComplete(new DataTable(), "", "");
@@ -248,6 +248,12 @@ namespace ServiceWeb.crm.Master.Equipment
                 ddlproperties.DataBind();
                 ddlproperties.SelectedValue = hddxvalue.Value;
                 ddlproperties.Style["display"] = "";
+            }
+
+            if (!Permission.ConfigurationItemModify)
+            {
+                TextBox txtdata = e.Item.FindControl("txtdata") as TextBox;
+                txtdata.Enabled = false;
             }
         }
 
@@ -3188,6 +3194,22 @@ namespace ServiceWeb.crm.Master.Equipment
             public string SLAGroupDesc { get; set; }
 
             public string ActiveStatus { get; set; }
+        }
+
+        public string AttributesFormatModify(int showDigitNum, string attributesValue)
+        {
+            if (
+                !Permission.ConfigurationItemAttributes && 
+                !Permission.ConfigurationItemModify &&
+                !String.IsNullOrEmpty(attributesValue)
+                )
+            {
+
+                int replaceDigitNum = attributesValue.Length - showDigitNum;
+                string replacePart = attributesValue.Substring(0, replaceDigitNum);
+                attributesValue = attributesValue.Replace(replacePart, new string('X', replaceDigitNum));
+            }
+            return attributesValue;
         }
 
     }

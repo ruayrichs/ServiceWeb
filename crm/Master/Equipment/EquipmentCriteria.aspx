@@ -124,6 +124,8 @@
                                 </script>             
                             </ContentTemplate>
                         </asp:UpdatePanel>
+                          <%if (Permission.ConfigurationItemModify)
+                              { %>
                         <div class="card" style="margin-bottom: 10px; margin-top: 15px;">
                             <div class="card-body card-body-sm">
                                 <div class="d-flex justify-content-between">
@@ -136,6 +138,7 @@
                                 </div>
                             </div>
                         </div>
+                        <%} %>
                     </div>
                     <div class="col-md-6 col-sm-12 d-none">
                         <asp:UpdatePanel runat="server" UpdateMode="Conditional">

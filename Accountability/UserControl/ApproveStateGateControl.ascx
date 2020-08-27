@@ -204,6 +204,11 @@
             <asp:HiddenField runat="server" ID="hddWorkGroupCodeApprovalControl" />
             <asp:HiddenField runat="server" ID="hddWorkStategateApprovalControl" />
             <asp:HiddenField runat="server" ID="hddTicketCodeApprovalControl" />
+            <asp:HiddenField runat="server" ID="hddTikcetStatusCodeTargetApprovalControl" />
+            <asp:HiddenField runat="server" ID="hddTicketDocumentType" />
+            <asp:HiddenField runat="server" ID="hddTicketFiscalYear" />
+            <asp:HiddenField runat="server" ID="hddTicketDocumentNo" />
+            <asp:HiddenField runat="server" ID="hddTicketStatusCodeOld" />
         </ContentTemplate>
     </asp:UpdatePanel>
 </div>

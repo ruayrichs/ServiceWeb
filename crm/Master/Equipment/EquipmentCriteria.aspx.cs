@@ -344,28 +344,56 @@ namespace ServiceWeb.crm.Master.Equipment
                 ciSelect
             );
 
-            var dataSource = listEquipmentItem.Select(s => new
-            {
-                s.EquipmentCode,
-                s.Description,
-                s.EquipmentTypeName,
-                s.Status,
-                s.EquipmentClassName,
-                s.CategoryCode,
-                s.OwnerGroupName,
-                s.xValue001,
-                s.xValue002,
-                s.xValue003,
-                s.xValue004,
-                s.xValue005,
-                s.ModelNumber,
-                s.ManufacturerSerialNO,
-                s.BeginGuarantee,
-                s.EndGuaranty,
-                s.BeginWarrantee,
-                s.EndWarrantee,
-                s.CiLocation
-            });
+            //**** check permission atttributes
+
+            var dataSource = Permission.ConfigurationItemAttributes ? 
+                listEquipmentItem.Select(s => new
+                {
+                    s.EquipmentCode,
+                    s.Description,
+                    s.EquipmentTypeName,
+                    s.Status,
+                    s.EquipmentClassName,
+                    s.CategoryCode,
+                    s.OwnerGroupName,
+                    s.xValue001,
+                    s.xValue002,
+                    s.xValue003,
+                    s.xValue004,
+                    s.xValue005,
+                    s.ModelNumber,
+                    s.ManufacturerSerialNO,
+                    s.BeginGuarantee,
+                    s.EndGuaranty,
+                    s.BeginWarrantee,
+                    s.EndWarrantee,
+                    s.CiLocation
+                }) 
+                : 
+                listEquipmentItem.Select(s => new
+                {
+                    s.EquipmentCode,
+                    s.Description,
+                    s.EquipmentTypeName,
+                    s.Status,
+                    s.EquipmentClassName,
+                    s.CategoryCode,
+                    s.OwnerGroupName,
+                    xValue001 = AttributesFormatModify(2, s.xValue001),
+                    xValue002 = AttributesFormatModify(2, s.xValue002),
+                    xValue003 = AttributesFormatModify(2, s.xValue003),
+                    xValue004 = AttributesFormatModify(2, s.xValue004),
+                    xValue005 = AttributesFormatModify(2, s.xValue005),
+                    s.ModelNumber,
+                    s.ManufacturerSerialNO,
+                    s.BeginGuarantee,
+                    s.EndGuaranty,
+                    s.BeginWarrantee,
+                    s.EndWarrantee,
+                    s.CiLocation
+                });
+
+            /////********* check permission atttributes
 
             //this.eItemData = listEquipmentItem;
             //Session["Export_Excel_CI_Datatable"] = listEquipmentItem; 
@@ -992,7 +1020,6 @@ namespace ServiceWeb.crm.Master.Equipment
                     cIObjectModel.configurationItemModel.province = "";
                     cIObjectModel.configurationItemModel.country = "";
                     cIObjectModel.configurationItemModel.picturePart = "";
-                    cIObjectModel.configurationItemModel.objectID = "";
                     cIObjectModel.configurationItemModel.activeBy = "";
                     cIObjectModel.configurationItemModel.activeDate = "";
                     cIObjectModel.configurationItemModel.activeTime = "";
@@ -1086,5 +1113,22 @@ namespace ServiceWeb.crm.Master.Equipment
             return dtResult;
 
         }
+
+        public string AttributesFormatModify(int showDigitNum, string attributesValue)
+        {
+            if (
+                !Permission.ConfigurationItemAttributes &&
+                !Permission.ConfigurationItemModify &&
+                !String.IsNullOrEmpty(attributesValue)
+                )
+            {
+
+                int replaceDigitNum = attributesValue.Length - showDigitNum;
+                string replacePart = attributesValue.Substring(0, replaceDigitNum);
+                attributesValue = attributesValue.Replace(replacePart, new string('X', replaceDigitNum));
+            }
+            return attributesValue;
+        }
+
     }
 }

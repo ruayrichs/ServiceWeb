@@ -953,7 +953,7 @@ namespace ServiceWeb.Service
 
                           where item.SID='" + SID + @"'
                           and item.TierCode='" + TierCode + @"'
-                          order by item.sequence, map.created_on asc";
+                          order by ABS(item.sequence), map.created_on asc";
 
             return dbService.selectDataFocusone(sql);
         }

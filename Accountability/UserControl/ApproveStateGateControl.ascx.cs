@@ -14,6 +14,10 @@ using ServiceWeb.Service;
 using ServiceWeb.crm.AfterSale;
 using SNA.Lib.Initiative;
 using ERPW.Lib.Service;
+using ERPW.Lib.Service.Workflow.Entity;
+using ERPW.Lib.Master;
+using ERPW.Lib.Master.Entity;
+using System.Web.UI.HtmlControls;
 
 namespace ServiceWeb.Accountability.UserControl
 {
@@ -67,6 +71,71 @@ namespace ServiceWeb.Accountability.UserControl
             set
             {
                 hddTicketCodeApprovalControl.Value = value;
+                udpCodeidentityInitiativeAS.Update();
+            }
+        }
+
+        public string TicketStatusCodeTarget
+        {
+            get
+            {
+                return hddTikcetStatusCodeTargetApprovalControl.Value;
+            }
+            set
+            {
+                hddTikcetStatusCodeTargetApprovalControl.Value = value;
+                udpCodeidentityInitiativeAS.Update();
+            }
+        }
+
+        public string TicketDocumentType
+        {
+            get
+            {
+                return hddTicketDocumentType.Value;
+            }
+            set
+            {
+                hddTicketDocumentType.Value = value;
+                udpCodeidentityInitiativeAS.Update();
+            }
+        }
+
+        public string TicketFiscalYear
+        {
+            get
+            {
+                return hddTicketFiscalYear.Value;
+            }
+            set
+            {
+                hddTicketFiscalYear.Value = value;
+                udpCodeidentityInitiativeAS.Update();
+            }
+        }
+
+        public string TicketDocumentNo
+        {
+            get
+            {
+                return hddTicketDocumentNo.Value;
+            }
+            set
+            {
+                hddTicketDocumentNo.Value = value;
+                udpCodeidentityInitiativeAS.Update();
+            }
+        }
+
+        public string TicketStatusCodeOld
+        {
+            get
+            {
+                return hddTicketStatusCodeOld.Value;
+            }
+            set
+            {
+                hddTicketStatusCodeOld.Value = value;
                 udpCodeidentityInitiativeAS.Update();
             }
         }
@@ -280,7 +349,138 @@ namespace ServiceWeb.Accountability.UserControl
 
             udpControls.Update();
         }
+        #region update status
+        ServiceTicketLibrary lib = new ServiceTicketLibrary();
+        private void updateTicketStatusToTarget(string SID, string CompanyCode, string DocumentType, string FiscalYear, string DocumentNo, string CreateBy, string statusOld)
+        {
+            string TICKET_STATUS_EVENT_CODE = TicketStatusCodeTarget;
+            ServiceCallTransaction c = (ServiceCallTransaction)this.Parent.Page;
 
+            if (!String.IsNullOrEmpty(TICKET_STATUS_EVENT_CODE))
+            {
+                AfterSaleService.getInstance().UpdateStatus(
+                SID,
+                CompanyCode,
+                TICKET_STATUS_EVENT_CODE,
+                DocumentType,
+                FiscalYear,
+                DocumentNo,
+                c.UserName,
+                Validation.getCurrentServerStringDateTime());
+
+
+                //string TICKET_STATUS_EVENT_OLD_DESC = ServiceTicketLibrary.GetTicketDocStatusDesc(SID, CompanyCode, statusOld);
+                //string TICKET_STATUS_EVENT_NEW_DESC = ServiceTicketLibrary.GetTicketDocStatusDesc(SID, CompanyCode, TICKET_STATUS_EVENT_CODE);
+
+
+                //string quoteMessage = "Update status from \"" + TICKET_STATUS_EVENT_OLD_DESC + "\" to \"" + TICKET_STATUS_EVENT_NEW_DESC + "\"";
+                //List<logValue_OldNew> enLog = new List<logValue_OldNew>();
+                //enLog.Add(new logValue_OldNew
+                //{
+                //    Value_Old = "",
+                //    Value_New = quoteMessage,
+                //    TableName = "",
+                //    FieldName = "",
+                //    AccessCode = LogServiceLibrary.AccessCode_Updata_Status
+                //});
+                //SaveLog(SID
+                //    , CompanyCode
+                //    , DocumentType
+                //    , FiscalYear
+                //    , DocumentNo
+                //    , CreateBy
+                //    , enLog);
+
+                postremark(DocumentNo, statusOld, TICKET_STATUS_EVENT_CODE, "");
+
+                string SERVICE_DOC_STATUS_RESPONSECUSTOMER = lib.GetTicketStatusFromEvent(SID, CompanyCode, ServiceTicketLibrary.TICKET_STATUS_EVENT_RESPONSECUSTOMER);
+
+                if (TICKET_STATUS_EVENT_CODE == SERVICE_DOC_STATUS_RESPONSECUSTOMER)
+                {
+                    string ResponseDate = Validation.getCurrentServerStringDateTime().Substring(0, 8);
+                    string ResponseTime = Validation.getCurrentServerDateTime().ToString("HHmmss");
+                    string ResponseBy = CreateBy;
+
+                    c.saveTimetampResponseToCustomer(ResponseDate, ResponseTime, ResponseBy);
+                }
+
+                HiddenField hddTicketStatus_Old = c.parenthddTicketStatus_Old as HiddenField;
+                HiddenField hddTicketStatus_New = c.parenthddTicketStatus_New as HiddenField;
+                HiddenField hddTicketStatus = c.parenthddTicketStatus as HiddenField;
+                UpdatePanel udpHiddenCode = c.parentudpHiddenCode as UpdatePanel;
+                HtmlInputText _txt_TicketStatusTran = c.parent_txt_TicketStatusTran as HtmlInputText;
+                UpdatePanel udpTicketStatusTran = c.parentudpTicketStatusTran as UpdatePanel;
+                UpdatePanel updPerson = c.parentupdPerson as UpdatePanel;
+
+                hddTicketStatus_New.Value = TICKET_STATUS_EVENT_CODE;
+                hddTicketStatus_Old.Value = hddTicketStatus_New.Value;
+                hddTicketStatus.Value = hddTicketStatus_New.Value; 
+                _txt_TicketStatusTran.Value = TICKET_STATUS_EVENT_CODE + " : " + ServiceTicketLibrary.GetTicketDocStatusDesc(SID, CompanyCode, TICKET_STATUS_EVENT_CODE);
+                ;
+                udpTicketStatusTran.Update();
+                udpHiddenCode.Update();
+                updPerson.Update();
+            }
+
+        }
+        private void postremark(string ticketNumber, string statusCodeOld, string statusCodeNew, string remarkMessage)
+        {
+            ServiceLibrary libService = new ServiceLibrary();
+
+            string aobjectlink = AfterSaleService.getInstance().getAobjectLinkByTicketNumber(ticketNumber);
+            if (string.IsNullOrEmpty(aobjectlink))
+            {
+                throw new Exception("access denied.");
+            }
+
+            string comment = remarkMessage;
+            string type = "REMARK";
+
+            string curDateTime = Validation.getCurrentServerStringDateTimeMillisecond();
+
+            string messageQuote = "";
+            string quoteType = "";
+
+            if (!string.IsNullOrEmpty(statusCodeNew) && statusCodeNew != statusCodeOld)
+            {
+                quoteType = "UPDATESTATUS";
+                messageQuote = @"Update status from " + "\"" + ServiceTicketLibrary.GetTicketDocStatusDesc(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, statusCodeOld) + "\"" + " to " + "\"" + ServiceTicketLibrary.GetTicketDocStatusDesc(ERPWAuthentication.SID, ERPWAuthentication.CompanyCode, statusCodeNew) + "\"";
+                //messageQuote = messageQuote.Replace("'", "\"");
+            }
+
+            libService.SaveActivityDetail(
+                    ERPWAuthentication.SID,
+                    ERPWAuthentication.CompanyCode,
+                    ERPWAuthentication.CompanyCode,
+                    ERPWAuthentication.EmployeeCode,
+                    ERPWAuthentication.EmployeeCode,
+                    ERPWAuthentication.FullNameEN,
+                    aobjectlink,
+                    "",
+                    comment,
+                    "",
+                    curDateTime,
+                    type,
+                    quoteType,
+                    messageQuote,
+                    ""
+                );
+        }
+        private void SaveLog(string SID, string CompanyCode, string DocumentType, string FiscalYear, string DocumentNo, string CreateBy, List<logValue_OldNew> enLog)
+        {
+
+            if (enLog.Count == 0)
+            {
+                return;
+            }
+
+            string DocType = DocumentType;
+
+            List<Main_LogService> en = AfterSaleService.getInstance().SaveLogTicket(SID, DocType, FiscalYear, DocumentNo, CompanyCode,
+                CreateBy, enLog);
+
+        }
+        #endregion
         protected void btnConfirmRequestApprovelInitiativeModelControl_Click(object sender, EventArgs e)
         {
             try
@@ -556,7 +756,6 @@ namespace ServiceWeb.Accountability.UserControl
                 );
 
                 //sendEmail("APPROVE_UPGARDE_STATEGATE");
-                
 
 
                 if (WorkflowService.getInstance().CheckApproveGroup(InitiativeCode, hddStateGateAS.Value, hddStateGateEndAS.Value))
@@ -571,6 +770,16 @@ namespace ServiceWeb.Accountability.UserControl
                         hddStateGateAS.Value,
                         hddStateGateEndAS.Value,
                         curDateTime
+                    );
+
+                    updateTicketStatusToTarget(
+                    ERPWAuthentication.SID,
+                    ERPWAuthentication.CompanyCode,
+                    TicketDocumentType,
+                    TicketFiscalYear,
+                    TicketDocumentNo,
+                    ERPWAuthentication.EmployeeCode,
+                    TicketStatusCodeOld
                     );
 
                     //sendEmail("COMPLETE_UPGARDE_STATEGATE");
@@ -588,7 +797,7 @@ namespace ServiceWeb.Accountability.UserControl
                 if (SuccessApprove != "")
                 {
                     NotificationLibrary.GetInstance().TicketAlertEvent(
-                            NotificationLibrary.EVENT_TYPE.TICKET_OPEN,
+                            NotificationLibrary.EVENT_TYPE.TICKET_UPDATESTATUS,
                             ERPWAuthentication.SID,
                             ERPWAuthentication.CompanyCode,
                             TicketCode,

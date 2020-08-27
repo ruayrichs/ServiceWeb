@@ -102,12 +102,15 @@
                     </button>
                     <asp:Button Text="Diagram" runat="server" ID="btnOpenDiagram" CssClass="btn btn-success d-none"
                         OnClientClick="return showDiagram();" />
+
+                    <%if (Permission.ConfigurationItemModify)
+                        { %>
                     <button type="button" runat="server" class="btn btn-primary btn-sm mb-1" onclick="$(this).next().click();">
                         <i class="fa fa-save"></i>&nbsp;&nbsp;Save
                     </button>
                     <asp:Button Text="Save" runat="server" CssClass="btn btn-primary AUTH_UPDATE d-none" ID="btnSaveEquipment"
                         OnClick="btnSaveEquipment_Click" OnClientClick="AGLoading(true);" />
-
+                    <%} %>
                     <asp:Button Text="" runat="server" CssClass="d-none" ID="btnReloadLog" ClientIDMode="Static"
                         OnClick="btnReloadLog_Click" OnClientClick="AGLoading(true);" />
                     
@@ -359,7 +362,7 @@
                                                                 <asp:HiddenField ID="hddobjectid" runat="server" Value='<%# Eval("ObjectID") %>' />
                                                                 <asp:HiddenField ID="hddpropertiescode" runat="server" Value='<%# Eval("PropertiesCode") %>' />
                                                                 <asp:HiddenField ID="hddselectedcode" runat="server" Value='<%# Eval("SelectedCode") %>' />
-                                                                <asp:TextBox runat="server" ID="txtdata" Text='<%# Eval("xValue") %>' Visible='<%# !isSelectedValue(Eval("SelectedCode")) %>'
+                                                                <asp:TextBox runat="server" ID="txtdata" Text='<%# AttributesFormatModify(2, Eval("xValue").ToString()) %>' Visible='<%# !isSelectedValue(Eval("SelectedCode")) %>'
                                                                     CssClass="form-control form-control-sm" placeholder="Text" />
                                                                 <asp:DropDownList ID="ddlproperties" runat="server" CssClass="form-control form-control-sm" Style="display: none;"></asp:DropDownList>
                                                             </div>

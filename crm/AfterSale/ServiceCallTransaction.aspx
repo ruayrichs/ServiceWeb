@@ -180,6 +180,7 @@
             if (lv == '1') {
                 hideTicketType();
                 $("#buttonClose").remove();
+                $("#hddDisableStatusEdit").attr('Value', 'true');
             }
         };
         function hideTicketType() {
@@ -334,7 +335,7 @@
                         <% } %>
                         <% if (mode_stage == agape.lib.constant.ApplicationSession.CHANGE_MODE_STRING && !IsDocTicketStatusCancel)
                             { %>
-                        <button type="button" id="btnAddKnowledge" class="btn btn-primary btn-sm mb-1" onclick="$('#<%= btnOpenModalAddKM.ClientID  %>').click();">
+                        <button type="button" id="btnAddKnowledge" class="btn btn-primary btn-sm mb-1 d-none" onclick="$('#<%= btnOpenModalAddKM.ClientID  %>').click();">
                             <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add KM
                         </button>
 
@@ -402,6 +403,7 @@
                     <asp:HiddenField ID="hddFiscalYear_OpenRelation" runat="server" ClientIDMode="Static" />
                     <asp:HiddenField ID="hddTicketNo_OpenRelation" runat="server" ClientIDMode="Static" />
                     <asp:HiddenField ID="hddAuthenEdit" runat="server" ClientIDMode="Static" Value="false" />
+                    <asp:HiddenField ID="hddDisableStatusEdit" runat="server" ClientIDMode="Static" Value="false" />
                     <asp:HiddenField ID="hddBusinessObject" runat="server" />
                     <asp:HiddenField ID="hddEmployeeFirstView" runat="server" ClientIDMode="Static" />
                     <asp:HiddenField ID="hddPageTicketMode" runat="server" ClientIDMode="Static" />

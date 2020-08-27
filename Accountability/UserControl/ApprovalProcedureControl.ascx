@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ApprovalProcedureControl.ascx.cs" Inherits="ServiceWeb.Accountability.UserControl.ApprovalProcedureControl" %>
+<%@ Register Src="~/widget/usercontrol/SmartSearchMainDelegate.ascx" TagPrefix="uc1" TagName="SmartSearchMainDelegate" %>
 <%--<%@ Register Src="~/UserControl/ActivitySendMailModal.ascx" TagPrefix="ag" TagName="ActivitySendMailModal" %>--%>
 <div class="hide">
     <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpCodeidentityInitiative">
@@ -102,6 +103,20 @@
 </style>
 
 
+<asp:Label CssClass="l-click"  Text="Select Approval :" runat="server" />
+<div class="form-row l-click">
+    <div id="panel-client" class="form-group col-lg-8 col-sm-10">
+        <div class="input-group">
+            <uc1:SmartSearchMainDelegate isOnlyFriend="false" runat="server" id="SmartSearchMainDelegate" CssClass="ticket-allow-editor-everyone" />
+        </div>
+    </div>
+    <div class="form-group col-lg-2 col-sm-2">
+        <div class="text-left">
+            <button ID="btnSaveAddEmp" type="button" class="btn btn-success ticket-allow-editor-everyone">Save</button>
+            <button ID="btnCancelAddEmp" type="button" class="btn btn-danger ticket-allow-editor-everyone">Cancel</button>
+        </div>
+    </div>
+</div>
 <div class="d-none">
     <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpHiddenCode">
         <ContentTemplate>
@@ -128,7 +143,7 @@
         </ContentTemplate>
     </asp:UpdatePanel>
 </div>
-<div>
+<div class="this-d-none">
     <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="udpApprovalProcedureModelControl">
         <ContentTemplate>
             <div>
@@ -315,6 +330,7 @@
                                                                                 <asp:HiddenField runat="server" ID="hddSTATEGATETO" Value='<%# Eval("STATEGATETO") %>' />
                                                                                 <asp:HiddenField runat="server" ID="hddSTATEGATEFROM" Value='<%# Eval("STATEGATEFROM") %>' />
                                                                                 <asp:HiddenField runat="server" ID="hddApprovalProcedureStateGateInnerStructure" Value='<%# Eval("StructureCode") %>' />
+                                                                                <asp:Button class="btn btn-outline-primary btn-sm float-right btnval enabled d-none" ID="btnvalEmployee" runat="server" onclick="btnAddApproval_Click" Text='<%# Eval("StructureCode")+"|"+Eval("STATEGATEFROM")+"|"+Eval("STATEGATETO") %>' /> 
                                                                                
                                                                                 <asp:Repeater runat="server" ID="rptApprovalProcedureStateGateInnerRole" OnItemDataBound="rptApprovalProcedureStateGateInnerRole_ItemDataBound">
                                                                                     <ItemTemplate>
@@ -359,6 +375,13 @@
                                                                                                             </div>
                                                                                                         </ItemTemplate>
                                                                                                     </asp:Repeater>
+                                                                                                    <div class="f-click d-none" style="color:blue; cursor: cell;">
+                                                                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                                        +
+                                                                                                    </div>
+                                                                                                    <div class="l-click d-none">
+                                                                                                        <button type="button" class="btn btn-outline-primary btn-sm float-right ok-enabled" onClick='addItem(this)' value="">OK</button>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
@@ -675,6 +698,34 @@
                 }
             });
         }
+        function addItem(elmt) {
+            var btnvalEmployee = $(elmt).parent().parent().parent().parent().parent().find(".btnval").attr('id');
+            $("#" + btnvalEmployee).removeAttr("disabled");
+            $("#" + btnvalEmployee).click();
+        }
+
+        $(document).ready(function () {
+            $(".l-click").toggle("fast", function () { });
+            $(".f-click").click(function (event) {
+                $(".l-click").toggle("slow", function () { });
+                var idSelect = $(this).parent().find(".l-click").find(".autocomplete-box").find(".tt-input").attr('id');
+                $(this).parent().find(".ok-enabled").removeAttr("disabled");
+                $(this).parent().find(".ok-enabled").attr("id", "pre-click");
+                $(".form-control-smart-search").removeAttr("disabled");
+                $(".this-d-none").hide();
+            });
+
+            $("#btnCancelAddEmp").click(function (event) {
+                $(".l-click").toggle("fast", function () { });
+                $("#pre-click").attr("id", "");
+                $(".ok-enabled").prop('disabled', true);
+                $(".this-d-none").slideToggle("slow", function () { });
+            });
+
+            $("#btnSaveAddEmp").click(function (event) {
+                $("#pre-click").click();
+            });
+        });
     </script>
     <%--<ag:ActivitySendMailModal runat="server" id="ActivitySendMailModal" />--%>
 </div>

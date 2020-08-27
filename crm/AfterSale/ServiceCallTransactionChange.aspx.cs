@@ -5237,11 +5237,47 @@ namespace ServiceWeb.crm.AfterSale
 
         private void bindCustomer()
         {
+            setDDLSelectAccountability(servicecallCustomer);
 
             cusLists.DataSource = servicecallCustomer;
             cusLists.DataBind();
             updateCus.Update();
 
+        }
+
+        private void setDDLSelectAccountability(DataTable servicecallCustomer)
+        {
+            if (servicecallCustomer.Rows.Count > 0)
+            {
+                string customerCode = !String.IsNullOrEmpty(servicecallCustomer.Rows[0]["CustomerCode"].ToString()) ? servicecallCustomer.Rows[0]["CustomerCode"].ToString() : servicecallCustomer.Rows[0]["CustomerCode"].ToString();
+                CustomerProfile customerProfile = ERPW.Lib.Master.CustomerService.getInstance().SearchCustomerDataByCustomerCode(
+                        SID,
+                        CompanyCode,
+                        customerCode
+                );
+
+                if (customerProfile != null)
+                {
+                    if (ddlAccountability.Items.FindByValue(customerProfile.Accountability) != null)
+                    {
+                        ddlAccountability.SelectedValue = customerProfile.Accountability;
+                    }
+                    else
+                    {
+                        ddlAccountability.SelectedValue = "";
+                    }  
+                }
+                else
+                {
+                    ddlAccountability.SelectedValue = "";
+                }
+
+            } 
+            else
+            {
+                ddlAccountability.SelectedValue = "";
+            }
+            updDDLAcc.Update();
         }
 
         private void bindCustomerChangeMode()

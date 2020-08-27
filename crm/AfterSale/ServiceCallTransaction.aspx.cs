@@ -33,6 +33,7 @@ using ERPW.Lib.Authentication.Entity;
 using System.IO;
 using System.Diagnostics;
 using AjaxControlToolkit;
+using System.Web.UI.HtmlControls;
 
 namespace ServiceWeb.crm.AfterSale
 {
@@ -1190,12 +1191,16 @@ namespace ServiceWeb.crm.AfterSale
             }
 
             bindDataAccountability();
-
             GetMaterialPurchase();
             BindingMaterialPurchase();
             setHeaderPropertyValue();
             GetPropertyValueItem();
             BindingPropertyValue();
+
+            if (CustomerProfile != null)
+            {
+                ddlAccountability.SelectedValue = CustomerProfile.Accountability;
+            }
 
         }
 
@@ -2043,6 +2048,8 @@ namespace ServiceWeb.crm.AfterSale
                     , DocType, true
                     , "", true
                     , (string)Session["SCT_created_fiscalyear" + idGen], true);
+
+            
         }
 
         private void defaultData()
@@ -2421,6 +2428,28 @@ namespace ServiceWeb.crm.AfterSale
                 ddlTransfer_OwnerService.CssClass = ddlTransfer_OwnerService.CssClass + " ticket-allow-editor";
                 ddlEscalate_OwnerService.CssClass = ddlEscalate_OwnerService.CssClass + " ticket-allow-editor";
             }
+
+        }
+        private CustomerProfile _CustomerProfile = null;
+        public CustomerProfile CustomerProfile
+        {
+            get
+            {
+                if (_CustomerProfile == null)
+                {
+                    _CustomerProfile = ERPW.Lib.Master.CustomerService.getInstance().SearchCustomerDataByCustomerCode(
+                        SID,
+                        CompanyCode,
+                        CustomerCode
+                    );
+
+                    if (_CustomerProfile == null)
+                    {
+                        _CustomerProfile = new CustomerProfile();
+                    }
+                }
+                return _CustomerProfile;
+            }
         }
 
         protected void controlscreen()
@@ -2675,7 +2704,7 @@ namespace ServiceWeb.crm.AfterSale
             return desc;
         }
 
-        private string GetDocStatusDesc(string code)
+        protected string GetDocStatusDesc(string code)
         {
             DataRow[] drr = dtDocstatus.Select("Name='" + code + "'");
             string desc = "";
@@ -3662,7 +3691,7 @@ namespace ServiceWeb.crm.AfterSale
             countround++;
         }
 
-        protected void saveTimetampResponseToCustomer(string ResponseDate, string ResponseTime, string ResponseBy)
+        public void saveTimetampResponseToCustomer(string ResponseDate, string ResponseTime, string ResponseBy)
         {
             try
             {
@@ -4662,6 +4691,74 @@ namespace ServiceWeb.crm.AfterSale
             }
         }
 
+        #region Check StatusCode Target
+        private string getStatusCodeTarget(string AobjLink, string workgroup,string stategateFrom, string stategateTo, string SUBPROJECT)
+        {
+            string targetStatusCode = ""; 
+            DataTable dt = libWorkFlow.getAccountabilityDoc(SID, workgroup, AobjLink, stategateFrom, stategateTo);
+
+            if (dt.Rows.Count > 0)
+            {
+                targetStatusCode = !String.IsNullOrEmpty(dt.Rows[0]["TicketStatusCode"].ToString()) ? dt.Rows[0]["TicketStatusCode"].ToString() : "";
+            }
+
+            return targetStatusCode;
+        }
+        
+        public HiddenField parenthddTicketStatus_Old
+        {
+            get
+            {
+               return hddTicketStatus_Old ;
+            }
+        }
+
+        public HiddenField parenthddTicketStatus_New { 
+            get
+            {
+                return hddTicketStatus_New;
+            }
+        }
+        public HiddenField parenthddTicketStatus
+        {
+            get
+            {
+                return hddTicketStatus;
+            }
+        }
+        public UpdatePanel parentudpHiddenCode
+        {
+            get
+            {
+                return udpHiddenCode;
+            }
+        }
+
+        public HtmlInputText parent_txt_TicketStatusTran
+        {
+            get
+            {
+                return _txt_TicketStatusTran;
+            }
+        }
+
+        public UpdatePanel parentudpTicketStatusTran
+        {
+            get
+            {
+                return udpTicketStatusTran;
+            }
+        }
+
+        public UpdatePanel parentupdPerson
+        {
+            get
+            {
+                return updPerson;
+            }
+        }
+
+        #endregion
         private void BindDataWorkflow()
         {
             #region Workflow
@@ -4695,6 +4792,20 @@ namespace ServiceWeb.crm.AfterSale
                     ApproveStateGateControl.StategateCode = StateGate[0];
                     ApproveStateGateControl.Trig();
                     ApproveStateGateControl.TicketCode = hddDocnumberTran.Value;
+
+                    if (!String.IsNullOrEmpty(StateGate[0]))
+                    {
+                        ApproveStateGateControl.TicketStatusCodeTarget = getStatusCodeTarget(AobjLink
+                            , ""
+                            , StateGate[0]
+                            , StateGate[1]
+                            , Convert.ToString(dtWF.Rows[0]["SUBPROJECT"]));
+                        ApproveStateGateControl.TicketDocumentNo = hddDocnumberTran.Value.Trim();
+                        ApproveStateGateControl.TicketDocumentType = hddTicketDocType.Value.Trim();
+                        ApproveStateGateControl.TicketFiscalYear = _txt_fiscalyear.Value;
+                        ApproveStateGateControl.TicketStatusCodeOld = hddTicketStatus_Old.Value.Trim();
+                    }
+
                 }
                 //if (StateGate.Length >= 3)
                 //{
@@ -4830,8 +4941,8 @@ namespace ServiceWeb.crm.AfterSale
             ddlAccountability.DataTextField = "DataText";
             ddlAccountability.DataValueField = "DataValue";
             ddlAccountability.DataBind();
-            ddlAccountability.Items.Insert(0, new ListItem("Please select", ""));
 
+            ddlAccountability.Items.Insert(0, new ListItem("Please select", ""));
             ddlAccountability.Enabled = mode_stage == ApplicationSession.CREATE_MODE_STRING;
             ddlAccountability.SelectedValue = "";
 
