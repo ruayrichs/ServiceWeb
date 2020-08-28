@@ -1232,6 +1232,26 @@ namespace ServiceWeb.Service
             return dt.Rows.Count;
         }
 
+        public int tierActivityServiceCall(string SNAID, string ServiceDocNo, string EquipmentNo, string ItemNo)
+        {
+            string sql = @"select top 1 STUFF(Tier, 1, 2, '') AS Activity from CRM_SERVICECALL_MAPPING_ACTIVITY  WITH (NOLOCK) 
+                            where SNAID='" + SNAID + @"' 
+                            and ServiceDocNo='" + ServiceDocNo + @"' 
+                            --and EquipmentNo='" + EquipmentNo + @"'
+                            and ItemNo='" + ItemNo + @"'
+                            order by Activity desc";
+
+            DataTable dt = dbService.selectDataFocusone(sql);
+            var Activity = 0;
+            foreach (DataRow dr in dt.Rows)
+            {
+                var num = dt.Rows[0]["Activity"].ToString();
+                Activity = Int16.Parse(num);
+            }
+
+            return Activity;
+        }
+
         public string getLastActivityServiceCall(string SNAID, string ServiceDocNo, string EquipmentNo, string ItemNo)
         {
             string sql = @"select top 1 * from CRM_SERVICECALL_MAPPING_ACTIVITY 

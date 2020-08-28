@@ -286,6 +286,10 @@
                        {
                            'targets': 2,
                            'createdCell': function (td, cellData, rowData, row, col) {
+                               var datas = cellData.split(" Day ");
+                               if (cellData != "") {
+                                   cellData = parseInt(datas[0]).toString() + " Day " + datas[1];
+                               }
                                $(td).addClass("col-date text-nowrap");
                                $(td).html(
                                    cellData

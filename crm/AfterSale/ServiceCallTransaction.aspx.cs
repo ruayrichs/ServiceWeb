@@ -3508,6 +3508,8 @@ namespace ServiceWeb.crm.AfterSale
             //btnCloseWork.CommandArgument = "FALSE";
             btnTransfer.CommandArgument = "FALSE";
 
+            var tierActivity = AfterSaleService.getInstance().tierActivityServiceCall(CompanyCode, hddDocnumberTran.Value, EquipmentSelect, EquipmentItemNo);
+            countActivity = tierActivity;
             if (hddHeaderStatus.Value == "Open") { countActivity = countround; }
             if (countround == 1)
             {
@@ -4200,6 +4202,13 @@ namespace ServiceWeb.crm.AfterSale
                 HiddenField hddTier = hddEscalate_Tier;
                 HiddenField hhdAOBJECTLINK = hddEscalate_AOBJECTLINK;
 
+                string hddTierNextTo = hddTierNext.Value;
+                if (Roll_Escalate.SelectedValue != "")
+                {
+                    hddTierNextTo = Roll_Escalate.SelectedValue;
+                    hddTierNext.Value = Roll_Escalate.SelectedValue;
+                }
+
                 DataRow[] drsTier = dtTier.Select("Tier='" + hddTierNext.Value + "'");
 
                 string tierDesc = "";
@@ -4259,11 +4268,6 @@ namespace ServiceWeb.crm.AfterSale
                     double.TryParse(dtTierSelecDetail.Rows[0]["Resolution"].ToString(), out resolutionTime);
                 }
                 string aobjectLink = "";
-                string hddTierNextTo = hddTierNext.Value;
-                if (Roll_Escalate.SelectedValue != "")
-                {
-                    hddTierNextTo = Roll_Escalate.SelectedValue;
-                }
                 try
                 {
                     aobjectLink = AfterSaleService.getInstance().EscalateTicket(
